@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/products"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Product Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="dots"></ion-spinner>
+    <p>Loading product details...</p>
+  </div>
+  
+  <div *ngIf="!loading && !product" class="empty-state">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h3>Product not found</h3>
+    <p>The product you're looking for doesn't exist or has been removed</p>
+    <ion-button routerLink="/tabs/products" expand="block" fill="clear">
+      Browse Other Products
+    </ion-button>
+  </div>
+  
+  <div *ngIf="!loading && product" class="product-detail-container">
+    <div class="product-image-container">
+      <img [src]="product.imageUrl || 'assets/product-placeholder.svg'" alt="{{ product.name }}" class="product-image">
+      <div *ngIf="product.stock === 0" class="stock-badge out-of-stock">Out of Stock</div>
+      <div *ngIf="product.stock > 0 && product.stock <= 5" class="stock-badge low-stock">Low Stock</div>
+    </div>
+    
+    <div class="product-info-container">
+      <div class="product-header">
+        <div class="category-tag">{{ product.category | titlecase }}</div>
+        <h1 class="product-name">{{ product.name }}</h1>
+        <div class="product-price">{{ formatPrice(product.price) }}</div>
+      </div>
+      
+      <div class="product-description">
+        <h3>Product Description</h3>
+        <p>{{ product.description || 'No description available for this product.' }}</p>
+      </div>
+      
+      <div class="product-stock">
+        <h3>Availability</h3>
+        <p *ngIf="product.stock > 5" class="in-stock">In Stock ({{ product.stock }} available)</p>
+        <p *ngIf="product.stock > 0 && product.stock <= 5" class="limited-stock">Limited Stock ({{ product.stock }} left)</p>
+        <p *ngIf="product.stock === 0" class="out-of-stock">Currently Out of Stock</p>
+      </div>
+      
+      <div class="action-buttons">
+        <ion-button expand="block" color="primary" 
+                   [disabled]="product.stock === 0"
+                   (click)="product.stock > 0 ? null : showProductUnavailable()">
+          <ion-icon name="cart" slot="start"></ion-icon>
+          {{ product.stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
+        </ion-button>
+        
+        <ion-button expand="block" color="secondary" (click)="inquireAboutProduct()">
+          <ion-icon name="chatbubble" slot="start"></ion-icon>
+          Inquire About This Product
+        </ion-button>
+      </div>
+    </div>
+    
+    <div class="similar-products" *ngIf="similarProducts.length > 0">
+      <h3>Similar Products</h3>
+      <div class="similar-products-grid">
+        <div *ngFor="let similarProduct of similarProducts" class="similar-product-card" 
+            (click)="navigateToProductDetail(similarProduct.id)">
+          <img [src]="similarProduct.imageUrl || 'assets/product-placeholder.svg'" alt="{{ similarProduct.name }}">
+          <div class="similar-product-info">
+            <h4>{{ similarProduct.name }}</h4>
+            <span class="similar-product-price">{{ formatPrice(similarProduct.price) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

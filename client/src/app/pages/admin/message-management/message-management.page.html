@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Message Management</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openComposeForm()">
+        <ion-icon slot="icon-only" name="create"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshData($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="dots"></ion-spinner>
+    <p>Loading messages...</p>
+  </div>
+  
+  <div *ngIf="!loading && messages.length === 0" class="empty-state">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <h3>No messages found</h3>
+    <p>There are no messages in the system yet</p>
+  </div>
+  
+  <ion-list *ngIf="!loading && messages.length > 0">
+    <ion-list-header>
+      <ion-label>All Messages</ion-label>
+    </ion-list-header>
+    
+    <ion-item-sliding *ngFor="let message of messages">
+      <ion-item (click)="viewMessage(message)" class="message-item" [ngClass]="{'unread': !message.isRead}">
+        <ion-icon 
+          [name]="message.isRead ? 'mail-open-outline' : 'mail'"
+          [color]="message.isRead ? 'medium' : 'primary'" 
+          slot="start">
+        </ion-icon>
+        
+        <ion-label>
+          <h2>{{ message.subject || 'No Subject' }}</h2>
+          <p class="message-participants">
+            <span class="sender">From: {{ message.sender?.name || 'Unknown' }}</span>
+            <ion-icon name="arrow-forward-outline" color="medium"></ion-icon>
+            <span class="receiver">To: {{ message.receiver?.name || 'Unknown' }}</span>
+          </p>
+          <p class="message-preview">{{ getMessagePreview(message.content) }}</p>
+          <p class="message-date">{{ getFormattedDate(message.createdAt) }}</p>
+        </ion-label>
+        
+        <ion-badge slot="end" *ngIf="!message.isRead" color="primary">New</ion-badge>
+      </ion-item>
+      
+      <ion-item-options side="end">
+        <ion-item-option color="primary" (click)="openReplyForm(message)">
+          <ion-icon slot="icon-only" name="arrow-redo"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="deleteMessage(message, $event)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openComposeForm()">
+      <ion-icon name="create"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

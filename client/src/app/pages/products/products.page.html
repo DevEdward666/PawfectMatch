@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Products
+    </ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Search products" [(ngModel)]="searchTerm" (ionChange)="onSearchChange($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshProducts($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <div class="filters-container">
+    <ion-item>
+      <ion-label>Category</ion-label>
+      <ion-select [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange($event)" interface="popover">
+        <ion-select-option value="">All Categories</ion-select-option>
+        <ion-select-option *ngFor="let category of categories" [value]="category">
+          {{ category | titlecase }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label>Sort By</ion-label>
+      <ion-select [(ngModel)]="selectedSort" (ionChange)="onSortChange($event)" interface="popover">
+        <ion-select-option *ngFor="let option of sortOptions" [value]="option.value">
+          {{ option.label }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+    <ion-button expand="block" fill="clear" (click)="resetFilters()">
+      Clear Filters
+    </ion-button>
+  </div>
+  
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="dots"></ion-spinner>
+    <p>Loading products...</p>
+  </div>
+  
+  <div *ngIf="!loading && filteredProducts.length === 0" class="empty-state">
+    <ion-icon name="cart-outline"></ion-icon>
+    <h3>No products found</h3>
+    <p>Try adjusting your filters or check back later for new products</p>
+  </div>
+  
+  <div class="product-grid">
+    <ion-card *ngFor="let product of filteredProducts" class="product-card" (click)="navigateToProductDetail(product.id)">
+      <div class="product-image">
+        <img [src]="product.imageUrl || 'assets/product-placeholder.svg'" alt="{{ product.name }}">
+        <div *ngIf="product.stock === 0" class="out-of-stock-badge">Out of Stock</div>
+        <div *ngIf="product.stock > 0 && product.stock <= 5" class="low-stock-badge">Low Stock</div>
+      </div>
+      
+      <ion-card-header>
+        <ion-card-subtitle>{{ product.category | titlecase }}</ion-card-subtitle>
+        <ion-card-title>{{ product.name }}</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="product-price">{{ formatPrice(product.price) }}</div>
+        
+        <p *ngIf="product.description" class="product-description">
+          {{ product.description | slice:0:60 }}{{ product.description.length > 60 ? '...' : '' }}
+        </p>
+        
+        <ion-button expand="block" fill="solid" 
+                  [disabled]="product.stock === 0"
+                  [color]="product.stock === 0 ? 'medium' : 'primary'">
+          <ion-icon name="cart" slot="start"></ion-icon>
+          {{ product.stock === 0 ? 'Out of Stock' : 'View Details' }}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
