@@ -1,12 +1,20 @@
 const jwt = require('jsonwebtoken');
-const { db } = require('./db');
-const { users } = require('../shared/schema');
+const { Pool } = require('pg');
+const { drizzle } = require('drizzle-orm/node-postgres');
 const { eq } = require('drizzle-orm');
 
-// JWT secret key
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+// Database connection
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const db = drizzle(pool);
 
-// Middleware to authenticate user
+// Get schema
+const schema = require('../shared/schema');
+const { users } = schema;
+
+// JWT Secret (should be in .env but for simplicity)
+const JWT_SECRET = process.env.JWT_SECRET || 'pet-shop-secret-key';
+
+// Authenticate middleware
 exports.authenticate = async (req, res, next) => {
   try {
     // Get token from header
@@ -15,7 +23,7 @@ exports.authenticate = async (req, res, next) => {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
-        message: 'Authentication required'
+        message: 'Authentication failed: No token provided'
       });
     }
     
@@ -25,29 +33,39 @@ exports.authenticate = async (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     
     // Check if user exists
-    const [user] = await db.select().from(users).where(eq(users.id, decoded.id));
+    const [user] = await db.select()
+      .from(users)
+      .where(eq(users.id, decoded.id));
+    
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid token'
+        message: 'Authentication failed: User not found'
       });
     }
     
-    // Attach user info to request
+    // Set user info in request
     req.user = {
-      id: decoded.id,
-      email: decoded.email,
-      role: decoded.role
+      id: user.id,
+      email: user.email,
+      role: user.role
     };
     
     next();
   } catch (error) {
     console.error('Authentication error:', error);
     
-    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+    if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({
         success: false,
-        message: 'Invalid or expired token'
+        message: 'Authentication failed: Invalid token'
+      });
+    }
+    
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication failed: Token expired'
       });
     }
     
@@ -59,12 +77,12 @@ exports.authenticate = async (req, res, next) => {
   }
 };
 
-// Middleware to check if user is admin
+// Admin check middleware
 exports.isAdmin = (req, res, next) => {
   if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
-      message: 'Admin access required'
+      message: 'Access denied: Admin privileges required'
     });
   }
   

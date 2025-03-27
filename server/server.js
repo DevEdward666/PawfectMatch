@@ -21,6 +21,18 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL
 });
 
+// Import routes
+const userRoutes = require('./userRoutes');
+const petsRoutes = require('./petsRoutes');
+const productsRoutes = require('./productsRoutes');
+const adoptionRoutes = require('./adoptionRoutes');
+
+// API routes
+app.use('/api/users', userRoutes);
+app.use('/api/pets', petsRoutes);
+app.use('/api/products', productsRoutes);
+app.use('/api/adoptions', adoptionRoutes);
+
 // Simple routes for testing
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Server is running' });
@@ -28,6 +40,24 @@ app.get('/api/health', (req, res) => {
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to Pet Shop API' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({
+    success: false,
+    message: 'Server error',
+    error: process.env.NODE_ENV === 'production' ? 'An unexpected error occurred' : err.message
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found'
+  });
 });
 
 // Start the server
