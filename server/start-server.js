@@ -1,10 +1,18 @@
 // Pet Shop API Server
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Middleware
 app.use(cors());
@@ -15,12 +23,20 @@ const userRoutes = require('./userRoutes');
 const petsRoutes = require('./petsRoutes');
 const productsRoutes = require('./productsRoutes');
 const adoptionRoutes = require('./adoptionRoutes');
+const reportsRoutes = require('./reportsRoutes');
+const messagesRoutes = require('./messagesRoutes');
+const dashboardRoutes = require('./dashboardRoutes');
+const uploadRoutes = require('./uploadRoutes');
 
 // API routes
 app.use('/api/users', userRoutes);
 app.use('/api/pets', petsRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/adoptions', adoptionRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/messages', messagesRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/uploads', uploadRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -50,7 +66,7 @@ app.use((req, res) => {
   });
 });
 
-// Start server
+// Start the server
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
 });

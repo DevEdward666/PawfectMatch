@@ -26,12 +26,20 @@ const userRoutes = require('./userRoutes');
 const petsRoutes = require('./petsRoutes');
 const productsRoutes = require('./productsRoutes');
 const adoptionRoutes = require('./adoptionRoutes');
+const reportsRoutes = require('./reportsRoutes');
+const messagesRoutes = require('./messagesRoutes');
+const dashboardRoutes = require('./dashboardRoutes');
+const uploadRoutes = require('./uploadRoutes');
 
 // API routes
 app.use('/api/users', userRoutes);
 app.use('/api/pets', petsRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/adoptions', adoptionRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/messages', messagesRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/uploads', uploadRoutes);
 
 // Simple routes for testing
 app.get('/api/health', (req, res) => {
