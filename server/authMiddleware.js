@@ -11,40 +11,48 @@ const db = drizzle(pool);
 const schema = require('../shared/schema');
 const { users } = schema;
 
-// JWT Secret (should be in .env but for simplicity)
+// JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'pet-shop-secret-key';
 
-// Authenticate middleware
+// Authentication middleware
 exports.authenticate = async (req, res, next) => {
   try {
     // Get token from header
-    const authHeader = req.headers.authorization;
+    let token = req.header('Authorization');
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Check if token exists
+    if (!token) {
       return res.status(401).json({
         success: false,
-        message: 'Authentication failed: No token provided'
+        message: 'No authentication token, access denied'
       });
     }
     
-    const token = authHeader.split(' ')[1];
+    // Remove Bearer prefix if present
+    if (token.startsWith('Bearer ')) {
+      token = token.slice(7, token.length);
+    }
     
     // Verify token
     const decoded = jwt.verify(token, JWT_SECRET);
     
-    // Check if user exists
-    const [user] = await db.select()
-      .from(users)
-      .where(eq(users.id, decoded.id));
+    // Check if user still exists
+    const [user] = await db.select({
+      id: users.id,
+      email: users.email,
+      role: users.role
+    })
+    .from(users)
+    .where(eq(users.id, decoded.id));
     
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Authentication failed: User not found'
+        message: 'User does not exist'
       });
     }
     
-    // Set user info in request
+    // Add user to request
     req.user = {
       id: user.id,
       email: user.email,
@@ -58,33 +66,51 @@ exports.authenticate = async (req, res, next) => {
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({
         success: false,
-        message: 'Authentication failed: Invalid token'
+        message: 'Invalid token'
       });
     }
     
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
         success: false,
-        message: 'Authentication failed: Token expired'
+        message: 'Token expired'
       });
     }
     
     res.status(500).json({
       success: false,
-      message: 'Authentication error',
+      message: 'Server error during authentication',
       error: error.message
     });
   }
 };
 
-// Admin check middleware
+// Admin role check middleware
 exports.isAdmin = (req, res, next) => {
-  if (!req.user || req.user.role !== 'admin') {
-    return res.status(403).json({
+  try {
+    // Check if user is authenticated
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+    }
+    
+    // Check if user has admin role
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. Admin privileges required'
+      });
+    }
+    
+    next();
+  } catch (error) {
+    console.error('Admin check error:', error);
+    res.status(500).json({
       success: false,
-      message: 'Access denied: Admin privileges required'
+      message: 'Server error during admin verification',
+      error: error.message
     });
   }
-  
-  next();
 };
