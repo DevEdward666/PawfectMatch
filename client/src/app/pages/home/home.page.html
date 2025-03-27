@@ -1,0 +1,117 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>
+      <div class="title-container">
+        <ion-icon name="paw"></ion-icon>
+        <span>Pet Shop</span>
+      </div>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/tabs/report" color="danger">
+        <ion-icon slot="icon-only" name="alert-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshData($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <div class="welcome-card">
+    <div class="welcome-content">
+      <h2>Welcome, {{ currentUser?.name || 'Friend' }}!</h2>
+      <p>Find your new furry friend today.</p>
+      <ion-button (click)="navigateToPets()" expand="block" fill="solid">
+        <ion-icon name="paw" slot="start"></ion-icon>
+        Browse Adoptable Pets
+      </ion-button>
+    </div>
+    <div class="welcome-image">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#6200EA" d="M45,0 C55,10 75,10 85,0 C95,10 115,10 125,0 C135,10 155,10 165,0 Q200,25 165,45 Q200,75 165,90 Q200,125 165,140 Q200,175 165,190 C155,200 135,200 125,190 C115,200 95,200 85,190 C75,200 55,200 45,190 Q0,175 45,140 Q0,125 45,90 Q0,75 45,45 Q0,25 45,0"></path>
+      </svg>
+    </div>
+  </div>
+  
+  <div class="report-banner" (click)="navigateToReport()">
+    <ion-icon name="warning" color="light"></ion-icon>
+    <h3>Report Animal Cruelty</h3>
+    <p>Help protect animals - report incidents here</p>
+  </div>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <div class="section-title">
+          <span>Pets for Adoption</span>
+          <ion-button (click)="navigateToPets()" fill="clear" size="small">View All</ion-button>
+        </div>
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <div *ngIf="loading" class="loading-container">
+        <ion-spinner name="dots"></ion-spinner>
+        <p>Loading pets...</p>
+      </div>
+      
+      <div *ngIf="!loading && featuredPets.length === 0" class="empty-state">
+        <ion-icon name="paw"></ion-icon>
+        <h3>No pets available</h3>
+        <p>Check back soon for new additions to our adoption program</p>
+      </div>
+      
+      <ion-slides *ngIf="!loading && featuredPets.length > 0" pager="true" [options]="{ slidesPerView: 1.2, spaceBetween: 10 }">
+        <ion-slide *ngFor="let pet of featuredPets" (click)="navigateToPetDetail(pet.id)">
+          <div class="pet-slide-card">
+            <div class="pet-image">
+              <img [src]="pet.imageUrl || 'assets/pet-placeholder.svg'" alt="{{ pet.name }}">
+              <div class="pet-badge">{{ pet.status }}</div>
+            </div>
+            <div class="pet-details">
+              <h3>{{ pet.name }}</h3>
+              <p>{{ pet.breed || pet.species }}</p>
+              <p *ngIf="pet.age">{{ pet.age }} years old</p>
+            </div>
+          </div>
+        </ion-slide>
+      </ion-slides>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <div class="section-title">
+          <span>Popular Products</span>
+          <ion-button (click)="navigateToProducts()" fill="clear" size="small">View All</ion-button>
+        </div>
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <div *ngIf="loading" class="loading-container">
+        <ion-spinner name="dots"></ion-spinner>
+        <p>Loading products...</p>
+      </div>
+      
+      <div *ngIf="!loading && featuredProducts.length === 0" class="empty-state">
+        <ion-icon name="cart"></ion-icon>
+        <h3>No products available</h3>
+        <p>Check back soon for new products</p>
+      </div>
+      
+      <div *ngIf="!loading && featuredProducts.length > 0" class="product-grid">
+        <div *ngFor="let product of featuredProducts" class="product-card" (click)="navigateToProductDetail(product.id)">
+          <img [src]="product.imageUrl || 'assets/product-placeholder.svg'" alt="{{ product.name }}">
+          <div class="product-info">
+            <h4>{{ product.name }}</h4>
+            <p class="product-price">${{ product.price }}</p>
+          </div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

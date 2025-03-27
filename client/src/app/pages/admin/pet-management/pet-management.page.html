@@ -1,0 +1,123 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pet Management</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openPetForm()">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Search pets" (ionChange)="onSearch($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshData($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="all">
+      <ion-label>All Pets</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="applications">
+      <ion-label>Adoption Requests</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  
+  <div [ngSwitch]="segment">
+    <!-- All Pets Tab -->
+    <div *ngSwitchCase="'all'">
+      <div *ngIf="loading" class="loading-container">
+        <ion-spinner name="dots"></ion-spinner>
+        <p>Loading pets...</p>
+      </div>
+      
+      <div *ngIf="!loading && filterPets().length === 0" class="empty-state">
+        <ion-icon name="paw-outline"></ion-icon>
+        <h3>No pets found</h3>
+        <p>Add a new pet using the + button</p>
+      </div>
+      
+      <ion-list *ngIf="!loading && filterPets().length > 0">
+        <ion-item-sliding *ngFor="let pet of filterPets()">
+          <ion-item>
+            <ion-thumbnail slot="start" *ngIf="pet.imageUrl">
+              <img [src]="pet.imageUrl" alt="{{ pet.name }}">
+            </ion-thumbnail>
+            <ion-icon *ngIf="!pet.imageUrl" slot="start" name="paw" size="large"></ion-icon>
+            
+            <ion-label>
+              <h2>{{ pet.name }}</h2>
+              <p>{{ pet.breed || pet.species }}</p>
+              <p *ngIf="pet.age">{{ pet.age }} year(s) old • {{ pet.gender || 'Unknown' }}</p>
+              <ion-badge color="{{ getStatusColor(pet.status) }}">{{ pet.status | titlecase }}</ion-badge>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item-options side="end">
+            <ion-item-option color="primary" (click)="openPetForm(pet)">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="deletePet(pet)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </div>
+    
+    <!-- Adoption Applications Tab -->
+    <div *ngSwitchCase="'applications'">
+      <div *ngIf="loading" class="loading-container">
+        <ion-spinner name="dots"></ion-spinner>
+        <p>Loading adoption applications...</p>
+      </div>
+      
+      <div *ngIf="!loading && filterApplications().length === 0" class="empty-state">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <h3>No adoption applications</h3>
+        <p>There are no pending adoption applications</p>
+      </div>
+      
+      <ion-list *ngIf="!loading && filterApplications().length > 0">
+        <ion-item-sliding *ngFor="let application of filterApplications()">
+          <ion-item>
+            <ion-thumbnail slot="start" *ngIf="application.pet?.imageUrl">
+              <img [src]="application.pet?.imageUrl" alt="{{ application.pet?.name }}">
+            </ion-thumbnail>
+            <ion-icon *ngIf="!application.pet?.imageUrl" slot="start" name="paw" size="large"></ion-icon>
+            
+            <ion-label>
+              <h2>{{ application.pet?.name || 'Unknown Pet' }}</h2>
+              <p>
+                Applicant ID: {{ application.userId }}
+                • Applied: {{ getFormattedDate(application.createdAt) }}
+              </p>
+              <p *ngIf="application.message">
+                Message: {{ application.message | slice:0:60 }}{{ application.message.length > 60 ? '...' : '' }}
+              </p>
+              <ion-badge color="{{ getStatusColor(application.status) }}">{{ application.status | titlecase }}</ion-badge>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item-options side="end" *ngIf="application.status === 'pending'">
+            <ion-item-option color="success" (click)="updateApplicationStatus(application, 'approved')">
+              <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="updateApplicationStatus(application, 'rejected')">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </div>
+  </div>
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openPetForm()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

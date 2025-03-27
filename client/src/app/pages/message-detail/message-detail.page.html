@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/messages"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Message</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="deleteMessage()" color="danger">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="dots"></ion-spinner>
+    <p>Loading message...</p>
+  </div>
+  
+  <div *ngIf="!loading && !message" class="empty-state">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h3>Message not found</h3>
+    <p>The message you're looking for doesn't exist or has been deleted</p>
+    <ion-button routerLink="/tabs/messages" expand="block" fill="clear">
+      Back to Messages
+    </ion-button>
+  </div>
+  
+  <div *ngIf="!loading && message" class="message-container">
+    <ion-card class="message-card">
+      <ion-card-header>
+        <ion-card-subtitle>
+          {{ isMessageFromUser() ? 'Sent to' : 'From' }}: 
+          <span class="user-name">{{ isMessageFromUser() ? (message.receiver?.name || 'Unknown') : (message.sender?.name || 'Unknown') }}</span>
+        </ion-card-subtitle>
+        <ion-card-title>{{ message.subject || 'No Subject' }}</ion-card-title>
+        <div class="message-date">{{ getFormattedDate(message.createdAt) }}</div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="message-content">
+          {{ message.content }}
+        </div>
+      </ion-card-content>
+    </ion-card>
+    
+    <div class="reply-container" *ngIf="!isMessageFromUser()">
+      <h3>Reply</h3>
+      <form [formGroup]="replyForm" (ngSubmit)="reply()">
+        <ion-item>
+          <ion-textarea
+            formControlName="content"
+            placeholder="Type your reply here..."
+            rows="4"
+            auto-grow="true"
+          ></ion-textarea>
+        </ion-item>
+        
+        <div class="error-message" *ngIf="replyForm.get('content')?.invalid && replyForm.get('content')?.touched">
+          <span *ngIf="replyForm.get('content')?.errors?.required">Reply content is required</span>
+          <span *ngIf="replyForm.get('content')?.errors?.minlength">Reply must be at least 5 characters</span>
+        </div>
+        
+        <ion-button 
+          type="submit" 
+          expand="block" 
+          [disabled]="replyForm.invalid"
+          class="reply-button"
+        >
+          <ion-icon name="send" slot="start"></ion-icon>
+          Send Reply
+        </ion-button>
+      </form>
+    </div>
+  </div>
+</ion-content>
