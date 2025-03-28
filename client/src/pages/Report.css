@@ -1,0 +1,17 @@
+.report-subtitle{
+    padding: 10px;
+    text-align: left;
+    font-size: 24px;
+    display: flex;
+    text-align: center;
+    font-size: 18px;
+    color: grey;
+}
+.report-title{
+    text-align: center;
+    font-size: 24px;
+    display: flex;
+    font-size: 20px;
+    color: white;
+    justify-content: center;
+}

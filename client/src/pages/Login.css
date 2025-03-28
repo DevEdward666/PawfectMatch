@@ -1,0 +1,12 @@
+.login-logo {
+    text-align: center;
+    margin: 40px 0;
+  }
+  
+  .login-logo img {
+    max-width: 150px;
+  }
+  
+  form {
+    margin-bottom: 20px;
+  }
