@@ -1,0 +1,146 @@
+.pet-image-container {
+    position: relative;
+    height: 280px;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .pet-detail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .pet-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+  }
+  
+  .pet-image-placeholder ion-icon {
+    font-size: 5rem;
+    color: #cccccc;
+  }
+  
+  .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  
+  .badge-container {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .status-badge {
+    text-transform: capitalize;
+    font-size: 1rem;
+    padding: 8px 12px;
+  }
+  
+  .pet-content-container {
+    padding: 16px;
+  }
+  
+  .pet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  
+  .pet-title {
+    flex: 1;
+  }
+  
+  .pet-title h1 {
+    margin: 0 0 8px 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+  
+  .pet-subtitle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .adoption-button-container {
+    margin-left: 16px;
+  }
+  
+  .pet-description {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    color: var(--ion-color-dark);
+  }
+  
+  .pet-details-grid {
+    margin-top: 16px;
+  }
+  
+  .detail-item {
+    margin-bottom: 16px;
+  }
+  
+  .detail-label {
+    font-size: 0.85rem;
+    color: var(--ion-color-medium);
+    margin-bottom: 4px;
+  }
+  
+  .detail-value {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .status-value {
+    display: flex;
+    align-items: center;
+  }
+  
+  .adoption-button-container-footer {
+    margin-top: 20px;
+  }
+  
+  .error-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    text-align: center;
+    height: 100%;
+  }
+  
+  .adoption-form {
+    padding: 16px;
+  }
+  
+  .adoption-form h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+  
+  .adoption-form p {
+    color: var(--ion-color-medium);
+    margin-bottom: 20px;
+  }
+  
+  .adoption-form-buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
