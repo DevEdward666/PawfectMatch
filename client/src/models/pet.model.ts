@@ -20,6 +20,7 @@ export interface PetForm {
   gender?: string;
   description?: string;
   status?: 'available' | 'adopted' | 'pending';
+  image?: File;
 }
 
 export interface AdoptionApplication {

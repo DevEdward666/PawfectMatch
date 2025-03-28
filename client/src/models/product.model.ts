@@ -16,4 +16,5 @@ export interface ProductForm {
   price: number;
   category: 'food' | 'toys' | 'accessories' | 'grooming' | 'other';
   stock: number;
+  image?: File;
 }
