@@ -25,7 +25,6 @@ import {
 import {
   person,
   trash,
-  reply,
   arrowBack,
   send,
   close,
@@ -37,7 +36,7 @@ import { useMessages } from '../contexts/MessageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { MessageForm } from '../models/message.model';
 import { Redirect } from 'react-router-dom';
-
+import "./MessageDetail.css"
 interface MessageDetailParams {
   id: string;
 }
@@ -60,17 +59,17 @@ const MessageDetail: React.FC = () => {
   const [replyMessage, setReplyMessage] = useState('');
   const [showError, setShowError] = useState(false);
   
-  // If user is not logged in, redirect to login
-  if (!isLoggedIn()) {
-    return <Redirect to="/login" />;
-  }
-  
   // Load message when component mounts
   useEffect(() => {
     if (id) {
       fetchMessageById(parseInt(id));
     }
   }, [id]);
+  // If user is not logged in, redirect to login
+  if (!isLoggedIn()) {
+    return <Redirect to="/login" />;
+  }
+  
   
   const handleDeleteClick = () => {
     setShowDeleteAlert(true);
@@ -269,7 +268,7 @@ const MessageDetail: React.FC = () => {
             onClick={handleOpenReplyModal}
             disabled={isCurrentUserSender()}
           >
-            <IonIcon slot="start" icon={reply} />
+            <IonIcon slot="start" icon={arrowBack} />
             Reply
           </IonButton>
         </IonToolbar>
@@ -367,142 +366,6 @@ const MessageDetail: React.FC = () => {
         buttons={['OK']}
       />
       
-      <style jsx>{`
-        .message-card {
-          margin: 0;
-          box-shadow: none;
-          border-radius: 0;
-        }
-        
-        .message-header {
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          margin-bottom: 16px;
-        }
-        
-        .sender-info {
-          display: flex;
-          align-items: center;
-        }
-        
-        .sender-avatar {
-          margin-right: 12px;
-          width: 40px;
-          height: 40px;
-        }
-        
-        .avatar-text {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: var(--ion-color-petprimary);
-          color: white;
-          font-weight: bold;
-          font-size: 1.2rem;
-        }
-        
-        .sender-details {
-          display: flex;
-          flex-direction: column;
-        }
-        
-        .sender-name {
-          margin: 0;
-          font-size: 1rem;
-          font-weight: 600;
-        }
-        
-        .message-meta {
-          display: flex;
-          align-items: center;
-          color: var(--ion-color-medium);
-          font-size: 0.8rem;
-          margin-top: 2px;
-        }
-        
-        .message-meta ion-icon {
-          margin-right: 4px;
-        }
-        
-        .to-text {
-          margin-left: 4px;
-        }
-        
-        .message-date {
-          display: flex;
-          align-items: center;
-          color: var(--ion-color-medium);
-          font-size: 0.8rem;
-        }
-        
-        .message-date ion-icon {
-          margin-right: 4px;
-        }
-        
-        .message-divider {
-          height: 1px;
-          background-color: var(--ion-color-light-shade);
-          margin: 12px 0;
-        }
-        
-        .message-subject {
-          font-size: 1.2rem;
-          font-weight: 600;
-          margin-bottom: 16px;
-          color: var(--ion-color-dark);
-        }
-        
-        .message-body {
-          font-size: 1rem;
-          line-height: 1.5;
-          color: var(--ion-color-dark);
-        }
-        
-        .message-body p {
-          margin: 0 0 12px 0;
-        }
-        
-        .error-container {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          padding: 40px 20px;
-          text-align: center;
-          height: 100%;
-        }
-        
-        .reply-divider {
-          height: 1px;
-          background-color: var(--ion-color-light-shade);
-          margin: 16px 0;
-        }
-        
-        .original-message {
-          padding: 0 16px;
-        }
-        
-        .original-header {
-          margin-bottom: 8px;
-          font-size: 0.9rem;
-        }
-        
-        .original-content {
-          font-size: 0.9rem;
-          color: var(--ion-color-medium);
-        }
-        
-        .original-content p {
-          margin: 0 0 6px 0;
-        }
-        
-        .reply-textarea {
-          margin: 0 10px;
-        }
-      `}</style>
     </IonPage>
   );
 };

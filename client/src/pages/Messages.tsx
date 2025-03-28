@@ -51,7 +51,7 @@ import { useMessages } from '../contexts/MessageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { MessageForm } from '../models/message.model';
 import { Redirect } from 'react-router-dom';
-
+import "./Messages.css"
 const Messages: React.FC = () => {
   const { 
     inboxMessages, 
@@ -79,12 +79,6 @@ const Messages: React.FC = () => {
     subject: '',
     content: ''
   });
-  
-  // If user is not logged in, redirect to login
-  if (!isLoggedIn()) {
-    return <Redirect to="/login" />;
-  }
-  
   // Load messages when component mounts
   useEffect(() => {
     fetchMessages();
@@ -101,11 +95,11 @@ const Messages: React.FC = () => {
         (message.subject && message.subject.toLowerCase().includes(searchText.toLowerCase())) ||
         message.content.toLowerCase().includes(searchText.toLowerCase()) ||
         (activeSegment === 'inbox' && message.sender && 
-          (message.sender.username.toLowerCase().includes(searchText.toLowerCase()) || 
+          (message.sender.username?.toLowerCase().includes(searchText.toLowerCase()) || 
           (message.sender.fullName && message.sender.fullName.toLowerCase().includes(searchText.toLowerCase()))
         )) ||
         (activeSegment === 'sent' && message.receiver && 
-          (message.receiver.username.toLowerCase().includes(searchText.toLowerCase()) || 
+          (message.receiver.username?.toLowerCase().includes(searchText.toLowerCase()) || 
           (message.receiver.fullName && message.receiver.fullName.toLowerCase().includes(searchText.toLowerCase()))
         ))
       );
@@ -113,6 +107,12 @@ const Messages: React.FC = () => {
       setFilteredMessages(filtered);
     }
   }, [searchText, inboxMessages, sentMessages, activeSegment]);
+  
+  // If user is not logged in, redirect to login
+  if (!isLoggedIn()) {
+    return <Redirect to="/login" />;
+  }
+  
   
   const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
     fetchMessages().then(() => {
@@ -452,130 +452,6 @@ const Messages: React.FC = () => {
         />
       </IonContent>
       
-      <style jsx>{`
-        .message-badge {
-          position: absolute;
-          top: 4px;
-          right: 4px;
-          font-size: 10px;
-          padding: 2px 4px;
-          min-width: 16px;
-          min-height: 16px;
-          border-radius: 8px;
-        }
-        
-        .message-content {
-          width: 100%;
-          overflow: hidden;
-        }
-        
-        .message-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-        }
-        
-        .message-from {
-          font-weight: 600;
-          color: var(--ion-color-dark);
-          font-size: 0.95rem;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 70%;
-        }
-        
-        .message-date {
-          white-space: nowrap;
-          font-size: 0.8rem;
-        }
-        
-        .message-subject {
-          display: flex;
-          align-items: center;
-          font-weight: 500;
-          margin-top: 4px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          color: var(--ion-color-dark);
-        }
-        
-        .message-preview {
-          margin-top: 4px;
-          color: var(--ion-color-medium);
-          font-size: 0.85rem;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        
-        .unread-message .message-from {
-          font-weight: 700;
-          color: var(--ion-color-petprimary);
-        }
-        
-        .unread-message .message-subject {
-          font-weight: 600;
-        }
-        
-        .unread-dot {
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          background-color: var(--ion-color-danger);
-          margin-right: 8px;
-          flex-shrink: 0;
-        }
-        
-        .avatar-text {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: var(--ion-color-petprimary);
-          color: white;
-          font-weight: bold;
-          font-size: 1.2rem;
-        }
-        
-        .empty-state {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          padding: 40px 20px;
-          text-align: center;
-          height: 100%;
-        }
-        
-        .empty-state ion-icon {
-          font-size: 5rem;
-          margin-bottom: 16px;
-        }
-        
-        .empty-state h5 {
-          margin: 0 0 8px 0;
-          font-size: 1.1rem;
-        }
-        
-        .empty-state p {
-          margin: 0 0 20px 0;
-          font-size: 0.9rem;
-        }
-        
-        .error-container {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          padding: 40px 20px;
-          text-align: center;
-          height: 100%;
-        }
-      `}</style>
     </IonPage>
   );
 };

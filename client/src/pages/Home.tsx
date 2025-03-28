@@ -15,8 +15,6 @@ import {
   IonGrid,
   IonRow,
   IonCol,
-  IonSlides,
-  IonSlide,
   IonImg,
   IonText,
   IonSpinner,
@@ -36,7 +34,7 @@ import {
 import { usePets } from '../contexts/PetContext';
 import { useProducts } from '../contexts/ProductContext';
 import { useAuth } from '../contexts/AuthContext';
-
+import { Swiper, SwiperSlide } from 'swiper/react';
 // Slide options
 const slideOpts = {
   initialSlide: 0,
@@ -170,9 +168,9 @@ const Home: React.FC = () => {
             <IonSpinner name="crescent" />
           </div>
         ) : recentPets.length > 0 ? (
-          <IonSlides options={slideOpts} className="pet-slides">
+          <Swiper className="pet-slides" {...slideOpts}>
             {recentPets.map((pet) => (
-              <IonSlide key={pet.id}>
+              <SwiperSlide key={pet.id}>
                 <IonCard routerLink={`/pets/${pet.id}`} className="pet-card">
                   <div className="card-image-container">
                     {pet.imageUrl ? (
@@ -205,9 +203,9 @@ const Home: React.FC = () => {
                     </div>
                   </IonCardContent>
                 </IonCard>
-              </IonSlide>
+              </SwiperSlide>
             ))}
-          </IonSlides>
+          </Swiper>
         ) : (
           <div className="empty-state">
             <IonIcon icon={paw} color="medium" />
@@ -229,9 +227,9 @@ const Home: React.FC = () => {
             <IonSpinner name="crescent" />
           </div>
         ) : featuredProducts.length > 0 ? (
-          <IonSlides options={slideOpts} className="product-slides">
+          <Swiper className="product-slides" {...slideOpts}>
             {featuredProducts.map((product) => (
-              <IonSlide key={product.id}>
+              <SwiperSlide key={product.id}>
                 <IonCard routerLink={`/products/${product.id}`} className="product-card">
                   <div className="card-image-container">
                     {product.imageUrl ? (
@@ -264,9 +262,9 @@ const Home: React.FC = () => {
                     </div>
                   </IonCardContent>
                 </IonCard>
-              </IonSlide>
+              </SwiperSlide>
             ))}
-          </IonSlides>
+          </Swiper>
         ) : (
           <div className="empty-state">
             <IonIcon icon={basket} color="medium" />
@@ -299,177 +297,6 @@ const Home: React.FC = () => {
           </IonCardContent>
         </IonCard>
       </IonContent>
-      
-      <style jsx>{`
-        /* CSS Styles */
-        .hero-banner {
-          margin-bottom: 20px;
-        }
-        
-        .hero-card {
-          position: relative;
-          margin: 0;
-          width: 100%;
-          border-radius: 0;
-        }
-        
-        .hero-card img {
-          width: 100%;
-          height: 220px;
-          object-fit: cover;
-          opacity: 0.7;
-        }
-        
-        .hero-card-content {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-          padding: 20px;
-          background: rgba(0, 0, 0, 0.4);
-          color: white;
-        }
-        
-        .hero-card-content h1 {
-          margin-bottom: 8px;
-          font-size: 24px;
-          font-weight: bold;
-        }
-        
-        .hero-card-content p {
-          margin-bottom: 20px;
-          font-size: 16px;
-        }
-        
-        .section-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 0 16px;
-          margin: 20px 0 10px;
-        }
-        
-        .section-header h2 {
-          font-size: 18px;
-          font-weight: 600;
-          margin: 0;
-        }
-        
-        .pet-card, .product-card {
-          width: 100%;
-          margin: 0;
-          border-radius: 12px;
-          overflow: hidden;
-        }
-        
-        .card-image-container {
-          position: relative;
-          height: 160px;
-          overflow: hidden;
-        }
-        
-        .pet-image, .product-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        
-        .pet-image-placeholder, .product-image-placeholder {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: #f4f4f4;
-        }
-        
-        .pet-image-placeholder ion-icon, .product-image-placeholder ion-icon {
-          font-size: 3rem;
-          color: #cccccc;
-        }
-        
-        .pet-badge, .price-badge {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-          margin: 0;
-        }
-        
-        .pet-slides, .product-slides {
-          padding: 10px 0 20px 10px;
-        }
-        
-        .card-footer {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        
-        .favorite-icon {
-          font-size: 24px;
-          color: var(--ion-color-medium);
-        }
-        
-        .loading-container, .empty-state {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          padding: 40px 20px;
-          text-align: center;
-        }
-        
-        .empty-state ion-icon {
-          font-size: 3rem;
-          margin-bottom: 16px;
-        }
-        
-        .quick-link-button {
-          height: 80px;
-          margin: 0;
-        }
-        
-        .button-inner {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 100%;
-        }
-        
-        .button-inner ion-icon {
-          font-size: 24px;
-          margin-bottom: 5px;
-        }
-        
-        .report-card {
-          margin: 20px 16px;
-          border-radius: 12px;
-          background-color: #fff9fc;
-        }
-        
-        .report-image-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100%;
-        }
-        
-        .report-image-container ion-icon {
-          font-size: 4rem;
-        }
-        
-        .report-image-col {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      `}</style>
     </IonPage>
   );
 };

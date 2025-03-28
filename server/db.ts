@@ -9,5 +9,5 @@ if (!process.env.DATABASE_URL) {
 }
 
 // Note: Pool still uses connectionString as the parameter name
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+export const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
 export const db = drizzle(pool, { schema });

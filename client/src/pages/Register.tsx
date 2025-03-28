@@ -29,8 +29,8 @@ import {
   logIn
 } from 'ionicons/icons';
 import { useAuth } from '../contexts/AuthContext';
-import { Redirect } from 'react-router-dom';
-
+import "./Register.css"
+import { Redirect } from 'react-router';
 const Register: React.FC = () => {
   const { register, isLoading, error, isLoggedIn } = useAuth();
   
@@ -267,44 +267,6 @@ const Register: React.FC = () => {
         
         <IonLoading isOpen={isLoading} message="Creating account..." />
       </IonContent>
-      
-      <style jsx>{`
-        .register-header {
-          margin: 20px 0;
-        }
-        
-        .register-header h2 {
-          color: var(--ion-color-petprimary);
-          margin-bottom: 10px;
-        }
-        
-        .register-header p {
-          color: var(--ion-color-medium);
-        }
-        
-        .section-divider {
-          display: flex;
-          align-items: center;
-          margin: 20px 0;
-          color: var(--ion-color-medium);
-        }
-        
-        .section-divider::before,
-        .section-divider::after {
-          content: "";
-          flex: 1;
-          border-bottom: 1px solid var(--ion-color-light-shade);
-        }
-        
-        .section-divider span {
-          padding: 0 10px;
-          font-size: 14px;
-        }
-        
-        form {
-          margin-bottom: 20px;
-        }
-      `}</style>
     </IonPage>
   );
 };

@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 // Base API configuration
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
 // Create axios instance
 const api = axios.create({
@@ -13,7 +13,7 @@ const api = axios.create({
 
 // Request interceptor for API calls
 api.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: any) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers = config.headers || {};
@@ -42,8 +42,8 @@ api.interceptors.response.use(
       (error.response.data as any).message === 'Token expired' &&
       !originalRequest?.headers?._retry
     ) {
-      originalRequest.headers = originalRequest.headers || {};
-      originalRequest.headers._retry = true;
+      // originalRequest.headers = originalRequest.headers || {};
+      // originalRequest.headers._retry = true;
       
       // Here you could implement token refresh logic, but for now we just logout
       localStorage.removeItem('token');

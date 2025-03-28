@@ -5,7 +5,7 @@ const { drizzle } = require('drizzle-orm/node-postgres');
 const { eq, and } = require('drizzle-orm');
 
 // Database connection
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
 const db = drizzle(pool);
 
 // Get schema

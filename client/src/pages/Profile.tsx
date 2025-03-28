@@ -44,7 +44,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { usePets } from '../contexts/PetContext';
 import { useReports } from '../contexts/ReportContext';
 import { Redirect } from 'react-router-dom';
-
+import "./Profile.css"
 const Profile: React.FC = () => {
   const { user, isLoading: authLoading, error: authError, logout, updateProfile, changePassword, isLoggedIn } = useAuth();
   const { adoptionApplications, fetchUserAdoptionApplications, isLoading: petsLoading } = usePets();
@@ -75,11 +75,6 @@ const Profile: React.FC = () => {
     password: false
   });
   
-  // If user is not logged in, redirect to login
-  if (!isLoggedIn()) {
-    return <Redirect to="/login" />;
-  }
-  
   // Update profile form when user data changes
   useEffect(() => {
     if (user) {
@@ -99,6 +94,11 @@ const Profile: React.FC = () => {
       fetchUserReports();
     }
   }, []);
+  // If user is not logged in, redirect to login
+  if (!isLoggedIn()) {
+    return <Redirect to="/login" />;
+  }
+  
   
   const handleProfileChange = (e: CustomEvent) => {
     const { name, value } = e.detail;
@@ -165,12 +165,11 @@ const Profile: React.FC = () => {
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await updateProfile(profileData);
-    if (result) {
+
       setUpdateSuccess({
         ...updateSuccess,
         profile: true
       });
-    }
   };
   
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -185,7 +184,6 @@ const Profile: React.FC = () => {
       newPassword: passwordData.newPassword
     });
     
-    if (result) {
       setUpdateSuccess({
         ...updateSuccess,
         password: true
@@ -195,7 +193,6 @@ const Profile: React.FC = () => {
         newPassword: '',
         confirmPassword: ''
       });
-    }
   };
   
   const handleLogout = () => {
@@ -529,172 +526,7 @@ const Profile: React.FC = () => {
           </div>
         )}
       </IonContent>
-      
-      <style jsx>{`
-        .profile-header {
-          display: flex;
-          align-items: center;
-          padding: 10px 0;
-        }
-        
-        .profile-avatar {
-          width: 80px;
-          height: 80px;
-          margin-right: 20px;
-        }
-        
-        .profile-details {
-          flex: 1;
-        }
-        
-        .profile-details h2 {
-          margin: 0 0 5px 0;
-          font-size: 1.2rem;
-          font-weight: 600;
-        }
-        
-        .profile-details p {
-          margin: 0 0 10px 0;
-          color: var(--ion-color-medium);
-        }
-        
-        .profile-stat {
-          text-align: center;
-          padding: 10px;
-        }
-        
-        .stat-number {
-          font-size: 1.5rem;
-          font-weight: bold;
-          color: var(--ion-color-petprimary);
-        }
-        
-        .stat-label {
-          font-size: 0.8rem;
-          color: var(--ion-color-medium);
-        }
-        
-        .section-header {
-          margin: 20px 0 10px;
-        }
-        
-        .section-header h2 {
-          margin: 0;
-          font-size: 1.2rem;
-          font-weight: 500;
-        }
-        
-        .loading-container, .empty-state {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          padding: 40px 20px;
-          text-align: center;
-        }
-        
-        .empty-state ion-icon {
-          font-size: 3rem;
-          margin-bottom: 16px;
-        }
-        
-        .application-item {
-          display: flex;
-          flex-direction: column;
-        }
-        
-        .application-pet-info {
-          display: flex;
-          margin-bottom: 10px;
-        }
-        
-        .application-pet-image {
-          width: 60px;
-          height: 60px;
-          border-radius: 8px;
-          overflow: hidden;
-          margin-right: 15px;
-        }
-        
-        .application-pet-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        
-        .placeholder-image {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: #f4f4f4;
-        }
-        
-        .application-pet-details {
-          flex: 1;
-        }
-        
-        .application-pet-details h3 {
-          margin: 0 0 5px 0;
-          font-size: 1rem;
-        }
-        
-        .application-pet-details p {
-          margin: 0 0 10px 0;
-          color: var(--ion-color-medium);
-          font-size: 0.9rem;
-        }
-        
-        .application-date {
-          display: flex;
-          justify-content: flex-end;
-        }
-        
-        .report-item {
-          display: flex;
-        }
-        
-        .report-content {
-          flex: 1;
-          margin-right: 15px;
-        }
-        
-        .report-content h3 {
-          margin: 0 0 5px 0;
-          font-size: 1rem;
-        }
-        
-        .report-description {
-          margin: 0 0 10px 0;
-          color: var(--ion-color-dark);
-          font-size: 0.9rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-        }
-        
-        .report-meta {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        
-        .report-image {
-          width: 70px;
-          height: 70px;
-          border-radius: 8px;
-          overflow: hidden;
-        }
-        
-        .report-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      `}</style>
+     
     </IonPage>
   );
 };

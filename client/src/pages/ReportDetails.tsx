@@ -241,7 +241,7 @@ const ReportDetail: React.FC = () => {
               
               {currentReport.responses && currentReport.responses.length > 0 ? (
                 <IonList>
-                  {currentReport.responses.map(response => (
+                  {currentReport.responses?.map(response => (
                     <IonCard key={response.id} className="ion-margin-vertical">
                       <IonCardContent>
                         <div style={{ display: 'flex', alignItems: 'flex-start' }}>
