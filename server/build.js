@@ -12,7 +12,7 @@ dotenv.config();
 async function initializeDatabase() {
   console.log('Checking database connection...');
   try {
-    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
     await pool.query('SELECT NOW()');
     console.log('Database connection successful');
     

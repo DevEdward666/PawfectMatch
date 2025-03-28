@@ -9,7 +9,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 // Create a database connection pool
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
 const db = drizzle(pool, { schema });
 
 module.exports = { pool, db };

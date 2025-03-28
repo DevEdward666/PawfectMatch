@@ -22,7 +22,7 @@ import {
 import { logIn, mail, lockClosed, person } from 'ionicons/icons';
 import { useAuth } from '../contexts/AuthContext';
 import { Redirect } from 'react-router-dom';
-
+import "./Login.css"
 const Login: React.FC = () => {
   const { login, isLoading, error, isLoggedIn } = useAuth();
   
@@ -127,20 +127,6 @@ const Login: React.FC = () => {
         <IonLoading isOpen={isLoading} message="Please wait..." />
       </IonContent>
       
-      <style jsx>{`
-        .login-logo {
-          text-align: center;
-          margin: 40px 0;
-        }
-        
-        .login-logo img {
-          max-width: 150px;
-        }
-        
-        form {
-          margin-bottom: 20px;
-        }
-      `}</style>
     </IonPage>
   );
 };

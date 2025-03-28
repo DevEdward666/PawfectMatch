@@ -6,7 +6,7 @@ require('dotenv').config();
 
 // Create Express app
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
@@ -18,7 +18,7 @@ const { drizzle } = require('drizzle-orm/node-postgres');
 
 // Connect to the database
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+    connectionString: process.env.DATABASE_URL + '?sslmode=require'+ '?sslmode=require'
 });
 
 // Import routes

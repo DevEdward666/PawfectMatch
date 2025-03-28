@@ -109,13 +109,13 @@ const Report: React.FC = () => {
     try {
       const photo = await takePhoto();
       if (photo) {
-        const file = await convertBlobToFile(photo.webviewPath);
+        const file = await convertBlobToFile(photo.webviewPath!);
         if (file) {
           setFormData({
             ...formData,
             image: file
           });
-          setPreviewImage(photo.webviewPath);
+          setPreviewImage(photo.webviewPath!);
         }
       }
     } catch (error) {
@@ -128,13 +128,13 @@ const Report: React.FC = () => {
       // This would be implemented with file browser, but here we'll use camera for simplicity
       const photo = await takePhoto();
       if (photo) {
-        const file = await convertBlobToFile(photo.webviewPath);
+        const file = await convertBlobToFile(photo.webviewPath!);
         if (file) {
           setFormData({
             ...formData,
             image: file
           });
-          setPreviewImage(photo.webviewPath);
+          setPreviewImage(photo.webviewPath!);
         }
       }
     } catch (error) {

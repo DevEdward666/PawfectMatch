@@ -5,7 +5,7 @@ const { drizzle } = require('drizzle-orm/node-postgres');
 const { eq } = require('drizzle-orm');
 
 // Database connection
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
 const db = drizzle(pool);
 
 // Get pets schema (importing it directly since we don't have a compiled JS version)

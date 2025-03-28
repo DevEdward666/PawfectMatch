@@ -6,7 +6,7 @@ const schema = require('../shared/schema');
 const bcrypt = require('bcrypt');
 
 // Initialize database connection
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
 const db = drizzle(pool, { schema });
 
 // Function to check if a table exists
