@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ToastController } from '@ionic/react';
+
+interface ToastOptions {
+  message: string;
+  duration?: number;
+  position?: 'top' | 'bottom' | 'middle';
+  color?: 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'danger' | 'light' | 'medium' | 'dark';
+}
 
 @Injectable({
   providedIn: 'root'
@@ -7,36 +14,45 @@ import { ToastController } from '@ionic/angular';
 export class ToastService {
   constructor(private toastController: ToastController) {}
 
-  async presentToast(message: string, color: string = 'primary', duration: number = 2000): Promise<void> {
+  async present(options: ToastOptions): Promise<void> {
     const toast = await this.toastController.create({
-      message,
-      duration,
-      color,
-      position: 'bottom',
-      buttons: [
-        {
-          text: 'Close',
-          role: 'cancel'
-        }
-      ]
+      message: options.message,
+      duration: options.duration || 2000,
+      position: options.position || 'bottom',
+      color: options.color || 'dark'
     });
-    
     await toast.present();
   }
 
   async success(message: string, duration: number = 2000): Promise<void> {
-    await this.presentToast(message, 'success', duration);
+    await this.present({
+      message,
+      duration,
+      color: 'success'
+    });
   }
 
   async error(message: string, duration: number = 3000): Promise<void> {
-    await this.presentToast(message, 'danger', duration);
-  }
-
-  async info(message: string, duration: number = 2000): Promise<void> {
-    await this.presentToast(message, 'primary', duration);
+    await this.present({
+      message,
+      duration,
+      color: 'danger'
+    });
   }
 
   async warning(message: string, duration: number = 2500): Promise<void> {
-    await this.presentToast(message, 'warning', duration);
+    await this.present({
+      message,
+      duration,
+      color: 'warning'
+    });
+  }
+
+  async info(message: string, duration: number = 2000): Promise<void> {
+    await this.present({
+      message,
+      duration,
+      color: 'primary'
+    });
   }
 }

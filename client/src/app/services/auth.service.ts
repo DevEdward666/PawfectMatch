@@ -1,99 +1,111 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
-import { ApiService } from './api.service';
-import { User, UserLogin, UserRegister, AuthResponse } from '../models/user.model';
-import { Router } from '@angular/router';
-import { Storage } from '@capacitor/storage';
+import { map, tap, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { 
+  User, 
+  LoginForm, 
+  RegisterForm, 
+  AuthResponse, 
+  ChangePasswordForm, 
+  UserProfile 
+} from '../models/user.model';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser$: Observable<User | null>;
-  private tokenKey = 'auth_token';
-  private userKey = 'current_user';
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
+  
+  private apiUrl = `${environment.apiUrl}/users`;
+  private token: string | null = null;
 
   constructor(
-    private apiService: ApiService,
-    private router: Router
+    private http: HttpClient,
+    private storageService: StorageService
   ) {
-    this.currentUserSubject = new BehaviorSubject<User | null>(null);
-    this.currentUser$ = this.currentUserSubject.asObservable();
-    this.loadUserFromStorage();
+    this.loadStoredUser();
   }
 
-  public get currentUserValue(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  async loadUserFromStorage(): Promise<void> {
-    try {
-      const { value: userJson } = await Storage.get({ key: this.userKey });
-      if (userJson) {
-        const user = JSON.parse(userJson);
-        this.currentUserSubject.next(user);
-      }
-    } catch (error) {
-      console.error('Error loading user from storage:', error);
+  private loadStoredUser(): void {
+    const userData = this.storageService.getItem('currentUser');
+    const storedToken = this.storageService.getItem('token');
+    
+    if (userData && storedToken) {
+      this.currentUserSubject.next(JSON.parse(userData));
+      this.token = storedToken;
     }
   }
 
-  register(user: UserRegister): Observable<AuthResponse> {
-    return this.apiService.post<AuthResponse>('users/register', user).pipe(
-      tap(async (response) => {
-        if (response.success && response.data) {
-          await this.storeUserAndToken(response.data.user, response.data.token);
-        }
+  getToken(): string | null {
+    return this.token;
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.token && !!this.currentUserSubject.value;
+  }
+
+  isAdmin(): boolean {
+    const user = this.currentUserSubject.value;
+    return !!user && user.role === 'admin';
+  }
+
+  login(credentials: LoginForm): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(response => {
+        this.storeUserData(response);
       })
     );
   }
 
-  login(credentials: UserLogin): Observable<AuthResponse> {
-    return this.apiService.post<AuthResponse>('users/login', credentials).pipe(
-      tap(async (response) => {
-        if (response.success && response.data) {
-          await this.storeUserAndToken(response.data.user, response.data.token);
-        }
+  register(userData: RegisterForm): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
+      tap(response => {
+        this.storeUserData(response);
       })
     );
   }
 
-  async storeUserAndToken(user: User, token: string): Promise<void> {
-    this.currentUserSubject.next(user);
-    await Storage.set({ key: this.tokenKey, value: token });
-    await Storage.set({ key: this.userKey, value: JSON.stringify(user) });
-  }
-
-  async getToken(): Promise<string | null> {
-    const { value } = await Storage.get({ key: this.tokenKey });
-    return value;
-  }
-
-  async logout(): Promise<void> {
-    await Storage.remove({ key: this.tokenKey });
-    await Storage.remove({ key: this.userKey });
+  logout(): Observable<any> {
+    this.token = null;
     this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
+    this.storageService.removeItem('currentUser');
+    this.storageService.removeItem('token');
+    return of(true);
   }
 
-  isAuthenticated(): Observable<boolean> {
-    return this.getToken().then(token => {
-      return of(!!token);
-    }).catch(() => {
-      return of(false);
-    });
+  getUserProfile(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/profile`);
   }
 
-  isAdmin(): Observable<boolean> {
-    return this.currentUser$.pipe(
-      map(user => user?.role === 'admin')
+  updateProfile(profileData: UserProfile): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/profile`, profileData).pipe(
+      tap(updatedUser => {
+        const currentUser = this.currentUserSubject.value;
+        if (currentUser) {
+          const mergedUser = { ...currentUser, ...updatedUser };
+          this.currentUserSubject.next(mergedUser);
+          this.storageService.setItem('currentUser', JSON.stringify(mergedUser));
+        }
+      })
     );
   }
 
-  updateUserState(user: User): void {
-    this.currentUserSubject.next(user);
-    Storage.set({ key: this.userKey, value: JSON.stringify(user) });
+  changePassword(passwordData: ChangePasswordForm): Observable<any> {
+    return this.http.put(`${this.apiUrl}/change-password`, passwordData);
+  }
+
+  private storeUserData(authResponse: AuthResponse): void {
+    this.token = authResponse.token;
+    this.currentUserSubject.next(authResponse.user);
+    this.storageService.setItem('currentUser', JSON.stringify(authResponse.user));
+    this.storageService.setItem('token', authResponse.token);
   }
 }

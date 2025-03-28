@@ -5,31 +5,31 @@ export interface Report {
   userId: number;
   title: string;
   description: string;
+  status: 'pending' | 'reviewing' | 'resolved';
   location?: string;
   imageUrl?: string;
-  status: 'pending' | 'reviewing' | 'resolved';
   createdAt: string;
   updatedAt: string;
-  reporter?: Partial<User>;
+  user?: Partial<User>;
   responses?: ReportResponse[];
-  responseCount?: number;
 }
 
 export interface ReportForm {
   title: string;
   description: string;
   location?: string;
+  image?: File;
 }
 
 export interface ReportResponse {
   id: number;
   reportId: number;
-  adminId: number;
-  response: string;
+  userId: number;
+  content: string;
   createdAt: string;
-  admin?: Partial<User>;
+  user?: Partial<User>;
 }
 
 export interface ReportResponseForm {
-  response: string;
+  content: string;
 }

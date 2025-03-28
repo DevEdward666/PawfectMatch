@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router
+} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
 
@@ -18,25 +21,29 @@ export class AdminGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> {
-    return this.authService.isAuthenticated().pipe(
-      switchMap(isAuthenticated => {
-        if (isAuthenticated) {
-          return this.authService.isAdmin();
-        }
-        
-        this.toastService.info('Please login to access this page');
-        this.router.navigate(['/login'], { 
-          queryParams: { returnUrl: state.url } 
-        });
-        return of(false);
-      }),
-      tap(isAdmin => {
-        if (!isAdmin) {
-          this.toastService.error('Only administrators can access this area');
-          this.router.navigate(['/']);
-        }
-      })
-    );
+  ): boolean {
+    if (this.authService.isLoggedIn() && this.authService.isAdmin()) {
+      return true;
+    }
+
+    // If logged in but not admin
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/tabs/home']);
+      this.toastService.present({
+        message: 'You do not have permission to access this page.',
+        duration: 3000,
+        color: 'danger'
+      });
+      return false;
+    }
+
+    // Not logged in so redirect to login page
+    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    this.toastService.present({
+      message: 'Please log in to access this page',
+      duration: 3000,
+      color: 'warning'
+    });
+    return false;
   }
 }

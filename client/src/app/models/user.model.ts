@@ -1,7 +1,9 @@
 export interface User {
   id: number;
-  name: string;
+  username: string;
   email: string;
+  firstName?: string;
+  lastName?: string;
   role: 'admin' | 'user';
   phone?: string;
   address?: string;
@@ -9,35 +11,33 @@ export interface User {
   updatedAt: string;
 }
 
-export interface UserLogin {
-  email: string;
-  password: string;
-}
-
-export interface UserRegister {
-  name: string;
-  email: string;
-  password: string;
-  phone?: string;
-  address?: string;
-}
-
 export interface UserProfile {
-  name: string;
+  firstName?: string;
+  lastName?: string;
   phone?: string;
   address?: string;
 }
 
-export interface PasswordChange {
+export interface RegisterForm {
+  username: string;
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface LoginForm {
+  email: string;
+  password: string;
+}
+
+export interface ChangePasswordForm {
   currentPassword: string;
   newPassword: string;
+  confirmPassword: string;
 }
 
 export interface AuthResponse {
-  success: boolean;
-  message: string;
-  data?: {
-    user: User;
-    token: string;
-  };
+  user: User;
+  token: string;
 }

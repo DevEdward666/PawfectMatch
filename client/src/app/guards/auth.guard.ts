@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { tap, switchMap } from 'rxjs/operators';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router
+} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
 
@@ -18,19 +21,18 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> {
-    return this.authService.isAuthenticated().pipe(
-      switchMap(isAuthenticated => {
-        if (isAuthenticated) {
-          return of(true);
-        } else {
-          this.toastService.info('Please login to access this page');
-          this.router.navigate(['/login'], { 
-            queryParams: { returnUrl: state.url } 
-          });
-          return of(false);
-        }
-      })
-    );
+  ): boolean {
+    if (this.authService.isLoggedIn()) {
+      return true;
+    }
+
+    // Not logged in so redirect to login page
+    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    this.toastService.present({
+      message: 'Please log in to access this page',
+      duration: 3000,
+      color: 'warning'
+    });
+    return false;
   }
 }
