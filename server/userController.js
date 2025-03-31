@@ -19,7 +19,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'pet-shop-secret-key';
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password, phone, address } = req.body;
-    
+
     // Validate required fields
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -351,7 +351,7 @@ exports.getUserById = async (req, res) => {
     if (isNaN(userId)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid user ID'
+        message: 'Invalid user ID 2'
       });
     }
     

@@ -15,7 +15,7 @@ interface PetContextProps {
   updatePet: (id: number, petData: PetForm) => Promise<void>;
   deletePet: (id: number) => Promise<void>;
   applyForAdoption: (petId: number, applicationData: AdoptionApplicationForm) => Promise<void>;
-  fetchUserAdoptionApplications: () => Promise<void>;
+  fetchUserAdoptionApplications: (userId:number) => Promise<void>;
   fetchAllAdoptionApplications: () => Promise<void>;
   updateAdoptionApplication: (id: number, status: string) => Promise<void>;
 }
@@ -45,7 +45,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setError(null);
       
       const response = await api.get('/pets');
-      setPets(response.data);
+      setPets(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch pets.';
       setError(errorMessage);
@@ -75,34 +75,38 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     try {
       setIsLoading(true);
       setError(null);
-      
+  
       const formData = new FormData();
       Object.entries(petData).forEach(([key, value]) => {
-        if (value !== undefined) {
-          if (key === 'image' && value instanceof File) {
-            formData.append('image', value);
+        if (value !== undefined && value !== null) {
+          if (key === "image" && value instanceof File) {
+            formData.append("image", value);
           } else {
             formData.append(key, String(value));
           }
         }
       });
-      
-      const response = await api.post('/pets', formData, {
+  
+      console.log("Sending formData:", Object.fromEntries(formData.entries())); // Debugging
+  
+      const response = await api.post("/pets/addPets", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
-      
+  
       setPets([response.data, ...pets]);
-      showToast('Pet added successfully');
+      showToast("Pet added successfully");
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Failed to create pet.';
+      console.error("Error response:", err.response);
+      const errorMessage = err.response?.data?.message || "Failed to create pet.";
       setError(errorMessage);
-      showToast(errorMessage, 'error');
+      showToast(errorMessage, "error");
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const updatePet = async (id: number, petData: PetForm) => {
     try {
@@ -187,12 +191,12 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   };
 
-  const fetchUserAdoptionApplications = async () => {
+  const fetchUserAdoptionApplications = async (userId:number) => {
     try {
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get('/adoption/user');
+      const response = await api.get(`/adoption/user/${userId}`);
       setAdoptionApplications(response.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch your adoption applications.';

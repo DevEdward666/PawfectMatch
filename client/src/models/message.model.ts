@@ -22,3 +22,13 @@ export interface MessageResponse {
   inbox: Message[];
   sent: Message[];
 }
+
+export interface AdminMessagesResponse {
+  messages: Message[];
+  pagination: {
+    totalItems: number;
+    currentPage: number;
+    itemsPerPage: number;
+    totalPages: number;
+  };
+}

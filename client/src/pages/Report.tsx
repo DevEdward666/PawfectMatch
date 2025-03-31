@@ -76,7 +76,7 @@ const Report: React.FC = () => {
   }
   
   const handleInputChange = (e: CustomEvent) => {
-    const { name, value } = e.detail;
+    const { name, value } =  e.detail.event.target;
     setFormData({
       ...formData,
       [name]: value

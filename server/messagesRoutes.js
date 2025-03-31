@@ -23,5 +23,18 @@ router.get('/:id', messagesController.getMessageById);
 
 // Delete message
 router.delete('/:id', messagesController.deleteMessage);
+// Mark message as read
+router.put('/:id/read', (req, res) => {
+    // Extract ID from params
+    const messageId = parseInt(req.params.id);
+    // In messagesController.js, update the message to isRead = true
+    // This endpoint is already called from the frontend, but was missing from routes
+    messagesController.markAsRead(req, res);
+  });
+// Admin routes - requires admin role
+// Get all messages in the system (admin only)
+router.get('/admin/all', authMiddleware.isAdmin, messagesController.getAllMessages);
 
+// Admin delete message (admin can delete any message)
+router.delete('/admin/:id', authMiddleware.isAdmin, messagesController.adminDeleteMessage);
 module.exports = router;

@@ -39,7 +39,7 @@ const Register: React.FC = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    fullName: '',
+    name: '',
     phone: '',
     address: ''
   });
@@ -55,7 +55,7 @@ const Register: React.FC = () => {
   }
   
   const handleChange = (e: CustomEvent) => {
-    const { name, value } = e.detail;
+    const { name, value } = e.detail.event.target;
     
     // Clear error when user types
     if (name === 'password' || name === 'confirmPassword') {
@@ -108,7 +108,7 @@ const Register: React.FC = () => {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-        fullName: formData.fullName,
+        name: formData.name,
         phone: formData.phone,
         address: formData.address
       };
@@ -202,8 +202,8 @@ const Register: React.FC = () => {
                   <IonIcon icon={person} slot="start" color="medium" />
                   <IonLabel position="floating">Full Name</IonLabel>
                   <IonInput
-                    name="fullName"
-                    value={formData.fullName}
+                    name="name"
+                    value={formData.name}
                     onIonChange={handleChange}
                   />
                 </IonItem>

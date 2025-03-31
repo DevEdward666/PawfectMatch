@@ -90,10 +90,11 @@ const Profile: React.FC = () => {
   // Fetch user's adoption applications and reports when component mounts
   useEffect(() => {
     if (isLoggedIn()) {
-      fetchUserAdoptionApplications();
+      console.log(user)
+      fetchUserAdoptionApplications(user?.id!);
       fetchUserReports();
     }
-  }, []);
+  }, [user]);
   // If user is not logged in, redirect to login
   if (!isLoggedIn()) {
     return <Redirect to="/login" />;

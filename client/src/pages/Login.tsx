@@ -37,7 +37,8 @@ const Login: React.FC = () => {
   }
   
   const handleChange = (e: CustomEvent) => {
-    const { name, value } = e.detail;
+    const { name, value } = e.detail.event.target;
+    console.log(e)
     setCredentials({
       ...credentials,
       [name]: value

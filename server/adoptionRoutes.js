@@ -287,7 +287,7 @@ router.put('/:id', async (req, res) => {
     // If rejected but was the only pending application, set pet back to available
     if (status === 'rejected') {
       const [pendingCount] = await db.select({
-        count: db.count()
+      count: sql`COUNT(*)`
       })
       .from(adoptionApplications)
       .where(
@@ -352,7 +352,7 @@ router.delete('/:id', async (req, res) => {
     
     // Check if there are other pending applications for this pet
     const [pendingCount] = await db.select({
-      count: db.count()
+    count: sql`COUNT(*)`
     })
     .from(adoptionApplications)
     .where(

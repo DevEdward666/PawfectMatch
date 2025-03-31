@@ -26,11 +26,11 @@ router.put('/profile', authenticate, updateUserProfile);
 router.put('/change-password', authenticate, changePassword);
 
 // Admin routes
-router.get('/', authenticate, isAdmin, getAllUsers);
-router.get('/:id', authenticate, isAdmin, getUserById);
-router.post('/', authenticate, isAdmin, createUser);
-router.put('/:id', authenticate, isAdmin, updateUser);
+router.get('/getAllUsers', authenticate, isAdmin, getAllUsers);
+router.get('/getUser/:id', authenticate, isAdmin, getUserById);
+router.post('/create', authenticate, isAdmin, createUser);
+router.put('/update/:id', authenticate, isAdmin, updateUser);
 router.put('/:id/reset-password', authenticate, isAdmin, resetUserPassword);
-router.delete('/:id', authenticate, isAdmin, deleteUser);
+router.delete('/delete/:id', authenticate, isAdmin, deleteUser);
 
 export default router;

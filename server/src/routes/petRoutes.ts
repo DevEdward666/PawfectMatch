@@ -24,7 +24,9 @@ router.post('/:id/adopt', authenticate, applyForAdoption);
 router.get('/applications/user', authenticate, getUserAdoptionApplications);
 
 // Admin routes
-router.post('/', authenticate, isAdmin, uploadImage, createPet);
+// Configure multer for file uploads
+
+router.post('/addPets', authenticate, isAdmin, uploadImage, createPet);
 router.put('/:id', authenticate, isAdmin, uploadImage, updatePet);
 router.delete('/:id', authenticate, isAdmin, deletePet);
 router.get('/applications/all', authenticate, isAdmin, getAllAdoptionApplications);

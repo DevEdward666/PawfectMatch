@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 const { drizzle } = require('drizzle-orm/node-postgres');
-const { eq, and, desc } = require('drizzle-orm');
+const { sql,eq, and, desc } = require('drizzle-orm');
 
 // Database connection
 const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
@@ -75,7 +75,7 @@ exports.getUserReports = async (req, res) => {
     const reportsWithResponseCount = await Promise.all(
       userReports.map(async (report) => {
         const [responseCount] = await db.select({
-          count: db.count()
+          count: sql`COUNT(*)`
         })
         .from(reportResponses)
         .where(eq(reportResponses.reportId, report.id));
@@ -215,7 +215,7 @@ exports.getAllReports = async (req, res) => {
     const reportsWithResponseCount = await Promise.all(
       allReports.map(async (report) => {
         const [responseCount] = await db.select({
-          count: db.count()
+          count: sql`COUNT(*)`
         })
         .from(reportResponses)
         .where(eq(reportResponses.reportId, report.id));

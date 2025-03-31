@@ -349,7 +349,7 @@ exports.getUnreadCount = async (req, res) => {
     const userId = req.user.id; // Set by auth middleware
     
     const [unreadCount] = await db.select({
-      count: db.count()
+    count: sql`COUNT(*)`
     })
     .from(messages)
     .where(
@@ -370,6 +370,203 @@ exports.getUnreadCount = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error fetching unread count',
+      error: error.message
+    });
+  }
+}
+// Admin: Get all messages in the system (requires admin role)
+exports.getAllMessages = async (req, res) => {
+  try {
+    // Verify admin role (this should be done in middleware, but double-checking here)
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied: Admin role required'
+      });
+    }
+    
+    // Get pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+    
+    // Get all messages with sender and receiver info
+    const allMessages = await db.select({
+      id: messages.id,
+      senderId: messages.senderId,
+      receiverId: messages.receiverId,
+      subject: messages.subject,
+      content: messages.content,
+      isRead: messages.isRead,
+      createdAt: messages.createdAt,
+      senderName: schema.users.username,
+      senderEmail: schema.users.email,
+      senderRole: schema.users.role
+    })
+    .from(messages)
+    .leftJoin(schema.users, eq(messages.senderId, schema.users.id))
+    .orderBy(desc(messages.createdAt))
+    .limit(limit)
+    .offset(offset);
+    
+    // Get receiver information for each message
+    const messagesWithReceivers = await Promise.all(
+      allMessages.map(async (message) => {
+        const [receiver] = await db.select({
+          id: schema.users.id,
+          username: schema.users.username,
+          email: schema.users.email,
+          role: schema.users.role
+        })
+        .from(schema.users)
+        .where(eq(schema.users.id, message.receiverId));
+        
+        return {
+          id: message.id,
+          senderId: message.senderId,
+          receiverId: message.receiverId,
+          subject: message.subject,
+          content: message.content,
+          isRead: message.isRead,
+          createdAt: message.createdAt,
+          sender: {
+            id: message.senderId,
+            username: message.senderName,
+            email: message.senderEmail,
+            role: message.senderRole
+          },
+          receiver: receiver ? {
+            id: receiver.id,
+            username: receiver.username,
+            email: receiver.email,
+            role: receiver.role
+          } : null
+        };
+      })
+    );
+    
+    // Get total count for pagination
+    const [totalCount] = await db.select({
+      count: db.count()
+    })
+    .from(messages);
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        messages: messagesWithReceivers,
+        pagination: {
+          totalItems: Number(totalCount.count),
+          currentPage: page,
+          itemsPerPage: limit,
+          totalPages: Math.ceil(Number(totalCount.count) / limit)
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching all messages:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching all messages',
+      error: error.message
+    });
+  }
+};
+
+// Mark message as read
+exports.markAsRead = async (req, res) => {
+  try {
+    const messageId = parseInt(req.params.id);
+    const userId = req.user.id; // Set by auth middleware
+    
+    if (isNaN(messageId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid message ID'
+      });
+    }
+    
+    // Check if message exists and user is the receiver
+    const [message] = await db.select()
+      .from(messages)
+      .where(
+        and(
+          eq(messages.id, messageId),
+          eq(messages.receiverId, userId)
+        )
+      );
+    
+    if (!message) {
+      return res.status(404).json({
+        success: false,
+        message: 'Message not found or you are not authorized to modify it'
+      });
+    }
+    
+    // Update message to mark as read
+    await db.update(messages)
+      .set({ isRead: true })
+      .where(eq(messages.id, messageId));
+    
+    res.status(200).json({
+      success: true,
+      message: 'Message marked as read successfully'
+    });
+  } catch (error) {
+    console.error('Error marking message as read:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error marking message as read',
+      error: error.message
+    });
+  }
+};
+
+// Admin: Delete a message (admin can delete any message)
+exports.adminDeleteMessage = async (req, res) => {
+  try {
+    // Verify admin role
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied: Admin role required'
+      });
+    }
+    
+    const messageId = parseInt(req.params.id);
+    
+    if (isNaN(messageId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid message ID'
+      });
+    }
+    
+    // Check if message exists
+    const [message] = await db.select()
+      .from(messages)
+      .where(eq(messages.id, messageId));
+    
+    if (!message) {
+      return res.status(404).json({
+        success: false,
+        message: 'Message not found'
+      });
+    }
+    
+    // Delete message
+    await db.delete(messages)
+      .where(eq(messages.id, messageId));
+    
+    res.status(200).json({
+      success: true,
+      message: 'Message deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting message:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting message',
       error: error.message
     });
   }
