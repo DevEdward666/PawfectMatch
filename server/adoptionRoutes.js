@@ -13,7 +13,8 @@ const schema = require('../shared/schema');
 const { adoptionApplications, pets, users } = schema;
 
 // Get all adoption applications (admin only, to be protected with middleware later)
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
+  console.log(res)
   try {
     const applications = await db.select({
       id: adoptionApplications.id,
@@ -165,7 +166,7 @@ router.post('/', async (req, res) => {
       });
     }
     
-    if (pet.status !== 'available') {
+    if (pet.status !== 'available' && pet.status !== 'pending') {
       return res.status(400).json({
         success: false,
         message: 'Pet is not available for adoption'

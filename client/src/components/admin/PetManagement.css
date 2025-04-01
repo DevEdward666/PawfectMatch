@@ -1,0 +1,9 @@
+.statusStyle-rejected{
+    color: rgb(243, 79, 79);
+}
+.statusStyle-pending{
+    color: rgb(245, 195, 79);
+}
+.statusStyle-approved{
+    color: rgb(138, 238, 62);
+}

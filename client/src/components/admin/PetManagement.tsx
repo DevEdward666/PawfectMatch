@@ -55,7 +55,7 @@ import { usePets } from '../../contexts/PetContext';
 import { Pet, PetForm, AdoptionApplication } from '../../models/pet.model';
 import { formatDistanceToNow } from 'date-fns';
 import { usePhotoGallery } from '../../hooks/usePhotoGallery';
-
+import './PetManagement.css'
 const PetManagement: React.FC = () => {
   const {
     pets,
@@ -354,7 +354,7 @@ const PetManagement: React.FC = () => {
   const uniqueSpecies = Array.from(new Set(pets.map(pet => pet.species)));
     
   // Pet applications for current pet
-  const petApplications = adoptionApplications.filter(app => 
+  const petApplications = adoptionApplications?.filter(app => 
     currentPet && app.petId === currentPet.id
   );
   
@@ -686,7 +686,7 @@ const PetManagement: React.FC = () => {
             </div>
           )}
           
-          {!isLoading && petApplications.length === 0 && (
+          {!isLoading && petApplications?.length === 0 && (
             <div className="ion-text-center ion-padding">
               <IonText color="medium">
                 <h4>No adoption applications found for this pet</h4>
@@ -695,14 +695,14 @@ const PetManagement: React.FC = () => {
             </div>
           )}
           
-          {!isLoading && petApplications.length > 0 && (
+          {!isLoading && petApplications?.length > 0 && (
             <IonList>
               {petApplications.map(app => (
                 <IonItem key={app.id} className="ion-margin-bottom">
                   <IonLabel>
                     <h2>Applicant ID: {app.userId}</h2>
                     <p className="ion-margin-top">
-                      <strong>Status:</strong> {app.status}
+                      <strong>Status:</strong> <strong className={`statusStyle-${app.status}`}>{app.status.toUpperCase()}</strong>
                     </p>
                     <p className="ion-margin-top">
                       <strong>Message:</strong><br />
@@ -716,12 +716,14 @@ const PetManagement: React.FC = () => {
                   </IonLabel>
                   
                   <div slot="end">
-                    <IonButton
+                    {app.status === 'approved' || app.status === 'rejected' ? null : <>
+                      <IonButton
+                      
                       color="success"
                       size="small"
                       fill={app.status === 'approved' ? 'solid' : 'outline'}
                       onClick={() => handleUpdateApplicationStatus(app.id, 'approved')}
-                      disabled={app.status === 'approved'}
+                      disabled={app.status === 'approved' || app.status === 'rejected'}
                     >
                       Approve
                     </IonButton>
@@ -730,10 +732,11 @@ const PetManagement: React.FC = () => {
                       size="small"
                       fill={app.status === 'rejected' ? 'solid' : 'outline'}
                       onClick={() => handleUpdateApplicationStatus(app.id, 'rejected')}
-                      disabled={app.status === 'rejected'}
+                      disabled={app.status === 'approved' || app.status === 'rejected'}
                     >
                       Reject
-                    </IonButton>
+                    </IonButton></>}
+          
                   </div>
                 </IonItem>
               ))}

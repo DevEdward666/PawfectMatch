@@ -69,7 +69,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     // Update recent pets when pets data changes
     if (pets && pets.length) {
-      setRecentPets(pets.filter((p) => p.status === 'available').slice(0, 5));
+      setRecentPets(pets.filter((p) => p.status === 'available' || p.status === "pending").slice(0, 5));
     }
   }, [pets]);
 

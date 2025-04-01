@@ -54,7 +54,7 @@ export const getAllPets = async (req: Request, res: Response) => {
     console.error('Get all pets error:', error);
     return res.status(500).json({
       success: false,
-      message: 'Server error while fetching pets'
+      message: 'Server error while fetching pets2'
     });
   }
 };
@@ -253,7 +253,7 @@ export const applyForAdoption = async (req: Request, res: Response) => {
       });
     }
     
-    if (pet.status !== 'available') {
+    if (pet.status !== 'available' && pet.status !== 'pending') {
       return res.status(400).json({
         success: false,
         message: 'Pet is not available for adoption'
@@ -367,12 +367,14 @@ export const getAllAdoptionApplications = async (req: Request, res: Response) =>
       .leftJoin(pets, eq(adoptionApplications.petId, pets.id));
       let conditions = [];
       const statusParsed = StatusEnum.safeParse(status);
-    if (status) {
-      conditions.push(eq(adoptionApplications.status, status as string));
+    if (statusParsed.success) {
+      conditions.push(eq(adoptionApplications.status, statusParsed.data));
     }
-    
+    if (conditions.length > 0) {
+      query.where(and(...conditions)); 
+    }
     const applications = await query.orderBy(desc(adoptionApplications.createdAt));
-    
+    console.log(applications)
     // Format the result
     const formattedApplications = applications.map(({ application, pet }) => ({
       ...application,

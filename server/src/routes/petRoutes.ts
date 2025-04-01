@@ -21,7 +21,7 @@ router.get('/:id', getPetById);
 
 // Protected routes (require authentication)
 router.post('/:id/adopt', authenticate, applyForAdoption);
-router.get('/applications/user', authenticate, getUserAdoptionApplications);
+router.get('/adoption/user', authenticate, getUserAdoptionApplications);
 
 // Admin routes
 // Configure multer for file uploads
@@ -29,7 +29,7 @@ router.get('/applications/user', authenticate, getUserAdoptionApplications);
 router.post('/addPets', authenticate, isAdmin, uploadImage, createPet);
 router.put('/:id', authenticate, isAdmin, uploadImage, updatePet);
 router.delete('/:id', authenticate, isAdmin, deletePet);
-router.get('/applications/all', authenticate, isAdmin, getAllAdoptionApplications);
-router.put('/applications/:id', authenticate, isAdmin, updateAdoptionApplication);
+router.get('/adoption/all', authenticate, isAdmin, getAllAdoptionApplications);
+router.put('/adoption/:id', authenticate, isAdmin, updateAdoptionApplication);
 
 export default router;

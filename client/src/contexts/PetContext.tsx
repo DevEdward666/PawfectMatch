@@ -61,7 +61,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setError(null);
       
       const response = await api.get(`/pets/${id}`);
-      setPet(response.data);
+      setPet(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch pet details.';
       setError(errorMessage);
@@ -95,7 +95,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         },
       });
   
-      setPets([response.data, ...pets]);
+      setPets([response.data.data, ...pets]);
       showToast("Pet added successfully");
     } catch (err: any) {
       console.error("Error response:", err.response);
@@ -130,8 +130,8 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         }
       });
       
-      setPets(pets.map(p => p.id === id ? response.data : p));
-      setPet(response.data);
+      setPets(pets.map(p => p.id === id ? response.data.data : p));
+      setPet(response.data.data);
       showToast('Pet updated successfully');
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to update pet.';
@@ -181,7 +181,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setPets(pets.map(p => p.id === petId ? { ...p, status: 'pending' } : p));
       
       // Add to applications list
-      setAdoptionApplications([response.data, ...adoptionApplications]);
+      setAdoptionApplications([response.data.data, ...adoptionApplications]);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to submit adoption application.';
       setError(errorMessage);
@@ -196,8 +196,8 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get(`/adoption/user/${userId}`);
-      setAdoptionApplications(response.data);
+      const response = await api.get(`/adoptions/user/${userId}`);
+      setAdoptionApplications(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch your adoption applications.';
       setError(errorMessage);
@@ -212,8 +212,8 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get('/adoption/all');
-      setAdoptionApplications(response.data);
+      const response = await api.get('/adoptions/all');
+      setAdoptionApplications(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch adoption applications.';
       setError(errorMessage);
@@ -228,7 +228,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setIsLoading(true);
       setError(null);
       
-      const response = await api.put(`/adoption/${id}`, { status });
+      const response = await api.put(`/adoptions/${id}`, { status });
       
       // Update in adoption applications list
       setAdoptionApplications(adoptionApplications.map(app => 
@@ -236,14 +236,14 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       ));
       
       // If the application's pet is the current pet, update its status
-      if (response.data.pet && pet && pet.id === response.data.pet.id) {
+      if (response.data.data.pet && pet && pet.id === response.data.data.pet.id) {
         setPet({ ...pet, status: status === 'approved' ? 'adopted' : status === 'rejected' ? 'available' : 'pending' });
       }
       
       // Update in pets list if needed
-      if (response.data.pet) {
+      if (response.data.data.pet) {
         setPets(pets.map(p => 
-          p.id === response.data.pet.id 
+          p.id === response.data.data.pet.id 
             ? { ...p, status: status === 'approved' ? 'adopted' : status === 'rejected' ? 'available' : 'pending' } 
             : p
         ));

@@ -18,7 +18,7 @@ app.use(express.json());
 const userRoutes = require('./userRoutes');
 const authRoutes = require('./authRoutes');
 // Using the TypeScript pet routes
-import petRoutes from './petsRoutes';
+import petRoutes from './src/routes/petRoutes';
 const productsRoutes = require('./productsRoutes');
 const adoptionRoutes = require('./adoptionRoutes');
 const reportsRoutes = require('./reportsRoutes');

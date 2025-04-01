@@ -20,14 +20,14 @@ export const productCategoryEnum = pgEnum('product_category', ['food', 'toys', '
 // Users table
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
-  password: varchar('password', { length: 255 }).notNull(),
-  name: varchar('name', { length: 255 }).notNull(),
-  role: userRoleEnum('role').default('user').notNull(),
-  phone: varchar('phone', { length: 20 }),
-  address: text('address'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  email: varchar('email').notNull(),
+  password: varchar('password').notNull(),
+  name: varchar('name').notNull(),
+  role: varchar('role').notNull(),
+  phone: varchar('phone'),
+  address: varchar('address'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
 
 // Pets table
