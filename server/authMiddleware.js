@@ -16,10 +16,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'pet-shop-secret-key';
 
 // Authentication middleware
 exports.authenticate = async (req, res, next) => {
+
   try {
+    
     // Get token from header
     let token = req.header('Authorization');
-    
+
     // Check if token exists
     if (!token) {
       return res.status(401).json({

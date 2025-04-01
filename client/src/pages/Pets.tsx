@@ -70,7 +70,7 @@ const Pets: React.FC = () => {
       let filtered = [...pets];
       
       // Filter by status - only show available pets
-      filtered = filtered.filter(pet => pet.status === 'available');
+      filtered = filtered.filter(pet => pet.status === 'available' || pet.status === 'pending');
       
       // Apply species filter
       if (selectedSpecies) {

@@ -385,11 +385,11 @@ const PetDetail: React.FC = () => {
                 <IonButton 
                   expand="block" 
                   color="petprimary" 
-                  disabled={pet.status !== 'available'}
+                  disabled={pet.status !== 'available' && pet.status !== 'pending'}
                   onClick={handleAdoptClick}
                 >
                   <IonIcon slot="start" icon={clipboard} />
-                  {pet.status === 'available' ? 'Submit Adoption Application' : 'Not Available for Adoption'}
+                  {pet.status === 'available' || pet.status === 'pending' ? 'Submit Adoption Application' : 'Not Available for Adoption'}
                 </IonButton>
               </div>
             </IonCardContent>
@@ -476,13 +476,6 @@ const PetDetail: React.FC = () => {
           duration={3000}
           position="bottom"
           color="success"
-          buttons={[
-            {
-              text: 'Close',
-              role: 'cancel',
-              icon: close
-            }
-          ]}
         />
       </IonContent>
       

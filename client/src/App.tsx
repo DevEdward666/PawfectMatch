@@ -51,6 +51,8 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Admin from 'pages/Admin';
+import ReportDetail from 'pages/ReportDetails';
 
 // Initialize Ionic
 setupIonicReact();
@@ -71,7 +73,7 @@ const App: React.FC = () => (
                     <Route exact path="/products" component={Products} />
                     <Route exact path="/messages" component={Messages} />
                     <Route exact path="/profile" component={Profile} />
-                    
+                    <Route exact path="/report" component={Report} />
                     {/* Auth Routes */}
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/register" component={Register} />
@@ -107,10 +109,11 @@ const App: React.FC = () => (
                 </IonTabs>
 
                 {/* Non-Tab Routes */}
-                <Route exact path="/report" component={Report} />
+                <Route exact path="/admin" component={Admin} />
                 <Route exact path="/pets/:id" component={PetDetail} />
                 <Route exact path="/products/:id" component={ProductDetail} />
                 <Route exact path="/messages/:id" component={MessageDetail} />
+                <Route exact path="/reports/:id" component={ReportDetail} />
               </IonReactRouter>
             </ReportProvider>
           </MessageProvider>

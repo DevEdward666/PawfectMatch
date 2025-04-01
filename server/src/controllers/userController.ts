@@ -370,7 +370,7 @@ export const updateUser = async (req: Request, res: Response) => {
       const emailCheck = await db
         .select()
         .from(users)
-        .where(and(eq(users.email, email), eq(users.id, userId, true)));
+        .where(and(eq(users.email, email), eq(users.id, userId)));
       
       if (emailCheck.length > 0) {
         return res.status(400).json({

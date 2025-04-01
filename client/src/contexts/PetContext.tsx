@@ -15,7 +15,7 @@ interface PetContextProps {
   updatePet: (id: number, petData: PetForm) => Promise<void>;
   deletePet: (id: number) => Promise<void>;
   applyForAdoption: (petId: number, applicationData: AdoptionApplicationForm) => Promise<void>;
-  fetchUserAdoptionApplications: () => Promise<void>;
+  fetchUserAdoptionApplications: (userId:number) => Promise<void>;
   fetchAllAdoptionApplications: () => Promise<void>;
   updateAdoptionApplication: (id: number, status: string) => Promise<void>;
 }
@@ -45,7 +45,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setError(null);
       
       const response = await api.get('/pets');
-      setPets(response.data);
+      setPets(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch pets.';
       setError(errorMessage);
@@ -61,7 +61,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setError(null);
       
       const response = await api.get(`/pets/${id}`);
-      setPet(response.data);
+      setPet(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch pet details.';
       setError(errorMessage);
@@ -75,34 +75,38 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     try {
       setIsLoading(true);
       setError(null);
-      
+  
       const formData = new FormData();
       Object.entries(petData).forEach(([key, value]) => {
-        if (value !== undefined) {
-          if (key === 'image' && value instanceof File) {
-            formData.append('image', value);
+        if (value !== undefined && value !== null) {
+          if (key === "image" && value instanceof File) {
+            formData.append("image", value);
           } else {
             formData.append(key, String(value));
           }
         }
       });
-      
-      const response = await api.post('/pets', formData, {
+  
+      console.log("Sending formData:", Object.fromEntries(formData.entries())); // Debugging
+  
+      const response = await api.post("/pets/addPets", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
-      
-      setPets([response.data, ...pets]);
-      showToast('Pet added successfully');
+  
+      setPets([response.data.data, ...pets]);
+      showToast("Pet added successfully");
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Failed to create pet.';
+      console.error("Error response:", err.response);
+      const errorMessage = err.response?.data?.message || "Failed to create pet.";
       setError(errorMessage);
-      showToast(errorMessage, 'error');
+      showToast(errorMessage, "error");
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const updatePet = async (id: number, petData: PetForm) => {
     try {
@@ -126,8 +130,8 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         }
       });
       
-      setPets(pets.map(p => p.id === id ? response.data : p));
-      setPet(response.data);
+      setPets(pets.map(p => p.id === id ? response.data.data : p));
+      setPet(response.data.data);
       showToast('Pet updated successfully');
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to update pet.';
@@ -177,7 +181,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setPets(pets.map(p => p.id === petId ? { ...p, status: 'pending' } : p));
       
       // Add to applications list
-      setAdoptionApplications([response.data, ...adoptionApplications]);
+      setAdoptionApplications([response.data.data, ...adoptionApplications]);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to submit adoption application.';
       setError(errorMessage);
@@ -187,13 +191,13 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   };
 
-  const fetchUserAdoptionApplications = async () => {
+  const fetchUserAdoptionApplications = async (userId:number) => {
     try {
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get('/adoption/user');
-      setAdoptionApplications(response.data);
+      const response = await api.get(`/adoptions/user/${userId}`);
+      setAdoptionApplications(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch your adoption applications.';
       setError(errorMessage);
@@ -208,8 +212,8 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get('/adoption/all');
-      setAdoptionApplications(response.data);
+      const response = await api.get('/adoptions/all');
+      setAdoptionApplications(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch adoption applications.';
       setError(errorMessage);
@@ -224,7 +228,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setIsLoading(true);
       setError(null);
       
-      const response = await api.put(`/adoption/${id}`, { status });
+      const response = await api.put(`/adoptions/${id}`, { status });
       
       // Update in adoption applications list
       setAdoptionApplications(adoptionApplications.map(app => 
@@ -232,14 +236,14 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       ));
       
       // If the application's pet is the current pet, update its status
-      if (response.data.pet && pet && pet.id === response.data.pet.id) {
+      if (response.data.data.pet && pet && pet.id === response.data.data.pet.id) {
         setPet({ ...pet, status: status === 'approved' ? 'adopted' : status === 'rejected' ? 'available' : 'pending' });
       }
       
       // Update in pets list if needed
-      if (response.data.pet) {
+      if (response.data.data.pet) {
         setPets(pets.map(p => 
-          p.id === response.data.pet.id 
+          p.id === response.data.data.pet.id 
             ? { ...p, status: status === 'approved' ? 'adopted' : status === 'rejected' ? 'available' : 'pending' } 
             : p
         ));

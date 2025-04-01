@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Message, MessageForm, MessageResponse } from '../models/message.model';
+import { Message, MessageForm, MessageResponse, AdminMessagesResponse } from '../models/message.model';
 import api from '../services/api';
 import { useIonToast } from '@ionic/react';
 
 interface MessageContextProps {
   inboxMessages: Message[];
   sentMessages: Message[];
+  allMessages: Message[];
   currentMessage: Message | null;
+  totalMessages: number;
+  currentPage: number;
+  totalPages: number;
   isLoading: boolean;
   error: string | null;
   fetchMessages: () => Promise<void>;
@@ -14,6 +18,8 @@ interface MessageContextProps {
   sendMessage: (messageData: MessageForm) => Promise<void>;
   deleteMessage: (id: number) => Promise<void>;
   markAsRead: (id: number) => Promise<void>;
+  fetchAllMessages: (page?: number, limit?: number) => Promise<void>;
+  adminDeleteMessage: (id: number) => Promise<void>;
 }
 
 const MessageContext = createContext<MessageContextProps | undefined>(undefined);
@@ -21,7 +27,11 @@ const MessageContext = createContext<MessageContextProps | undefined>(undefined)
 export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [inboxMessages, setInboxMessages] = useState<Message[]>([]);
   const [sentMessages, setSentMessages] = useState<Message[]>([]);
+  const [allMessages, setAllMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState<Message | null>(null);
+  const [totalMessages, setTotalMessages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [present] = useIonToast();
@@ -40,8 +50,8 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get<MessageResponse>('/messages');
-      const messageData: MessageResponse = response.data;
+      const response = await api.get('/messages');
+      const messageData: MessageResponse = response.data.data;
       
       setInboxMessages(messageData.inbox);
       setSentMessages(messageData.sent);
@@ -59,8 +69,8 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get<Message>(`/messages/${id}`);
-      setCurrentMessage(response.data);
+      const response = await api.get(`/messages/${id}`);
+      setCurrentMessage(response.data.data);
       
       // If this is an unread message in our inbox, mark it as read automatically
       if (response.data.isRead === false && inboxMessages.some(msg => msg.id === id)) {
@@ -80,10 +90,10 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
       setIsLoading(true);
       setError(null);
       
-      const response = await api.post<Message>('/messages', messageData);
+      const response = await api.post('/messages', messageData);
       
       // Add to sent messages list
-      setSentMessages([response.data, ...sentMessages]);
+      setSentMessages([response.data.data, ...sentMessages]);
       
       showToast('Message sent successfully');
       return Promise.resolve();
@@ -148,19 +158,77 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
+  // Admin: Fetch all messages in the system
+  const fetchAllMessages = async (page: number = 1, limit: number = 20) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const response = await api.get<{success: boolean, data: AdminMessagesResponse}>(`/messages/admin/all?page=${page}&limit=${limit}`);
+      const { messages, pagination } = response.data.data;
+      
+      setAllMessages(messages);
+      setTotalMessages(pagination.totalItems);
+      setCurrentPage(pagination.currentPage);
+      setTotalPages(pagination.totalPages);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || 'Failed to fetch all messages.';
+      setError(errorMessage);
+      showToast(errorMessage, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Admin: Delete a message
+  const adminDeleteMessage = async (id: number) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      await api.delete(`/messages/admin/${id}`);
+      
+      // Remove from all messages list
+      setAllMessages(allMessages.filter(msg => msg.id !== id));
+      
+      // Also remove from other lists if present
+      setInboxMessages(inboxMessages.filter(msg => msg.id !== id));
+      setSentMessages(sentMessages.filter(msg => msg.id !== id));
+      
+      // Reset current message if it was deleted
+      if (currentMessage && currentMessage.id === id) {
+        setCurrentMessage(null);
+      }
+      
+      showToast('Message deleted successfully');
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || 'Failed to delete message.';
+      setError(errorMessage);
+      showToast(errorMessage, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <MessageContext.Provider
       value={{
         inboxMessages,
         sentMessages,
+        allMessages,
         currentMessage,
+        totalMessages,
+        currentPage,
+        totalPages,
         isLoading,
         error,
         fetchMessages,
         fetchMessageById,
         sendMessage,
         deleteMessage,
-        markAsRead
+        markAsRead,
+        fetchAllMessages,
+        adminDeleteMessage
       }}
     >
       {children}

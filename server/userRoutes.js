@@ -13,11 +13,11 @@ router.put('/profile', authMiddleware.authenticate, userController.updateUserPro
 router.put('/change-password', authMiddleware.authenticate, userController.changePassword);
 
 // Admin routes - require admin role
-router.get('/', authMiddleware.authenticate, authMiddleware.isAdmin, userController.getAllUsers);
-router.get('/:id', authMiddleware.authenticate, authMiddleware.isAdmin, userController.getUserById);
-router.post('/', authMiddleware.authenticate, authMiddleware.isAdmin, userController.createUser);
-router.put('/:id', authMiddleware.authenticate, authMiddleware.isAdmin, userController.updateUser);
+router.get('/getAllUsers', authMiddleware.authenticate, authMiddleware.isAdmin, userController.getAllUsers);
+router.get('/getUser:id', authMiddleware.authenticate, authMiddleware.isAdmin, userController.getUserById);
+router.post('/create', authMiddleware.authenticate, authMiddleware.isAdmin, userController.createUser);
+router.put('/update/:id', authMiddleware.authenticate, authMiddleware.isAdmin, userController.updateUser);
 router.put('/:id/reset-password', authMiddleware.authenticate, authMiddleware.isAdmin, userController.resetUserPassword);
-router.delete('/:id', authMiddleware.authenticate, authMiddleware.isAdmin, userController.deleteUser);
+router.delete('/delete/:id', authMiddleware.authenticate, authMiddleware.isAdmin, userController.deleteUser);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import {
   User,
   AuthResponse,
@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [present] = useIonToast();
 
   // Initialize auth state from localStorage on component mount
-  useEffect(() => {
+  const getToken =()=> {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
     
@@ -42,8 +42,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
     }
-    
     setIsLoading(false);
+    return storedToken;
+  }
+  useEffect(() => {
+    getToken();
   }, []);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
@@ -60,8 +63,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsLoading(true);
       setError(null);
       
-      const response = await api.post<AuthResponse>('/auth/login', credentials);
-      const { user, token } = response.data;
+      const response = await api.post('/auth/login', credentials);
+      const { user, token } = response.data.data;
       
       // Store auth data
       localStorage.setItem('token', token);
@@ -85,8 +88,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsLoading(true);
       setError(null);
       
-      const response = await api.post<AuthResponse>('/auth/register', userData);
-      const { user, token } = response.data;
+      const response = await api.post('/auth/register', userData);
+      const { user, token } = response.data.data;
       
       // Store auth data
       localStorage.setItem('token', token);
@@ -156,9 +159,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const isLoggedIn = () => {
+  const isLoggedIn = useCallback(() => {
     return !!user && !!token;
-  };
+  },[token,user]);
 
   const isAdmin = () => {
     return isLoggedIn() && user?.role === 'admin';

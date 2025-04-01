@@ -7,33 +7,44 @@ import {
   adoptionApplications,
   InsertAdoptionApplication 
 } from '../models/schema';
-import { eq, asc, desc, and } from 'drizzle-orm';
+import { and, eq, asc, desc } from 'drizzle-orm';
 import fs from 'fs';
 import path from 'path';
+import { z } from "zod";
 
 export const getAllPets = async (req: Request, res: Response) => {
   try {
+
     const { status, species, sort } = req.query;
+    const StatusEnum = z.enum(["available", "adopted", "pending"]);
+
+    let conditions = [];
     
-    let query = db.select().from(pets);
-    
-    // Apply filters
-    if (status) {
-      query = query.where(eq(pets.status, status as string));
+    const statusParsed = StatusEnum.safeParse(status);
+    if (statusParsed.success) {
+      conditions.push(eq(pets.status, statusParsed.data));
     }
     
     if (species) {
-      query = query.where(eq(pets.species, species as string));
+      conditions.push(eq(pets.species, species as string));
     }
     
-    // Apply sorting
-    if (sort === 'newest') {
-      query = query.orderBy(desc(pets.createdAt));
+    // Start building the query
+    let query = db.select().from(pets);
+    
+    // Apply filters only if conditions exist
+    if (conditions.length > 0) {
+      query.where(and(...conditions)); // ✅ Correct usage
+    }
+    if (sort === "newest") {
+      query.orderBy(desc(pets.createdAt));
     } else {
-      query = query.orderBy(asc(pets.name));
+      query.orderBy(asc(pets.name));
     }
     
-    const petsList = await query;
+    // Execute query
+    const petsList = await query.execute(); // Ensure `.execute()` is called
+    
     
     return res.status(200).json({
       success: true,
@@ -43,7 +54,7 @@ export const getAllPets = async (req: Request, res: Response) => {
     console.error('Get all pets error:', error);
     return res.status(500).json({
       success: false,
-      message: 'Server error while fetching pets'
+      message: 'Server error while fetching pets2'
     });
   }
 };
@@ -76,14 +87,23 @@ export const getPetById = async (req: Request, res: Response) => {
 
 export const createPet = async (req: Request, res: Response) => {
   try {
+    console.log("Request body:", req.body);
+    console.log("Uploaded file:", req.file);
+
     const { name, species, breed, age, gender, description, status } = req.body;
-    
+
+    if (!name || !species || !breed) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, species, and breed are required fields.",
+      });
+    }
+
     let imageUrl = null;
     if (req.file) {
-      // Create a relative URL for the image
-      imageUrl = `/uploads/${req.file.filename}`;
+      imageUrl = `/uploads/Pets/${req.file.filename}`;
     }
-    
+
     const newPet: InsertPet = {
       name,
       species,
@@ -92,24 +112,25 @@ export const createPet = async (req: Request, res: Response) => {
       gender,
       description,
       imageUrl,
-      status: status || 'available'
+      status: status || "available",
     };
-    
+
     const [createdPet] = await db.insert(pets).values(newPet).returning();
-    
+
     return res.status(201).json({
       success: true,
-      message: 'Pet created successfully',
-      data: createdPet
+      message: "Pet created successfully",
+      data: createdPet,
     });
   } catch (error) {
-    console.error('Create pet error:', error);
+    console.error("Create pet error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Server error while creating pet'
+      message: "Server error while creating pet",
     });
   }
 };
+
 
 export const updatePet = async (req: Request, res: Response) => {
   try {
@@ -232,7 +253,7 @@ export const applyForAdoption = async (req: Request, res: Response) => {
       });
     }
     
-    if (pet.status !== 'available') {
+    if (pet.status !== 'available' && pet.status !== 'pending') {
       return res.status(400).json({
         success: false,
         message: 'Pet is not available for adoption'
@@ -336,7 +357,7 @@ export const getUserAdoptionApplications = async (req: Request, res: Response) =
 export const getAllAdoptionApplications = async (req: Request, res: Response) => {
   try {
     const { status } = req.query;
-    
+    const StatusEnum = z.enum(["completed", "cancelled","denied", "pending"]);
     let query = db
       .select({
         application: adoptionApplications,
@@ -344,14 +365,16 @@ export const getAllAdoptionApplications = async (req: Request, res: Response) =>
       })
       .from(adoptionApplications)
       .leftJoin(pets, eq(adoptionApplications.petId, pets.id));
-    
-    // Apply status filter if provided
-    if (status) {
-      query = query.where(eq(adoptionApplications.status, status as string));
+      let conditions = [];
+      const statusParsed = StatusEnum.safeParse(status);
+    if (statusParsed.success) {
+      conditions.push(eq(adoptionApplications.status, statusParsed.data));
     }
-    
+    if (conditions.length > 0) {
+      query.where(and(...conditions)); 
+    }
     const applications = await query.orderBy(desc(adoptionApplications.createdAt));
-    
+    console.log(applications)
     // Format the result
     const formattedApplications = applications.map(({ application, pet }) => ({
       ...application,

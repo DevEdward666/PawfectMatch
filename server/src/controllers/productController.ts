@@ -1,37 +1,40 @@
 import { Request, Response } from 'express';
 import { db } from '../config/database';
 import { products, Product, InsertProduct } from '../models/schema';
-import { eq, asc, desc, like } from 'drizzle-orm';
+import { and,eq, asc, desc, like } from 'drizzle-orm';
 import fs from 'fs';
 import path from 'path';
+import { z } from "zod";
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
     const { category, search, sort } = req.query;
     
     let query = db.select().from(products);
-    
-    // Apply category filter
-    if (category) {
-      query = query.where(eq(products.category, category as string));
+    const CategoryEnum = z.enum(["food", "toys", "accessories","grooming","other"]);
+
+    let conditions = [];
+    const categoryParsed = CategoryEnum.safeParse(category);
+    if (categoryParsed.success) {
+      conditions.push(eq(products.category, categoryParsed.data));
     }
-    
     // Apply search filter
     if (search) {
-      query = query.where(like(products.name, `%${search}%`));
+      conditions.push(like(products.name,`%${search}%`));
     }
     
-    // Apply sorting
-    if (sort === 'price_asc') {
-      query = query.orderBy(asc(products.price));
-    } else if (sort === 'price_desc') {
-      query = query.orderBy(desc(products.price));
-    } else if (sort === 'newest') {
-      query = query.orderBy(desc(products.createdAt));
+    if (conditions.length > 0) {
+      query.where(and(...conditions)); 
+    }
+    if (sort === "newest") {
+      query.orderBy(desc(products.createdAt));
+    }else if(sort === 'price_desc'){
+      query.orderBy(desc(products.price));
+    } else if(sort === 'price_asc'){
+      query.orderBy(asc(products.price));
     } else {
-      query = query.orderBy(asc(products.name));
+      query.orderBy(asc(products.name));
     }
-    
     const productsList = await query;
     
     return res.status(200).json({
@@ -86,7 +89,7 @@ export const createProduct = async (req: Request, res: Response) => {
     const newProduct: InsertProduct = {
       name,
       description,
-      price: parseFloat(price),
+      price: price,
       imageUrl,
       category: category || 'other',
       stock: stock ? parseInt(stock) : 0
@@ -143,7 +146,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       .set({
         name,
         description,
-        price: parseFloat(price),
+        price: price,
         imageUrl,
         category,
         stock: parseInt(stock),

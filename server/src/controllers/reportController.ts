@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { db } from '../config/database';
 import { reports, reportResponses, users, InsertReport, InsertReportResponse } from '../models/schema';
-import { eq, desc } from 'drizzle-orm';
+import { and,eq, desc, sql } from 'drizzle-orm';
 import fs from 'fs';
 import path from 'path';
-
+import { z } from "zod";
 // Submit a new report
 export const submitReport = async (req: Request, res: Response) => {
   try {
@@ -192,7 +192,8 @@ export const getReportById = async (req: Request, res: Response) => {
 export const getAllReports = async (req: Request, res: Response) => {
   try {
     const { status } = req.query;
-    
+    const StatusEnum = z.enum(["pending", "resolved", "reviewing"]);
+    let conditions = [];
     let query = db
       .select({
         report: reports,
@@ -204,42 +205,29 @@ export const getAllReports = async (req: Request, res: Response) => {
       })
       .from(reports)
       .leftJoin(users, eq(reports.userId, users.id));
-    
-    // Apply status filter if provided
-    if (status) {
-      query = query.where(eq(reports.status, status as string));
-    }
-    
+
+      const statusParsed = StatusEnum.safeParse(status);
+      if (statusParsed.success) {
+        conditions.push(eq(reports.status, statusParsed.data));
+      }
+      if (conditions.length > 0) {
+        query.where(and(...conditions)); 
+      }
     const allReports = await query.orderBy(desc(reports.createdAt));
-    
-    // Format the result
-    const formattedReports = await Promise.all(
-      allReports.map(async ({ report, reporter }) => {
-        const responseCount = await db
-          .select({ count: reportResponses.id })
-          .from(reportResponses)
-          .where(eq(reportResponses.reportId, report.id));
-        
-        return {
-          ...report,
-          reporter,
-          responseCount: responseCount.length
-        };
-      })
-    );
-    
+
     return res.status(200).json({
       success: true,
-      data: formattedReports
+      data: allReports
     });
   } catch (error) {
-    console.error('Get all reports error:', error);
+    console.error("Get all reports error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Server error while fetching reports'
+      message: "Server error while fetching reports"
     });
   }
 };
+
 
 // Admin: Update report status
 export const updateReportStatus = async (req: Request, res: Response) => {
