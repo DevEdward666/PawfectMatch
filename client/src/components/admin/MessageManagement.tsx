@@ -62,8 +62,17 @@ const MessageManagement: React.FC = () => {
   const [present] = useIonActionSheet();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    loadMessages();
-  }, []);
+    const init = async () => {
+      try {
+        await fetchAllMessages(1, 50);
+      } catch (error) {
+        console.error('Error loading messages:', error);
+        setToastMessage('Failed to load messages. Please try again.');
+        setShowToast(true);
+      }
+    };
+    init();
+  }, [fetchAllMessages]);
   
   const loadMessages = async () => {
     try {

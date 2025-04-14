@@ -51,7 +51,7 @@ const MessageDetail: React.FC = () => {
     error 
   } = useMessages();
   
-  const { isLoggedIn, user } = useAuth();
+  const {  user } = useAuth();
   
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showReplyModal, setShowReplyModal] = useState(false);

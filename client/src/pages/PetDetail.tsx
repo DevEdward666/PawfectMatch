@@ -53,7 +53,7 @@ interface PetDetailParams {
 const PetDetail: React.FC = () => {
   const { id } = useParams<PetDetailParams>();
   const { pet, isLoading, error, fetchPetById, applyForAdoption } = usePets();
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn } = useAuth();
   
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAdoptModal, setShowAdoptModal] = useState(false);

@@ -112,7 +112,7 @@ const UserManagement: React.FC = () => {
     };
     initialize();
 
-  }, [presentToast]);
+  }, [presentToast,errors]);
   
   // Functions
   const loadUsers = async () => {
@@ -232,7 +232,7 @@ const UserManagement: React.FC = () => {
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSubmit =  useCallback( async() => {
-    if (!validateForm()) return;
+    // if (!validateForm()) return;
     
     try {
       if (isEditMode && selectedUser) {
@@ -277,7 +277,6 @@ const UserManagement: React.FC = () => {
       
       setIsModalOpen(false);
       resetForm();
-      loadUsers();
     } catch (error: any) {
       console.error('Error submitting form:', error);
       presentToast({
@@ -286,7 +285,7 @@ const UserManagement: React.FC = () => {
         color: 'danger'
       });
     }
-  },[token,selectedUser,formData,selectedRole,isEditMode,presentToast,loadUsers,validateForm]);
+  },[token,selectedUser,formData,selectedRole,isEditMode,presentToast]);
   
   const confirmDelete = (user: User) => {
     // Prevent self-deletion

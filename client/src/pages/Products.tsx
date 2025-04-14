@@ -41,7 +41,6 @@ import {
   starOutline
 } from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { useProducts } from '../contexts/ProductContext';
 import { Product } from '../models/product.model';
 import "./Products.css";

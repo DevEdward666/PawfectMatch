@@ -36,7 +36,6 @@ import {
 } from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { useAuth } from '../contexts/AuthContext';
 import { useProducts } from '../contexts/ProductContext';
 import "./ProductDetail.css";
 interface ProductDetailParams {

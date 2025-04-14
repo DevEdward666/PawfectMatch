@@ -38,7 +38,6 @@ import {
   search
 } from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { usePets } from '../contexts/PetContext';
 import { Pet } from '../models/pet.model';
 import "./Pets.css";

@@ -45,7 +45,6 @@ import PetManagement from '../components/admin/PetManagement';
 import ProductManagement from '../components/admin/ProductManagement';
 import ReportManagement from '../components/admin/ReportManagement';
 import UserManagement from '../components/admin/UserManagement';
-import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
 
 interface DashboardStats {
