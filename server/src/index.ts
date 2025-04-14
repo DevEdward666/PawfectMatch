@@ -4,7 +4,7 @@ import { db } from '../db';
 import path from 'path';
 
 const app = express();
-const port = parseInt(process.env.PORT!) || 3000;
+const port = parseInt(process.env.PORT!) || 5001;
 
 app.use(cors());
 app.use(express.json());

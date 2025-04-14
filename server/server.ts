@@ -18,7 +18,7 @@ dotenv.config();
 
 // Create Express application
 const app: Application = express();
-const PORT: number = Number(process.env.PORT) || 3000;
+const PORT: number = Number(process.env.PORT) || 5001;
 
 // Test database connection
 async function testDbConnection() {
@@ -68,6 +68,9 @@ app.get('/api/health', async (req: Request, res: Response) => {
   }
 });
 
+app.listen(PORT,() => {
+  console.log(`Server is running on port ${PORT}`);
+});
 // Serve the static files from client build directory
 app.use(express.static(path.join(__dirname, '../client/build')));
 
@@ -92,9 +95,6 @@ app.use('/api/*', (req: Request, res: Response) => {
     success: false,
     message: 'API route not found'
   });
-});
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
 });
 // Start the server only if database connection is successful
 async function startServer() {
