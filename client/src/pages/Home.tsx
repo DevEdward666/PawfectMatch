@@ -1,41 +1,36 @@
-import React, { useState, useEffect } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonButton,
-  IonIcon,
-  IonGrid,
-  IonRow,
+  IonChip,
   IonCol,
-  IonImg,
-  IonText,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonRow,
   IonSpinner,
-  IonBadge,
-  IonChip
+  IonText,
+  IonTitle,
+  IonToolbar
 } from '@ionic/react';
-import { 
-  paw, 
-  basket, 
-  chatbubbleEllipses, 
-  warning, 
-  heart, 
-  heartOutline, 
-  cart, 
-  arrowForward 
+import {
+  arrowForward,
+  basket,
+  heartOutline,
+  paw,
+  warning
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { useAuth } from '../contexts/AuthContext';
 import { usePets } from '../contexts/PetContext';
 import { useProducts } from '../contexts/ProductContext';
-import { useAuth } from '../contexts/AuthContext';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import './Home.css'
+import './Home.css';
 // Slide options
 const slideOpts = {
   initialSlide: 0,
@@ -53,20 +48,20 @@ const Home: React.FC = () => {
   // States for UI animations/interactions
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
   const [recentPets, setRecentPets] = useState<any[]>([]);
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Load data when component mounts
     fetchPets();
     fetchProducts();
   }, []);
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Update featured products when products data changes
     if (products && products.length) {
       setFeaturedProducts(products.filter((p) => p.stock > 0).slice(0, 5));
     }
   }, [products]);
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Update recent pets when pets data changes
     if (pets && pets.length) {

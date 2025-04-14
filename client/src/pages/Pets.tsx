@@ -1,49 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import { RefresherEventDetail } from '@ionic/core';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonSearchbar,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonCardTitle,
-  IonCardSubtitle,
+  IonBadge,
   IonButton,
-  IonIcon,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonChip,
-  IonLabel,
-  IonSelect,
-  IonSelectOption,
-  IonLoading,
-  IonText,
-  IonRefresher,
-  IonRefresherContent,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonItem,
-  IonBadge
+  IonLabel,
+  IonLoading,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  IonRow,
+  IonSearchbar,
+  IonSelect,
+  IonSelectOption,
+  IonText,
+  IonTitle,
+  IonToolbar
 } from '@ionic/react';
-import { RefresherEventDetail } from '@ionic/core';
-import { 
-  paw, 
-  heartOutline, 
-  heart, 
-  female, 
+import {
+  female,
+  filter,
+  heart,
+  heartOutline,
   male,
-  search, 
-  options, 
-  filter
+  paw,
+  search
 } from 'ionicons/icons';
-import { usePets } from '../contexts/PetContext';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { usePets } from '../contexts/PetContext';
 import { Pet } from '../models/pet.model';
-import "./Pets.css"
+import "./Pets.css";
 const Pets: React.FC = () => {
   const { pets, isLoading, error, fetchPets } = usePets();
   const { isLoggedIn } = useAuth();
@@ -55,6 +53,7 @@ const Pets: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   
   // Load pets on component mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchPets();
     // Load favorites from localStorage
@@ -65,6 +64,7 @@ const Pets: React.FC = () => {
   }, []);
   
   // Filter pets when search text or filter changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (pets) {
       let filtered = [...pets];

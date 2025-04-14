@@ -1,51 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import { RefresherEventDetail } from '@ionic/core';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonSearchbar,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonCardTitle,
-  IonCardSubtitle,
+  IonBadge,
   IonButton,
-  IonIcon,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonChip,
-  IonLabel,
-  IonSelect,
-  IonSelectOption,
-  IonLoading,
-  IonText,
-  IonRefresher,
-  IonRefresherContent,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonBadge,
-  IonItem,
-  IonToast
+  IonLabel,
+  IonLoading,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  IonRow,
+  IonSearchbar,
+  IonSelect,
+  IonSelectOption,
+  IonText,
+  IonTitle,
+  IonToast,
+  IonToolbar
 } from '@ionic/react';
-import { RefresherEventDetail } from '@ionic/core';
 import {
   basket,
   cart,
-  star,
-  starOutline,
-  filter,
-  pricetag,
   cash,
   close,
-  search
+  filter,
+  pricetag,
+  search,
+  star,
+  starOutline
 } from 'ionicons/icons';
-import { useProducts } from '../contexts/ProductContext';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useProducts } from '../contexts/ProductContext';
 import { Product } from '../models/product.model';
-import "./Products.css"
+import "./Products.css";
 const Products: React.FC = () => {
   const { products, isLoading, error, fetchProducts } = useProducts();
   const { isLoggedIn } = useAuth();
@@ -61,6 +60,7 @@ const Products: React.FC = () => {
   const [toastMessage, setToastMessage] = useState('');
   
   // Load products on component mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchProducts();
     
@@ -78,6 +78,7 @@ const Products: React.FC = () => {
   }, []);
   
   // Filter products when search text or filters change
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (products) {
       let filtered = [...products];

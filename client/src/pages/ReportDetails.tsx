@@ -1,46 +1,42 @@
-import React, { useState, useEffect } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
+  IonAvatar,
+  IonBackButton,
+  IonBadge,
   IonButton,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonTextarea,
-  IonLoading,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonText,
-  IonIcon,
-  IonBackButton,
-  IonButtons,
-  IonList,
-  IonThumbnail,
-  IonImg,
   IonChip,
-  IonAvatar,
-  IonBadge,
-  IonFooter
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonLoading,
+  IonPage,
+  IonText,
+  IonTitle,
+  IonToolbar
 } from '@ionic/react';
 import {
-  warning,
-  location,
-  send,
-  checkmarkCircle,
-  hourglassOutline,
   alertCircleOutline,
   calendar,
-  time,
-  person
+  checkmarkCircle,
+  hourglassOutline,
+  location,
+  person,
+  send,
+  time
 } from 'ionicons/icons';
-import { useReports } from '../contexts/ReportContext';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useReports } from '../contexts/ReportContext';
 import { ReportResponseForm } from '../models/report.model';
 
 interface ReportDetailParams {
@@ -53,7 +49,7 @@ const ReportDetail: React.FC = () => {
   const { id } = useParams<ReportDetailParams>();
   
   const [responseContent, setResponseContent] = useState<string>('');
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isLoggedIn()) {
       fetchReportById(parseInt(id));

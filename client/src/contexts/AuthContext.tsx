@@ -1,14 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { useIonToast } from '@ionic/react';
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import {
-  User,
-  AuthResponse,
+  ChangePasswordRequest,
   LoginRequest,
   RegisterRequest,
   UpdateProfileRequest,
-  ChangePasswordRequest
+  User
 } from '../models/user.model';
 import api from '../services/api';
-import { useIonToast } from '@ionic/react';
 
 interface AuthContextProps {
   user: User | null;

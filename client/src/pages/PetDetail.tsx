@@ -1,53 +1,51 @@
-import React, { useState, useEffect } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
+  IonAlert,
   IonBackButton,
+  IonBadge,
   IonButton,
-  IonIcon,
+  IonButtons,
   IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonCardContent,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonChip,
-  IonLabel,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
   IonItem,
+  IonLabel,
   IonList,
-  IonTextarea,
-  IonAlert,
   IonLoading,
-  IonText,
-  IonBadge,
   IonModal,
-  IonToast
+  IonPage,
+  IonRow,
+  IonText,
+  IonTextarea,
+  IonTitle,
+  IonToast,
+  IonToolbar
 } from '@ionic/react';
-import { 
-  paw, 
-  heart, 
-  heartOutline, 
-  calendar, 
-  female, 
-  male, 
-  clipboard, 
-  home,
-  share,
-  shareOutline,
-  arrowBack,
+import {
+  calendar,
   checkmarkCircle,
-  close
+  clipboard,
+  close,
+  female,
+  heart,
+  heartOutline,
+  home,
+  male,
+  paw,
+  shareOutline
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { usePets } from '../contexts/PetContext';
 import { useAuth } from '../contexts/AuthContext';
+import { usePets } from '../contexts/PetContext';
 import { AdoptionApplicationForm } from '../models/pet.model';
-import "./PetDetail.css"
+import "./PetDetail.css";
 interface PetDetailParams {
   id: string;
 }
@@ -66,6 +64,7 @@ const PetDetail: React.FC = () => {
   const [showLoginAlert, setShowLoginAlert] = useState(false);
   
   // Load pet details when component mounts or id changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (id) {
       fetchPetById(parseInt(id));

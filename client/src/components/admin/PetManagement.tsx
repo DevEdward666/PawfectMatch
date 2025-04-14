@@ -1,61 +1,51 @@
-import React, { useEffect, useState } from 'react';
 import {
+  IonAlert,
+  IonAvatar,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonChip,
   IonCol,
+  IonContent,
   IonGrid,
+  IonHeader,
   IonIcon,
+  IonInput,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonRow,
   IonSearchbar,
-  IonSegment,
-  IonSegmentButton,
   IonSelect,
   IonSelectOption,
-  IonBadge,
-  IonText,
-  IonAlert,
-  IonToast,
-  IonChip,
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButtons,
-  IonFab,
-  IonFabButton,
-  useIonActionSheet,
-  IonThumbnail,
-  IonAvatar,
-  IonTextarea,
-  IonInput,
-  useIonToast,
   IonSpinner,
-  IonPopover,
-  IonLoading
+  IonText,
+  IonTextarea,
+  IonTitle,
+  IonToolbar,
+  useIonActionSheet,
+  useIonToast
 } from '@ionic/react';
 import {
-  paw,
   add,
-  ellipsisVertical,
-  trash,
+  closeOutline,
   create,
+  ellipsisVertical,
   eyeOutline,
   filterOutline,
+  paw,
   refreshOutline,
-  closeOutline
+  trash
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
 import { usePets } from '../../contexts/PetContext';
-import { Pet, PetForm, AdoptionApplication } from '../../models/pet.model';
-import { formatDistanceToNow } from 'date-fns';
 import { usePhotoGallery } from '../../hooks/usePhotoGallery';
-import './PetManagement.css'
+import { AdoptionApplication, Pet, PetForm } from '../../models/pet.model';
+import './PetManagement.css';
 const PetManagement: React.FC = () => {
   const {
     pets,
@@ -85,7 +75,6 @@ const PetManagement: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [currentPet, setCurrentPet] = useState<Pet | null>(null);
   const [showAdoptionApplications, setShowAdoptionApplications] = useState<boolean>(false);
-  const [selectedApplication, setSelectedApplication] = useState<AdoptionApplication | null>(null);
   
   // Form state
   const [formData, setFormData] = useState<PetForm>({
@@ -103,6 +92,7 @@ const PetManagement: React.FC = () => {
   const [photoPreview, setPhotoPreview] = useState<string | undefined>(undefined);
   
   // Effects
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadPets();
     loadAdoptionApplications();
@@ -121,9 +111,9 @@ const PetManagement: React.FC = () => {
     setSearchText(e.detail.value!);
   };
   
-  const handleViewChange = (e: CustomEvent) => {
-    setActiveView(e.detail.value);
-  };
+  // const handleViewChange = (e: CustomEvent) => {
+  //   setActiveView(e.detail.value);
+  // };
   
   const resetForm = () => {
     setFormData({

@@ -1,70 +1,55 @@
-import React, { useEffect, useState } from 'react';
 import {
+  IonAvatar,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonChip,
   IonCol,
+  IonContent,
   IonGrid,
+  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonRow,
   IonSearchbar,
-  IonSegment,
-  IonSegmentButton,
   IonSelect,
   IonSelectOption,
-  IonBadge,
-  IonText,
-  IonAlert,
-  IonToast,
-  IonChip,
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButtons,
-  IonFab,
-  IonFabButton,
-  useIonActionSheet,
-  IonThumbnail,
-  IonAvatar,
-  IonTextarea,
-  IonInput,
-  useIonToast,
   IonSpinner,
-  IonPopover,
-  IonLoading
+  IonText,
+  IonTextarea,
+  IonTitle,
+  IonToolbar,
+  useIonActionSheet,
+  useIonToast
 } from '@ionic/react';
+import { formatDistanceToNow } from 'date-fns';
 import {
-  warning,
-  ellipsisVertical,
-  trash,
-  create,
-  eyeOutline,
-  filterOutline,
-  refreshOutline,
-  closeOutline,
+  alertCircleOutline,
   chatbubbleEllipses,
   checkmarkCircle,
+  closeOutline,
+  ellipsisVertical,
+  eyeOutline,
+  filterOutline,
   hourglassOutline,
-  timeOutline,
-  alertCircleOutline
+  refreshOutline,
+  timeOutline
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
 import { useReports } from '../../contexts/ReportContext';
-import { Report, ReportForm, ReportResponseForm } from '../../models/report.model';
-import { formatDistanceToNow } from 'date-fns';
+import { Report } from '../../models/report.model';
 
 const ReportManagement: React.FC = () => {
   const {
     reports,
     currentReport,
     isLoading,
-    error,
     fetchAllReports,
     fetchReportById,
     updateReportStatus,
@@ -77,8 +62,6 @@ const ReportManagement: React.FC = () => {
   // State variables
   const [searchText, setSearchText] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
-  const [reportToDelete, setReportToDelete] = useState<Report | null>(null);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [showReportDetailModal, setShowReportDetailModal] = useState<boolean>(false);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
@@ -86,6 +69,7 @@ const ReportManagement: React.FC = () => {
   const [responseContent, setResponseContent] = useState<string>('');
   
   // Effects
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadReports();
   }, []);

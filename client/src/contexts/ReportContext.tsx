@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { useIonToast } from '@ionic/react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { Report, ReportForm, ReportResponseForm } from '../models/report.model';
 import api from '../services/api';
-import { useIonToast } from '@ionic/react';
 
 interface ReportContextProps {
   reports: Report[];

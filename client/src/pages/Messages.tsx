@@ -1,57 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import { RefresherEventDetail } from '@ionic/core';
 import {
+  IonAlert,
+  IonAvatar,
+  IonBadge,
+  IonButton,
+  IonButtons,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonSegment,
-  IonSegmentButton,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
   IonLabel,
   IonList,
-  IonItem,
-  IonAvatar,
-  IonText,
+  IonLoading,
+  IonModal,
   IonNote,
-  IonButton,
-  IonIcon,
+  IonPage,
   IonRefresher,
   IonRefresherContent,
   IonSearchbar,
-  IonModal,
-  IonButtons,
-  IonBackButton,
-  IonInput,
-  IonTextarea,
-  IonLoading,
-  IonBadge,
-  IonItemSliding,
-  IonItemOptions,
-  IonItemOption,
-  IonAlert,
-  IonFab,
-  IonFabButton,
+  IonSegment,
+  IonSegmentButton,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
+  IonText,
+  IonTextarea,
+  IonTitle,
+  IonToolbar
 } from '@ionic/react';
-import { RefresherEventDetail } from '@ionic/core';
 import {
-  mail,
-  mailOutline,
+  add,
+  close,
   mailOpen,
-  mailOpenOutline,
+  pencil,
   person,
   send,
-  trash,
-  close,
-  add,
-  pencil
+  trash
 } from 'ionicons/icons';
-import { useMessages } from '../contexts/MessageContext';
-import { useAuth } from '../contexts/AuthContext';
-import { MessageForm } from '../models/message.model';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import "./Messages.css"
+import { useAuth } from '../contexts/AuthContext';
+import { useMessages } from '../contexts/MessageContext';
+import { MessageForm } from '../models/message.model';
+import "./Messages.css";
 const Messages: React.FC = () => {
   const { 
     inboxMessages, 
@@ -80,11 +76,13 @@ const Messages: React.FC = () => {
     content: ''
   });
   // Load messages when component mounts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchMessages();
   }, []);
   
   // Filter messages when search text changes or active segment changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const currentMessages = activeSegment === 'inbox' ? inboxMessages : sentMessages;
     

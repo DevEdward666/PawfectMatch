@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { useIonToast } from '@ionic/react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { Product, ProductForm } from '../models/product.model';
 import api from '../services/api';
-import { useIonToast } from '@ionic/react';
 
 interface ProductContextProps {
   products: Product[];

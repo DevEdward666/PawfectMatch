@@ -1,55 +1,52 @@
-import React, { useState, useEffect } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
-  IonIcon,
+  IonBadge,
   IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonChip,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
-  IonBadge,
-  IonSegment,
-  IonSegmentButton,
   IonLoading,
-  IonText,
+  IonPage,
   IonRefresher,
   IonRefresherContent,
-  IonChip
+  IonRow,
+  IonSegment,
+  IonSegmentButton,
+  IonText,
+  IonTitle,
+  IonToolbar
 } from '@ionic/react';
 import {
-  people,
-  paw,
-  basket,
-  warning,
-  heart,
-  chatbubbleEllipses,
-  calendar,
-  barChart,
-  checkmarkCircle,
-  hourglassOutline,
   alertCircleOutline,
+  basket,
+  chatbubbleEllipses,
+  checkmarkCircle,
+  heart,
+  hourglassOutline,
+  paw,
+  people,
+  refreshOutline,
   timeOutline,
-  refreshOutline
+  warning
 } from 'ionicons/icons';
-import { useAuth } from '../contexts/AuthContext';
-import { Redirect } from 'react-router';
-import api from '../services/api';
+import React, { useEffect, useState } from 'react';
 import MessageManagement from '../components/admin/MessageManagement';
 import PetManagement from '../components/admin/PetManagement';
 import ProductManagement from '../components/admin/ProductManagement';
 import ReportManagement from '../components/admin/ReportManagement';
 import UserManagement from '../components/admin/UserManagement';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
 
 interface DashboardStats {
   counts: {

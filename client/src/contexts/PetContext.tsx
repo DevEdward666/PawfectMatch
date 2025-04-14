@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Pet, PetForm, AdoptionApplication, AdoptionApplicationForm } from '../models/pet.model';
-import api from '../services/api';
 import { useIonToast } from '@ionic/react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { AdoptionApplication, AdoptionApplicationForm, Pet, PetForm } from '../models/pet.model';
+import api from '../services/api';
 
 interface PetContextProps {
   pets: Pet[];

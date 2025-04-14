@@ -1,50 +1,44 @@
-import React, { useState, useEffect } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
+  IonAlert,
   IonBackButton,
+  IonBadge,
   IonButton,
-  IonIcon,
+  IonButtons,
   IonCard,
   IonCardContent,
-  IonText,
-  IonLoading,
-  IonAlert,
   IonChip,
-  IonLabel,
-  IonBadge,
-  IonGrid,
-  IonRow,
   IonCol,
-  IonToast,
-  IonItem,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
   IonInput,
-  IonThumbnail,
-  IonList,
-  IonAvatar
+  IonLabel,
+  IonLoading,
+  IonPage,
+  IonRow,
+  IonText,
+  IonTitle,
+  IonToast,
+  IonToolbar
 } from '@ionic/react';
 import {
+  add,
   basket,
   cart,
-  star,
-  starOutline,
-  share,
-  shareOutline,
-  arrowBack,
-  remove,
-  add,
   close,
   informationCircle,
-  pricetag
+  pricetag,
+  remove,
+  shareOutline,
+  star,
+  starOutline
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { useProducts } from '../contexts/ProductContext';
 import { useAuth } from '../contexts/AuthContext';
-import "./ProductDetail.css"
+import { useProducts } from '../contexts/ProductContext';
+import "./ProductDetail.css";
 interface ProductDetailParams {
   id: string;
 }
@@ -64,6 +58,7 @@ const ProductDetail: React.FC = () => {
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   
   // Load product details when component mounts or id changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (id) {
       fetchProductById(parseInt(id));
@@ -78,6 +73,7 @@ const ProductDetail: React.FC = () => {
   }, [id]);
   
   // Reset quantity to 1 when product changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setQuantity(1);
   }, [product]);

@@ -1,66 +1,55 @@
-import React, { useEffect, useState } from 'react';
 import {
+  IonAlert,
+  IonAvatar,
+  IonBadge,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
   IonCol,
+  IonContent,
   IonGrid,
+  IonHeader,
   IonIcon,
+  IonInput,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonRow,
   IonSearchbar,
-  IonSegment,
-  IonSegmentButton,
   IonSelect,
   IonSelectOption,
-  IonBadge,
-  IonText,
-  IonAlert,
-  IonToast,
-  IonChip,
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButtons,
-  IonFab,
-  IonFabButton,
-  useIonActionSheet,
-  IonThumbnail,
-  IonAvatar,
-  IonTextarea,
-  IonInput,
-  useIonToast,
   IonSpinner,
-  IonPopover,
-  IonLoading
+  IonText,
+  IonTextarea,
+  IonTitle,
+  IonToolbar,
+  useIonActionSheet,
+  useIonToast
 } from '@ionic/react';
 import {
-  basket,
   add,
-  ellipsisVertical,
-  trash,
+  basket,
+  closeOutline,
   create,
+  ellipsisVertical,
   eyeOutline,
   filterOutline,
   refreshOutline,
-  closeOutline
+  trash
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
 import { useProducts } from '../../contexts/ProductContext';
-import { Product, ProductForm } from '../../models/product.model';
-import { formatDistanceToNow } from 'date-fns';
 import { usePhotoGallery } from '../../hooks/usePhotoGallery';
+import { Product, ProductForm } from '../../models/product.model';
 
 const ProductManagement: React.FC = () => {
   const {
     products,
     isLoading,
-    error,
     fetchProducts,
     createProduct,
     updateProduct,
@@ -94,6 +83,7 @@ const ProductManagement: React.FC = () => {
   const [photoPreview, setPhotoPreview] = useState<string | undefined>(undefined);
   
   // Effects
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadProducts();
   }, []);

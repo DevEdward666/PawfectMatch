@@ -1,5 +1,3 @@
-import React from 'react';
-import { Redirect, Route } from 'react-router';
 import {
   IonApp,
   IonIcon,
@@ -11,26 +9,28 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { home, paw, basket, chatbubbleEllipses, person, warning } from 'ionicons/icons';
+import { chatbubbleEllipses, home, person } from 'ionicons/icons';
+import React from 'react';
+import { Redirect, Route } from 'react-router';
 
 // Pages
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
-import Report from './pages/Report';
-import Pets from './pages/Pets';
-import PetDetail from './pages/PetDetail';
-import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
-import Messages from './pages/Messages';
 import MessageDetail from './pages/MessageDetail';
+import Messages from './pages/Messages';
+import PetDetail from './pages/PetDetail';
+import Pets from './pages/Pets';
+import ProductDetail from './pages/ProductDetail';
+import Products from './pages/Products';
+import Profile from './pages/Profile';
+import Register from './pages/Register';
+import Report from './pages/Report';
 
 // Contexts
 import { AuthProvider } from './contexts/AuthContext';
+import { MessageProvider } from './contexts/MessageContext';
 import { PetProvider } from './contexts/PetContext';
 import { ProductProvider } from './contexts/ProductContext';
-import { MessageProvider } from './contexts/MessageContext';
 import { ReportProvider } from './contexts/ReportContext';
 
 /* Core CSS required for Ionic components to work properly */
@@ -42,17 +42,17 @@ import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 
 /* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css';
+import '@ionic/react/css/display.css';
+import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/float-elements.css';
+import '@ionic/react/css/padding.css';
 import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
 
 /* Theme variables */
-import './theme/variables.css';
 import Admin from 'pages/Admin';
 import ReportDetail from 'pages/ReportDetails';
+import './theme/variables.css';
 
 // Initialize Ionic
 setupIonicReact();

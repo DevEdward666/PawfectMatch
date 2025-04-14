@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
+  IonBackButton,
   IonButton,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonTextarea,
-  IonLoading,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonText,
-  IonIcon,
-  IonBackButton,
-  IonButtons,
-  IonList,
-  IonThumbnail,
-  IonImg,
   IonChip,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonImg,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonLoading,
+  IonPage,
   IonSegment,
   IonSegmentButton,
+  IonText,
+  IonTextarea,
+  IonThumbnail,
+  IonTitle,
+  IonToolbar,
   useIonActionSheet
 } from '@ionic/react';
 import {
-  warning,
+  alertCircleOutline,
+  camera,
+  checkmarkCircle,
+  documentText,
+  hourglassOutline,
   images,
   location,
-  camera,
-  documentText,
-  send,
   refresh,
+  send,
   trash,
-  checkmarkCircle,
-  hourglassOutline,
-  alertCircleOutline
+  warning
 } from 'ionicons/icons';
-import { useReports } from '../contexts/ReportContext';
-import { useAuth } from '../contexts/AuthContext';
-import { usePhotoGallery } from '../hooks/usePhotoGallery';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useReports } from '../contexts/ReportContext';
+import { usePhotoGallery } from '../hooks/usePhotoGallery';
 import { ReportForm } from '../models/report.model';
 
 const Report: React.FC = () => {
@@ -64,6 +64,7 @@ const Report: React.FC = () => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   
   // Load user's reports on component mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isLoggedIn()) {
       fetchUserReports();

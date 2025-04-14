@@ -1,50 +1,46 @@
-import React, { useState, useEffect } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonInput,
+  IonAvatar,
+  IonBadge,
   IonButton,
-  IonIcon,
   IonCard,
   IonCardContent,
   IonCardHeader,
-  IonCardTitle,
-  IonText,
-  IonSegment,
-  IonSegmentButton,
-  IonGrid,
-  IonRow,
   IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonItemDivider,
+  IonLabel,
+  IonList,
   IonLoading,
   IonNote,
-  IonAvatar,
-  IonBadge,
-  IonItemDivider
+  IonPage,
+  IonRow,
+  IonSegment,
+  IonSegmentButton,
+  IonText,
+  IonTitle,
+  IonToolbar
 } from '@ionic/react';
 import {
-  person,
-  mail,
   call,
   location,
   lockClosed,
-  save,
   logOut,
   paw,
-  basket,
-  warning,
-  chatbubbleEllipses
+  person,
+  save,
+  warning
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { usePets } from '../contexts/PetContext';
 import { useReports } from '../contexts/ReportContext';
-import { Redirect } from 'react-router-dom';
-import "./Profile.css"
+import "./Profile.css";
 const Profile: React.FC = () => {
   const { user, isLoading: authLoading, error: authError, logout, updateProfile, changePassword, isLoggedIn } = useAuth();
   const { adoptionApplications, fetchUserAdoptionApplications, isLoading: petsLoading } = usePets();
@@ -76,6 +72,7 @@ const Profile: React.FC = () => {
   });
   
   // Update profile form when user data changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (user) {
       setProfileData({
@@ -88,6 +85,7 @@ const Profile: React.FC = () => {
   }, [user]);
   
   // Fetch user's adoption applications and reports when component mounts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isLoggedIn()) {
       console.log(user)

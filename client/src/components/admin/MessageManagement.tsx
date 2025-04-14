@@ -1,58 +1,47 @@
-import React, { useEffect, useState } from 'react';
 import {
+  IonBadge,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonChip,
   IonCol,
+  IonContent,
   IonGrid,
+  IonHeader,
   IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonRow,
   IonSearchbar,
   IonSegment,
   IonSegmentButton,
-  IonSelect,
-  IonSelectOption,
-  IonBadge,
-  IonText,
-  IonAlert,
-  IonToast,
-  IonChip,
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButtons,
-  IonFab,
-  IonFabButton,
-  useIonActionSheet,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
   IonSpinner,
-  IonPopover
+  IonText,
+  IonTitle,
+  IonToast,
+  IonToolbar,
+  useIonActionSheet
 } from '@ionic/react';
+import { formatDistanceToNow } from 'date-fns';
 import {
+  arrowBack,
+  checkmarkCircle,
+  eyeOutline,
   mail,
   mailOutline,
-  trashOutline,
-  eyeOutline,
-  ellipsisVertical,
-  checkmarkCircle,
-  closeCircle,
-  addOutline,
-  arrowBack,
-  createOutline,
-  filterOutline,
-  refreshOutline
+  refreshOutline,
+  trashOutline
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
 import { useMessages } from '../../contexts/MessageContext';
 import { Message } from '../../models/message.model';
-import { formatDistanceToNow } from 'date-fns';
 
 const MessageManagement: React.FC = () => {
   const {
@@ -76,7 +65,7 @@ const MessageManagement: React.FC = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>('');
   const [present] = useIonActionSheet();
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadMessages();
   }, []);
@@ -114,21 +103,21 @@ const MessageManagement: React.FC = () => {
     }
   };
   
-  const handleRefresh = async (event: CustomEvent) => {
-    try {
-      await fetchAllMessages(1, 50);
-      if (event.detail) {
-        event.detail.complete();
-      }
-    } catch (error) {
-      console.error('Error refreshing messages:', error);
-      setToastMessage('Failed to refresh messages. Please try again.');
-      setShowToast(true);
-      if (event.detail) {
-        event.detail.complete();
-      }
-    }
-  };
+  // const handleRefresh = async (event: CustomEvent) => {
+  //   try {
+  //     await fetchAllMessages(1, 50);
+  //     if (event.detail) {
+  //       event.detail.complete();
+  //     }
+  //   } catch (error) {
+  //     console.error('Error refreshing messages:', error);
+  //     setToastMessage('Failed to refresh messages. Please try again.');
+  //     setShowToast(true);
+  //     if (event.detail) {
+  //       event.detail.complete();
+  //     }
+  //   }
+  // };
   
   const handleDeleteMessage = (messageId: number) => {
     present({

@@ -1,67 +1,56 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import {
+  IonAlert,
+  IonAvatar,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonChip,
   IonCol,
+  IonContent,
   IonGrid,
+  IonHeader,
   IonIcon,
+  IonInput,
   IonItem,
   IonLabel,
   IonList,
+  IonModal,
   IonRow,
   IonSearchbar,
-  IonSegment,
-  IonSegmentButton,
   IonSelect,
   IonSelectOption,
-  IonBadge,
-  IonText,
-  IonAlert,
-  IonToast,
-  IonChip,
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButtons,
-  IonFab,
-  IonFabButton,
-  useIonActionSheet,
-  IonThumbnail,
-  IonAvatar,
-  IonTextarea,
-  IonInput,
-  useIonToast,
   IonSpinner,
-  IonPopover,
-  IonLoading
+  IonText,
+  IonTextarea,
+  IonTitle,
+  IonToolbar,
+  useIonActionSheet,
+  useIonToast
 } from '@ionic/react';
 import {
-  people,
-  person,
   add,
-  ellipsisVertical,
-  trash,
+  callOutline,
+  closeOutline,
   create,
+  ellipsisVertical,
   eyeOutline,
   filterOutline,
-  refreshOutline,
-  closeOutline,
-  mailOutline,
-  callOutline,
   homeOutline,
-  shieldOutline,
+  mailOutline,
+  person,
   personCircleOutline,
-  timeOutline
+  refreshOutline,
+  shieldOutline,
+  timeOutline,
+  trash
 } from 'ionicons/icons';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { User, RegisterRequest, UpdateProfileRequest } from '../../models/user.model';
+import { RegisterRequest, UpdateProfileRequest, User } from '../../models/user.model';
 import api from '../../services/api';
-import { formatDistanceToNow } from 'date-fns';
 
 // We don't have a dedicated UserContext, so we'll fetch users directly with API here
 const UserManagement: React.FC = () => {
@@ -100,6 +89,7 @@ const UserManagement: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState<'user' | 'admin'>('user');
   
   // Effects
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadUsers();
   }, []);
@@ -220,7 +210,7 @@ const UserManagement: React.FC = () => {
     
     return true;
   };
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSubmit =  useCallback( async() => {
     if (!validateForm()) return;
     

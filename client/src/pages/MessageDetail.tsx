@@ -1,42 +1,41 @@
-import React, { useState, useEffect } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
+  IonAlert,
+  IonAvatar,
   IonBackButton,
   IonButton,
-  IonIcon,
+  IonButtons,
   IonCard,
   IonCardContent,
-  IonAvatar,
-  IonText,
-  IonTextarea,
+  IonContent,
   IonFooter,
-  IonLoading,
-  IonAlert,
+  IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
+  IonLoading,
+  IonModal,
   IonNote,
-  IonModal
+  IonPage,
+  IonText,
+  IonTextarea,
+  IonTitle,
+  IonToolbar
 } from '@ionic/react';
 import {
-  person,
-  trash,
   arrowBack,
-  send,
-  close,
   calendar,
-  mail
+  close,
+  mail,
+  person,
+  send,
+  trash
 } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { useMessages } from '../contexts/MessageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useMessages } from '../contexts/MessageContext';
 import { MessageForm } from '../models/message.model';
-import { Redirect } from 'react-router-dom';
-import "./MessageDetail.css"
+import "./MessageDetail.css";
 interface MessageDetailParams {
   id: string;
 }
@@ -60,6 +59,7 @@ const MessageDetail: React.FC = () => {
   const [showError, setShowError] = useState(false);
   
   // Load message when component mounts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (id) {
       fetchMessageById(parseInt(id));
