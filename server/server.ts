@@ -18,7 +18,7 @@ dotenv.config();
 
 // Create Express application
 const app: Application = express();
-const PORT: number = Number(process.env.PORT) || 5001;
+const PORT: number = Number(process.env.PORT) || 3000;
 
 // Test database connection
 async function testDbConnection() {

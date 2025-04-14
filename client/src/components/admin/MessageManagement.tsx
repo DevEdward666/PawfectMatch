@@ -46,11 +46,9 @@ import { Message } from '../../models/message.model';
 const MessageManagement: React.FC = () => {
   const {
     allMessages,
-    totalMessages,
     currentPage,
     totalPages,
     isLoading,
-    error,
     fetchAllMessages,
     adminDeleteMessage
   } = useMessages();
@@ -58,10 +56,7 @@ const MessageManagement: React.FC = () => {
   const [activeView, setActiveView] = useState<string>('all');
   const [searchText, setSearchText] = useState<string>('');
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
   const [showMessageDetail, setShowMessageDetail] = useState<boolean>(false);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [showFilter, setShowFilter] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>('');
   const [present] = useIonActionSheet();
