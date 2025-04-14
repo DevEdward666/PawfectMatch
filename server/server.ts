@@ -93,7 +93,9 @@ app.use('/api/*', (req: Request, res: Response) => {
     message: 'API route not found'
   });
 });
-
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 // Start the server only if database connection is successful
 async function startServer() {
   const dbConnected = await testDbConnection();
