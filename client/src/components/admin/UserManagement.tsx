@@ -187,49 +187,49 @@ const UserManagement: React.FC = () => {
     });
   };
   
-  const validateForm = (): boolean => {
-    // Required fields validation
-    if (!isEditMode && (!formData.username || !formData.email || !formData.password)) {
-      presentToast({
-        message: 'Username, email, and password are required',
-        duration: 3000,
-        color: 'danger'
-      });
-      return false;
-    }
+  // const validateForm = (): boolean => {
+  //   // Required fields validation
+  //   if (!isEditMode && (!formData.username || !formData.email || !formData.password)) {
+  //     presentToast({
+  //       message: 'Username, email, and password are required',
+  //       duration: 3000,
+  //       color: 'danger'
+  //     });
+  //     return false;
+  //   }
     
-    if (isEditMode && (!formData.username || !formData.email)) {
-      presentToast({
-        message: 'Username and email are required',
-        duration: 3000,
-        color: 'danger'
-      });
-      return false;
-    }
+  //   if (isEditMode && (!formData.username || !formData.email)) {
+  //     presentToast({
+  //       message: 'Username and email are required',
+  //       duration: 3000,
+  //       color: 'danger'
+  //     });
+  //     return false;
+  //   }
     
-    // Password matching for new users
-    if (!isEditMode && formData.password !== passwordConfirm) {
-      presentToast({
-        message: 'Passwords do not match',
-        duration: 3000,
-        color: 'danger'
-      });
-      return false;
-    }
+  //   // Password matching for new users
+  //   if (!isEditMode && formData.password !== passwordConfirm) {
+  //     presentToast({
+  //       message: 'Passwords do not match',
+  //       duration: 3000,
+  //       color: 'danger'
+  //     });
+  //     return false;
+  //   }
     
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      presentToast({
-        message: 'Please enter a valid email address',
-        duration: 3000,
-        color: 'danger'
-      });
-      return false;
-    }
+  //   // Email format validation
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!emailRegex.test(formData.email)) {
+  //     presentToast({
+  //       message: 'Please enter a valid email address',
+  //       duration: 3000,
+  //       color: 'danger'
+  //     });
+  //     return false;
+  //   }
     
-    return true;
-  };
+  //   return true;
+  // };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSubmit =  useCallback( async() => {
     // if (!validateForm()) return;
