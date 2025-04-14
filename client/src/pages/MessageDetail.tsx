@@ -63,9 +63,8 @@ const MessageDetail: React.FC = () => {
   useEffect(() => {
     if (id) {
       fetchMessageById(parseInt(id));
-      console.log(isLoggedIn())
     }
-  }, [id]);
+  }, [id,fetchMessageById]);
   // If user is not logged in, redirect to login
   // if (!isLoggedIn()) {
   //   return <Redirect to="/login" />;

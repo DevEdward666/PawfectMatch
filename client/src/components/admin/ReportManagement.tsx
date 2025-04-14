@@ -71,8 +71,11 @@ const ReportManagement: React.FC = () => {
   // Effects
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    loadReports();
-  }, []);
+    const initialize = async () => {
+      await fetchAllReports();
+    };
+    initialize();
+  }, [fetchAllReports]);
   
   // Functions
   const loadReports = async () => {

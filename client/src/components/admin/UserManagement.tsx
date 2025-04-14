@@ -62,7 +62,7 @@ const UserManagement: React.FC = () => {
   // State variables
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setError] = useState<string | null>(null);
   const [searchText, setSearchText] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
@@ -91,8 +91,28 @@ const UserManagement: React.FC = () => {
   // Effects
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    loadUsers();
-  }, []);
+    const initialize = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const response = await api.get('/users/getAllUsers');
+        setUsers(response.data.data);
+      } catch (error: any) {
+        console.error('Error loading users:', error);
+        setError(error.response?.data?.message || 'Failed to load users');
+        presentToast({
+          message: `Error loading users ${errors}`,
+          duration: 3000,
+          color: 'danger'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    initialize();
+
+  }, [presentToast]);
   
   // Functions
   const loadUsers = async () => {
@@ -106,7 +126,7 @@ const UserManagement: React.FC = () => {
       console.error('Error loading users:', error);
       setError(error.response?.data?.message || 'Failed to load users');
       presentToast({
-        message: 'Error loading users',
+        message: `Error loading users ${errors}`,
         duration: 3000,
         color: 'danger'
       });
@@ -266,7 +286,7 @@ const UserManagement: React.FC = () => {
         color: 'danger'
       });
     }
-  },[token,selectedUser,formData,selectedRole,isEditMode]);
+  },[token,selectedUser,formData,selectedRole,isEditMode,presentToast,loadUsers,validateForm]);
   
   const confirmDelete = (user: User) => {
     // Prevent self-deletion

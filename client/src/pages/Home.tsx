@@ -42,23 +42,23 @@ const slideOpts = {
 
 const Home: React.FC = () => {
   const { pets, isLoading: petsLoading, fetchPets } = usePets();
-  const { products, isLoading: productsLoading, fetchProducts } = useProducts();
+  const { products, fetchProducts } = useProducts();
   const { isLoggedIn } = useAuth();
   
   // States for UI animations/interactions
-  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  // const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
   const [recentPets, setRecentPets] = useState<any[]>([]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Load data when component mounts
     fetchPets();
     fetchProducts();
-  }, []);
+  }, [fetchPets,fetchProducts]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Update featured products when products data changes
     if (products && products.length) {
-      setFeaturedProducts(products.filter((p) => p.stock > 0).slice(0, 5));
+      // setFeaturedProducts(products.filter((p) => p.stock > 0).slice(0, 5));
     }
   }, [products]);
   // eslint-disable-next-line react-hooks/exhaustive-deps

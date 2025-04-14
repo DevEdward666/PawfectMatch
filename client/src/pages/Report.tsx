@@ -48,7 +48,7 @@ import { ReportForm } from '../models/report.model';
 
 const Report: React.FC = () => {
   const { userReports, submitReport, fetchUserReports, isLoading, error } = useReports();
-  const { isLoggedIn, isAdmin } = useAuth();
+  const { isLoggedIn } = useAuth();
   const { takePhoto } = usePhotoGallery();
   const [presentActionSheet] = useIonActionSheet();
   
@@ -69,7 +69,7 @@ const Report: React.FC = () => {
     if (isLoggedIn()) {
       fetchUserReports();
     }
-  }, []);
+  }, [fetchUserReports,isLoggedIn]);
   
   // If user is not logged in, redirect to login page
   if (!isLoggedIn()) {
@@ -295,7 +295,7 @@ const Report: React.FC = () => {
                     <div style={{ position: 'relative' }}>
                       <img 
                         src={previewImage} 
-                        alt="Report image" 
+                        alt="Report" 
                         style={{ 
                           maxWidth: '100%', 
                           maxHeight: '200px',

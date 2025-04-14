@@ -109,7 +109,7 @@ interface InventoryStatus {
 }
 
 const Admin: React.FC = () => {
-  const { isLoggedIn, isAdmin,token } = useAuth();
+  // const { isLoggedIn, isAdmin,token } = useAuth();
   const [activeSegment, setActiveSegment] = useState<string>('dashboard');
   const [loading, setLoading] = useState<boolean>(true);
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -120,8 +120,35 @@ const Admin: React.FC = () => {
 
   useEffect(() => {
     // if (isLoggedIn() && isAdmin()) {
-      fetchDashboardData();
+      const initialize = async () => {
+        setLoading(true);
+        setError(null);
+    
+        try {
+          // Fetch stats
+          const statsResponse = await api.get('/dashboard/stats');
+          setStats(statsResponse.data.data);
+    
+          // Fetch recent adoptions
+          const adoptionsResponse = await api.get('/dashboard/recent-adoptions?limit=5');
+          setRecentAdoptions(adoptionsResponse.data.data);
+    
+          // Fetch recent reports
+          const reportsResponse = await api.get('/dashboard/recent-reports?limit=5');
+          setRecentReports(reportsResponse.data.data);
+    
+          // Fetch inventory status
+          const inventoryResponse = await api.get('/dashboard/inventory');
+          setInventoryStatus(inventoryResponse.data.data);
+        } catch (err: any) {
+          console.error('Error fetching dashboard data:', err);
+          setError(err.response?.data?.message || 'Failed to load dashboard data');
+        } finally {
+          setLoading(false);
+        }
+      };
     // }
+    initialize();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -158,11 +185,11 @@ const Admin: React.FC = () => {
     });
   };
 
-  const navigateTo = (path: string) => {
-    // Use this when we have separate admin pages for each section
-    // For now, we'll use the segment approach
-    console.log(`Navigate to: ${path}`);
-  };
+  // const navigateTo = (path: string) => {
+  //   // Use this when we have separate admin pages for each section
+  //   // For now, we'll use the segment approach
+  //   console.log(`Navigate to: ${path}`);
+  // };
 
   const getStatusColor = (status: string) => {
     switch (status) {

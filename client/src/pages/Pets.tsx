@@ -44,7 +44,7 @@ import { Pet } from '../models/pet.model';
 import "./Pets.css";
 const Pets: React.FC = () => {
   const { pets, isLoading, error, fetchPets } = usePets();
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
   
   const [searchText, setSearchText] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState<string>('');
@@ -61,7 +61,7 @@ const Pets: React.FC = () => {
     if (savedFavorites) {
       setFavorites(JSON.parse(savedFavorites));
     }
-  }, []);
+  }, [fetchPets]);
   
   // Filter pets when search text or filter changes
   // eslint-disable-next-line react-hooks/exhaustive-deps

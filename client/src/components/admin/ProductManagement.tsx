@@ -85,8 +85,12 @@ const ProductManagement: React.FC = () => {
   // Effects
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    loadProducts();
-  }, []);
+    const initialize =async()=>{
+
+      await fetchProducts();
+    }
+    initialize();
+  }, [fetchProducts]);
   
   // Functions
   const loadProducts = async () => {

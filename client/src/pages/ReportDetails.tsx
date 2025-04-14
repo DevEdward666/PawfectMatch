@@ -45,7 +45,7 @@ interface ReportDetailParams {
 
 const ReportDetail: React.FC = () => {
   const { currentReport, fetchReportById, updateReportStatus, respondToReport, isLoading, error } = useReports();
-  const { isLoggedIn, isAdmin, user } = useAuth();
+  const { isLoggedIn, isAdmin } = useAuth();
   const { id } = useParams<ReportDetailParams>();
   
   const [responseContent, setResponseContent] = useState<string>('');
@@ -54,7 +54,7 @@ const ReportDetail: React.FC = () => {
     if (isLoggedIn()) {
       fetchReportById(parseInt(id));
     }
-  }, [id]);
+  }, [id,fetchReportById,isLoggedIn]);
   
   const handleStatusChange = async (status: 'pending' | 'reviewing' | 'resolved') => {
     await updateReportStatus(parseInt(id), status);

@@ -47,7 +47,7 @@ import { Product } from '../models/product.model';
 import "./Products.css";
 const Products: React.FC = () => {
   const { products, isLoading, error, fetchProducts } = useProducts();
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
 
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -75,7 +75,7 @@ const Products: React.FC = () => {
     if (savedCart) {
       setCartItems(JSON.parse(savedCart));
     }
-  }, []);
+  }, [fetchProducts]);
   
   // Filter products when search text or filters change
   // eslint-disable-next-line react-hooks/exhaustive-deps

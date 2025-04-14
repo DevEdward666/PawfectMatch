@@ -44,14 +44,13 @@ import {
 import React, { useEffect, useState } from 'react';
 import { usePets } from '../../contexts/PetContext';
 import { usePhotoGallery } from '../../hooks/usePhotoGallery';
-import { AdoptionApplication, Pet, PetForm } from '../../models/pet.model';
+import { Pet, PetForm } from '../../models/pet.model';
 import './PetManagement.css';
 const PetManagement: React.FC = () => {
   const {
     pets,
     adoptionApplications,
     isLoading,
-    error,
     fetchPets,
     createPet,
     updatePet,
@@ -65,7 +64,6 @@ const PetManagement: React.FC = () => {
   
   // State variables
   const [searchText, setSearchText] = useState<string>('');
-  const [activeView, setActiveView] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [speciesFilter, setSpeciesFilter] = useState<string>('all');
   const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
@@ -94,9 +92,12 @@ const PetManagement: React.FC = () => {
   // Effects
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    loadPets();
-    loadAdoptionApplications();
-  }, []);
+  const initialize = async () => {
+    await fetchPets();
+    await fetchAllAdoptionApplications();
+  }
+  initialize();
+  }, [fetchPets,fetchAllAdoptionApplications]);
   
   // Functions
   const loadPets = async () => {

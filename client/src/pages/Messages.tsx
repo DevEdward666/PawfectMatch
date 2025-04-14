@@ -60,7 +60,7 @@ const Messages: React.FC = () => {
     error 
   } = useMessages();
   
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn } = useAuth();
   
   const [activeSegment, setActiveSegment] = useState<string>('inbox');
   const [searchText, setSearchText] = useState('');
@@ -79,7 +79,7 @@ const Messages: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchMessages();
-  }, []);
+  }, [fetchMessages]);
   
   // Filter messages when search text changes or active segment changes
   // eslint-disable-next-line react-hooks/exhaustive-deps

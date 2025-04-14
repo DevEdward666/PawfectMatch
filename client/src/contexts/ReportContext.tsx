@@ -129,7 +129,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       setIsLoading(true);
       setError(null);
       
-      const response = await api.put(`/reports/${id}/status`, { status });
+      await api.put(`/reports/${id}/status`, { status });
       
       // Update in reports list
       setReports(reports.map(report => 

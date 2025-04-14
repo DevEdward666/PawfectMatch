@@ -76,7 +76,7 @@ const PetDetail: React.FC = () => {
       const favorites = JSON.parse(savedFavorites);
       setIsFavorite(favorites.includes(parseInt(id)));
     }
-  }, [id]);
+  }, [id,fetchPetById]);
   
   const toggleFavorite = () => {
     const newIsFavorite = !isFavorite;

@@ -46,7 +46,7 @@ interface ProductDetailParams {
 const ProductDetail: React.FC = () => {
   const { id } = useParams<ProductDetailParams>();
   const { product, isLoading, error, fetchProductById } = useProducts();
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
   
   const [isFavorite, setIsFavorite] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -55,7 +55,7 @@ const ProductDetail: React.FC = () => {
   const [showOutOfStockAlert, setShowOutOfStockAlert] = useState(false);
   
   // Related products (would normally fetch from API based on category/tags)
-  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  // const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   
   // Load product details when component mounts or id changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,7 +70,7 @@ const ProductDetail: React.FC = () => {
       const favorites = JSON.parse(savedFavorites);
       setIsFavorite(favorites.includes(parseInt(id)));
     }
-  }, [id]);
+  }, [id,fetchProductById]);
   
   // Reset quantity to 1 when product changes
   // eslint-disable-next-line react-hooks/exhaustive-deps

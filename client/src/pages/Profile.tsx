@@ -88,11 +88,10 @@ const Profile: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isLoggedIn()) {
-      console.log(user)
       fetchUserAdoptionApplications(user?.id!);
       fetchUserReports();
     }
-  }, [user]);
+  }, [user,fetchUserAdoptionApplications,fetchUserReports,isLoggedIn]);
   // If user is not logged in, redirect to login
   if (!isLoggedIn()) {
     return <Redirect to="/login" />;
@@ -163,7 +162,7 @@ const Profile: React.FC = () => {
   
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = await updateProfile(profileData);
+    await updateProfile(profileData);
 
       setUpdateSuccess({
         ...updateSuccess,
@@ -178,7 +177,7 @@ const Profile: React.FC = () => {
       return;
     }
     
-    const result = await changePassword({
+    await changePassword({
       currentPassword: passwordData.currentPassword,
       newPassword: passwordData.newPassword
     });
