@@ -35,6 +35,7 @@ import { usePets } from '../contexts/PetContext';
 import { useProducts } from '../contexts/ProductContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import './Home.css'
 // Slide options
 const slideOpts = {
   initialSlide: 0,
@@ -77,13 +78,13 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="petprimary">
-          <IonTitle>PetShop</IonTitle>
+          <IonTitle>PawfectMatch</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">PetShop</IonTitle>
+            <IonTitle size="large">PawfectMatch</IonTitle>
           </IonToolbar>
         </IonHeader>
         
@@ -95,7 +96,7 @@ const Home: React.FC = () => {
               alt="Pets" 
             />
             <div className="hero-card-content">
-              <h1>Welcome to PetShop</h1>
+              <h1>Welcome to PawfectMatch</h1>
               <p>Adopt a pet, shop for supplies, and report animal cruelty</p>
               {!isLoggedIn() && (
                 <IonButton routerLink="/login" fill="solid" color="light">
@@ -214,7 +215,7 @@ const Home: React.FC = () => {
         )}
 
         {/* Featured Products */}
-        <div className="section-header">
+        {/* <div className="section-header">
           <h2>Featured Products</h2>
           <IonButton routerLink="/products" fill="clear" color="petprimary">
             View All
@@ -244,7 +245,7 @@ const Home: React.FC = () => {
                       </div>
                     )}
                     <IonBadge className="price-badge" color="petsecondary">
-                      ${product.price.toFixed(2)}
+                      ${Number(product?.price ?? 0).toFixed(2)}
                     </IonBadge>
                   </div>
                   <IonCardHeader>
@@ -270,7 +271,7 @@ const Home: React.FC = () => {
             <IonIcon icon={basket} color="medium" />
             <IonText color="medium">No products available right now.</IonText>
           </div>
-        )}
+        )} */}
         
         {/* Report Cruelty Section */}
         <IonCard className="report-card">

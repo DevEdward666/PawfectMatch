@@ -127,7 +127,7 @@ const Menu: React.FC = () => {
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList>
-          <IonListHeader>Pet Shop App</IonListHeader>
+          <IonListHeader>Pawfect Match</IonListHeader>
           <IonNote>Welcome {user ? user.fullName || user.username : 'Guest'}</IonNote>
           
           {renderMenuItems()}

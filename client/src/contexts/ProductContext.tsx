@@ -39,7 +39,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
       setError(null);
       
       const response = await api.get('/products');
-      setProducts(response.data);
+      setProducts(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch products.';
       setError(errorMessage);
@@ -55,7 +55,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
       setError(null);
       
       const response = await api.get(`/products/${id}`);
-      setProduct(response.data);
+      setProduct(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch product details.';
       setError(errorMessage);
@@ -87,7 +87,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
         }
       });
       
-      setProducts([response.data, ...products]);
+      setProducts([response.data.data, ...products]);
       showToast('Product added successfully');
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to create product.';
@@ -120,8 +120,8 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
         }
       });
       
-      setProducts(products.map(p => p.id === id ? response.data : p));
-      setProduct(response.data);
+      setProducts(products.map(p => p.id === id ? response.data.data : p));
+      setProduct(response.data.data);
       showToast('Product updated successfully');
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to update product.';

@@ -323,6 +323,7 @@ const PetManagement: React.FC = () => {
   // Filtering pets
   const filteredPets = pets
     .filter(pet => {
+      console.log(pet)
       // Search filter
       if (searchText) {
         const searchLower = searchText.toLowerCase();

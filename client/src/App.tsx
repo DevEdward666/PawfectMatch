@@ -89,14 +89,14 @@ const App: React.FC = () => (
                       <IonIcon icon={home} />
                       <IonLabel>Home</IonLabel>
                     </IonTabButton>
-                    <IonTabButton tab="pets" href="/pets">
+                    {/* <IonTabButton tab="pets" href="/pets">
                       <IonIcon icon={paw} />
                       <IonLabel>Pets</IonLabel>
                     </IonTabButton>
                     <IonTabButton tab="products" href="/products">
                       <IonIcon icon={basket} />
                       <IonLabel>Shop</IonLabel>
-                    </IonTabButton>
+                    </IonTabButton> */}
                     <IonTabButton tab="messages" href="/messages">
                       <IonIcon icon={chatbubbleEllipses} />
                       <IonLabel>Messages</IonLabel>

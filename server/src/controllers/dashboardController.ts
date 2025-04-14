@@ -1,24 +1,22 @@
-const { Pool } = require('pg');
-const { drizzle } = require('drizzle-orm/node-postgres');
-const { eq, count, and, sql, desc, gt, lt, between } = require('drizzle-orm');
-
-// Database connection
-const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
-const db = drizzle(pool);
-
-// Get schema
-const schema = require('../shared/schema');
-const { 
+import { Pool } from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { eq, count, and, sql, desc, gt, lt, between } from 'drizzle-orm';
+import { Request, Response } from 'express';
+import { 
   users, 
   pets, 
   products, 
   adoptionApplications, 
   reports,
   messages
-} = schema;
+} from '../models/schema';
+// Database connection
+const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
+const db = drizzle(pool);
+
 
 // Get dashboard statistics
-exports.getDashboardStats = async (req, res) => {
+export const getDashboardStats = async (req: Request, res: Response)  => {
   try {
     // Get count of entities
     const [userCount] = await db.select({ count: count() }).from(users);
@@ -38,12 +36,12 @@ exports.getDashboardStats = async (req, res) => {
       .where(eq(reports.status, 'pending'));
     
     // Get unread admin messages (all messages to this admin that are unread)
-    const adminId = req.user.id;
+    const adminId = req.user?.id;
     const [unreadMessageCount] = await db.select({ count: count() })
       .from(messages)
       .where(
         and(
-          eq(messages.receiverId, adminId),
+          eq(messages.receiverId, adminId!),
           eq(messages.isRead, false)
         )
       );
@@ -101,7 +99,7 @@ exports.getDashboardStats = async (req, res) => {
       success: true,
       data: stats
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching dashboard stats:', error);
     res.status(500).json({
       success: false,
@@ -112,9 +110,10 @@ exports.getDashboardStats = async (req, res) => {
 };
 
 // Get recent adoption applications
-exports.getRecentAdoptions = async (req, res) => {
+export const getRecentAdoptions = async (req: Request, res: Response)  => {
   try {
-    const limit = parseInt(req.query.limit) || 5;
+    
+    const limit = parseInt(req.query?.limit?.toString()!) || 5;
     
     if (limit > 20) {
       return res.status(400).json({
@@ -163,7 +162,7 @@ exports.getRecentAdoptions = async (req, res) => {
       success: true,
       data: formattedAdoptions
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching recent adoptions:', error);
     res.status(500).json({
       success: false,
@@ -174,9 +173,9 @@ exports.getRecentAdoptions = async (req, res) => {
 };
 
 // Get recent reports
-exports.getRecentReports = async (req, res) => {
+export const getRecentReports = async (req: Request, res: Response)  => {
   try {
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit?.toString()!) || 5;
     
     if (limit > 20) {
       return res.status(400).json({
@@ -214,7 +213,7 @@ exports.getRecentReports = async (req, res) => {
       success: true,
       data: formattedReports
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching recent reports:', error);
     res.status(500).json({
       success: false,
@@ -225,7 +224,7 @@ exports.getRecentReports = async (req, res) => {
 };
 
 // Get inventory status
-exports.getInventoryStatus = async (req, res) => {
+export const getInventoryStatus = async (req: Request, res: Response)  => {
   try {
     // Get products with low stock
     const lowStockProducts = await db.select({
@@ -274,7 +273,7 @@ exports.getInventoryStatus = async (req, res) => {
       success: true,
       data: inventoryStatus
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching inventory status:', error);
     res.status(500).json({
       success: false,
@@ -285,7 +284,7 @@ exports.getInventoryStatus = async (req, res) => {
 };
 
 // Get adoption trends
-exports.getAdoptionTrends = async (req, res) => {
+export const getAdoptionTrends = async (req: Request, res: Response)  => {
   try {
     const period = req.query.period || 'month';
     let startDate;
@@ -347,7 +346,7 @@ exports.getAdoptionTrends = async (req, res) => {
       success: true,
       data: trends
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching adoption trends:', error);
     res.status(500).json({
       success: false,

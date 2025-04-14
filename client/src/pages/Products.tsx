@@ -347,7 +347,7 @@ const Products: React.FC = () => {
                           )}
                           
                           <IonBadge className="price-badge" color="petsecondary">
-                            ${product.price.toFixed(2)}
+                            ${Number(product?.price ?? 0).toFixed(2)}
                           </IonBadge>
                           
                           <IonButton

@@ -2,29 +2,41 @@ import express, { Request, Response, NextFunction, Application } from 'express';
 import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
-
+import userRoutes from '../server/src/routes/userRoutes';
+import authRoutes from '../server/src/routes/authRoutes';
+import petRoutes from '../server/src/routes/petRoutes';
+import productsRoutes from '../server/src/routes/productRoutes';
+import adoptionRoutes from '../server/src/routes/adoptionRoutes';
+import reportsRoutes from '../server/src/routes/reportRoutes';
+import messagesRoutes from '../server/src/routes/messagesRoutes';
+import dashboardRoutes from '../server/src/routes/dashboardRoutes';
+import uploadRoutes from '../server/src/routes/uploadRoutes';
+// Import database connection
+import { pool } from './src/db/connection';
 // Initialize environment variables
 dotenv.config();
 
 // Create Express application
 const app: Application = express();
-const PORT: number = Number(process.env.PORT) || 5000;
+const PORT: number = Number(process.env.PORT) || 5001;
+
+// Test database connection
+async function testDbConnection() {
+  try {
+    // Test the connection by executing a simple query
+    const client = await pool.connect();
+    console.log('Database connection successful');
+    client.release();
+    return true;
+  } catch (error) {
+    console.error('Database connection error:', error);
+    return false;
+  }
+}
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Import routes (mix of CommonJS modules and TypeScript modules)
-const userRoutes = require('./userRoutes');
-const authRoutes = require('./authRoutes');
-// Using the TypeScript pet routes
-import petRoutes from './src/routes/petRoutes';
-const productsRoutes = require('./productsRoutes');
-const adoptionRoutes = require('./adoptionRoutes');
-const reportsRoutes = require('./reportsRoutes');
-const messagesRoutes = require('./messagesRoutes');
-const dashboardRoutes = require('./dashboardRoutes');
-const uploadRoutes = require('./uploadRoutes');
 
 // API routes
 app.use('/api/users', userRoutes);
@@ -37,8 +49,23 @@ app.use('/api/messages', messagesRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/uploads', uploadRoutes);
 // API health check
-app.get('/api/health', (req: Request, res: Response) => {
-  res.status(200).json({ status: 'ok', message: 'Server is running' });
+app.get('/api/health', async (req: Request, res: Response) => {
+  try {
+    // Check database connection as part of health check
+    const dbConnected = await testDbConnection();
+    
+    res.status(200).json({ 
+      status: 'ok', 
+      message: 'Server is running',
+      database: dbConnected ? 'connected' : 'disconnected'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'Health check failed',
+      error: process.env.NODE_ENV === 'production' ? 'An unexpected error occurred' : (error as Error).message
+    });
+  }
 });
 
 // Serve the static files from client build directory
@@ -67,9 +94,45 @@ app.use('/api/*', (req: Request, res: Response) => {
   });
 });
 
+// Start the server only if database connection is successful
+async function startServer() {
+  const dbConnected = await testDbConnection();
+  
+  if (!dbConnected) {
+    console.error('Failed to connect to the database. Server will not start.');
+    process.exit(1);
+  }
+  
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+
+  // Handle graceful shutdown
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received: closing HTTP server');
+    server.close(async () => {
+      console.log('HTTP server closed');
+      await pool.end();
+      console.log('Database pool has ended');
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    console.log('SIGINT signal received: closing HTTP server');
+    server.close(async () => {
+      console.log('HTTP server closed');
+      await pool.end();
+      console.log('Database pool has ended');
+      process.exit(0);
+    });
+  });
+}
+
 // Start the server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
+startServer().catch(err => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });
 
 export default app;

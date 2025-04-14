@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { db } from '../config/database';
+import { db } from '../../src/db/connection';
 import { 
   pets, 
   Pet, 
   InsertPet, 
   adoptionApplications,
-  InsertAdoptionApplication 
+  InsertAdoptionApplication,
 } from '../models/schema';
 import { and, eq, asc, desc } from 'drizzle-orm';
 import fs from 'fs';

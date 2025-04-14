@@ -269,8 +269,7 @@ const ProductManagement: React.FC = () => {
   };
   
   // Filtering products
-  const filteredProducts = products
-    .filter(product => {
+  const filteredProducts = products?.filter(product => {
       // Search filter
       if (searchText) {
         const searchLower = searchText.toLowerCase();
@@ -282,14 +281,14 @@ const ProductManagement: React.FC = () => {
       }
       return true;
     })
-    .filter(product => {
+    ?.filter(product => {
       // Category filter
       if (categoryFilter !== 'all') {
         return product.category === categoryFilter;
       }
       return true;
     })
-    .filter(product => {
+    ?.filter(product => {
       // Stock filter
       if (stockFilter === 'low') {
         return product.stock < 10;
@@ -418,7 +417,8 @@ const ProductManagement: React.FC = () => {
                         <IonLabel>
                           <h2>{product.name}</h2>
                           <p>
-                            <strong>${product.price.toFixed(2)}</strong> - {product.category}
+                          <strong>${Number(product?.price ?? 0).toFixed(2)}</strong>
+                          - {product.category}
                           </p>
                           <p>{product.description ? product.description.substring(0, 60) + (product.description.length > 60 ? '...' : '') : 'No description'}</p>
                         </IonLabel>

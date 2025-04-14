@@ -42,7 +42,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get('/reports/all');
+      const response = await api.get('/report/all');
       setReports(response.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch reports.';

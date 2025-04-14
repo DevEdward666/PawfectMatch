@@ -305,7 +305,7 @@ const ProductDetail: React.FC = () => {
             </div>
             
             <div className="product-price">
-              <div className="price-amount">${product.price.toFixed(2)}</div>
+              <div className="price-amount">${Number(product?.price ?? 0).toFixed(2)}</div>
               {product.stock > 0 && <div className="stock-count">{product.stock} available</div>}
             </div>
           </div>
@@ -387,7 +387,7 @@ const ProductDetail: React.FC = () => {
                   <IonCol size="6">
                     <div className="spec-item">
                       <div className="spec-label">Price</div>
-                      <div className="spec-value">${product.price.toFixed(2)}</div>
+                      <div className="spec-value">${Number(product?.price ?? 0).toFixed(2)}</div>
                     </div>
                   </IonCol>
                   <IonCol size="6">

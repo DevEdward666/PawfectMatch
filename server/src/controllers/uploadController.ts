@@ -1,7 +1,7 @@
-const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
-
+import path from 'path';
+import fs from 'fs';
+import multer from 'multer';
+import { Request, Response } from 'express';
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -43,10 +43,10 @@ const upload = multer({
 });
 
 // Upload a single file
-exports.uploadSingle = upload.single('image');
+export const uploadSingle = upload.single('image');
 
 // Handle file upload
-exports.handleFileUpload = (req, res) => {
+export const handleFileUpload = (req: Request, res: Response) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -69,7 +69,7 @@ exports.handleFileUpload = (req, res) => {
         url: fileUrl
       }
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error handling file upload:', error);
     res.status(500).json({
       success: false,
@@ -80,7 +80,7 @@ exports.handleFileUpload = (req, res) => {
 };
 
 // Serve uploaded files
-exports.serveFile = (req, res) => {
+export const serveFile = (req: Request, res: Response) => {
   try {
     const filename = req.params.filename;
     const filepath = path.join(__dirname, 'uploads', filename);
@@ -94,7 +94,7 @@ exports.serveFile = (req, res) => {
     }
     
     res.sendFile(filepath);
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error serving file:', error);
     res.status(500).json({
       success: false,

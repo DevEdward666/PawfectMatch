@@ -413,7 +413,7 @@ const Admin: React.FC = () => {
                                   <IonLabel>
                                     <h2>{product.name}</h2>
                                     <p>Category: {product.category}</p>
-                                    <p>Price: ${product.price.toFixed(2)}</p>
+                                    <p>Price: ${Number(product?.price ?? 0).toFixed(2)}</p>
                                   </IonLabel>
                                   <IonBadge slot="end" color={product.stock < 3 ? 'danger' : 'warning'}>
                                     {product.stock} left

@@ -1,21 +1,21 @@
-const jwt = require('jsonwebtoken');
-const { Pool } = require('pg');
-const { drizzle } = require('drizzle-orm/node-postgres');
-const { eq } = require('drizzle-orm');
-
+import jwt from 'jsonwebtoken';
+import { Pool } from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { eq } from 'drizzle-orm';
+import { Request, Response, NextFunction } from 'express';
 // Database connection
 const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
 const db = drizzle(pool);
 
 // Get schema
-const schema = require('../shared/schema');
+const schema = require('../../../shared/schema');
 const { users } = schema;
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'pet-shop-secret-key';
 
 // Authentication middleware
-exports.authenticate = async (req, res, next) => {
+export const authenticate = async (req: Request, res: Response,next: NextFunction) => {
 
   try {
     
@@ -36,7 +36,7 @@ exports.authenticate = async (req, res, next) => {
     }
     
     // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded:any = jwt.verify(token, JWT_SECRET);
     
     // Check if user still exists
     const [user] = await db.select({
@@ -62,7 +62,7 @@ exports.authenticate = async (req, res, next) => {
     };
     
     next();
-  } catch (error) {
+  } catch (error:any) {
     console.error('Authentication error:', error);
     
     if (error.name === 'JsonWebTokenError') {
@@ -88,7 +88,7 @@ exports.authenticate = async (req, res, next) => {
 };
 
 // Admin role check middleware
-exports.isAdmin = (req, res, next) => {
+export const isAdmin = (req: Request, res: Response,next: NextFunction) => {
   try {
     // Check if user is authenticated
     if (!req.user) {
@@ -107,7 +107,7 @@ exports.isAdmin = (req, res, next) => {
     }
     
     next();
-  } catch (error) {
+  } catch (error:any) {
     console.error('Admin check error:', error);
     res.status(500).json({
       success: false,

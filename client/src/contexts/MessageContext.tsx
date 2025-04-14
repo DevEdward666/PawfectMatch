@@ -163,10 +163,8 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       setIsLoading(true);
       setError(null);
-      
-      const response = await api.get<{success: boolean, data: AdminMessagesResponse}>(`/messages/admin/all?page=${page}&limit=${limit}`);
+      const response = await api.get(`/messages/admin/all?page=${page}&limit=${limit}`);
       const { messages, pagination } = response.data.data;
-      
       setAllMessages(messages);
       setTotalMessages(pagination.totalItems);
       setCurrentPage(pagination.currentPage);

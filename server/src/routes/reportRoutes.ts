@@ -13,7 +13,7 @@ import { uploadImage } from '../middlewares/upload';
 const router = express.Router();
 
 // Protected routes (require authentication)
-router.post('/', authenticate, uploadImage, submitReport);
+router.post('/all', authenticate, uploadImage, submitReport);
 router.get('/user', authenticate, getUserReports);
 router.get('/:id', authenticate, getReportById);
 
