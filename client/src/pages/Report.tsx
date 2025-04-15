@@ -66,9 +66,12 @@ const Report: React.FC = () => {
   // Load user's reports on component mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (isLoggedIn()) {
-      fetchUserReports();
+    const init =async () => {
+      if (isLoggedIn()) {
+        await fetchUserReports();
+      }
     }
+    init();
   }, [fetchUserReports,isLoggedIn]);
   
   // If user is not logged in, redirect to login page
@@ -206,7 +209,7 @@ const Report: React.FC = () => {
       <IonHeader>
         <IonToolbar color="danger">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonBackButton color="light" defaultHref="/home" />
           </IonButtons>
           <IonTitle>Report Animal Cruelty</IonTitle>
         </IonToolbar>
@@ -380,11 +383,11 @@ const Report: React.FC = () => {
             ) : (
               <IonList>
                 {userReports.map(report => (
-                  <IonCard key={report.id} routerLink={`/reports/${report.id}`}>
+                  <IonCard key={ report.id} routerLink={`/reports/${ report.id}`}>
                     <div style={{ display: 'flex', padding: '12px 16px' }}>
-                      {report.imageUrl ? (
+                      { report.imageUrl ? (
                         <IonThumbnail slot="start" style={{ marginRight: '16px' }}>
-                          <IonImg src={report.imageUrl} alt="Report evidence" />
+                          <IonImg  src={`data:image/jpeg;base64,${report.imageUrl}`} alt="Report evidence" />
                         </IonThumbnail>
                       ) : (
                         <div style={{ 
@@ -401,7 +404,7 @@ const Report: React.FC = () => {
                         </div>
                       )}
                       <div style={{ flex: 1 }}>
-                        <h3 style={{ margin: '0 0 4px 0' }}>{report.title}</h3>
+                        <h3 style={{ margin: '0 0 4px 0' }}>{ report.title}</h3>
                         <p style={{ 
                           margin: '0 0 8px 0', 
                           overflow: 'hidden',
@@ -410,16 +413,16 @@ const Report: React.FC = () => {
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: 'vertical'
                         }}>
-                          {report.description}
+                          { report.description}
                         </p>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <IonChip color={getStatusColor(report.status)} outline={true} style={{ margin: 0 }}>
-                            <IonIcon icon={getStatusIcon(report.status)} />
-                            <IonLabel>{report.status.charAt(0).toUpperCase() + report.status.slice(1)}</IonLabel>
+                          <IonChip color={getStatusColor( report.status)} outline={true} style={{ margin: 0 }}>
+                            <IonIcon icon={getStatusIcon( report.status)} />
+                            <IonLabel>{ report.status.charAt(0).toUpperCase() +  report.status.slice(1)}</IonLabel>
                           </IonChip>
                           <IonText color="medium">
                             <small>
-                              {new Date(report.createdAt).toLocaleDateString()}
+                              {new Date( report.createdAt).toLocaleDateString()}
                             </small>
                           </IonText>
                         </div>

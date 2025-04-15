@@ -19,9 +19,8 @@ export const submitReport = async (req: Request, res: Response) => {
     }
     
     let imageUrl = null;
-    if (req.file) {
-      // Create a relative URL for the image
-      imageUrl = `/uploads/${req.file.filename}`;
+    if (req.file && req.file.buffer) {
+      imageUrl = req.file.buffer.toString('base64');
     }
     
     // Create new report
@@ -180,7 +179,7 @@ export const getReportById = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    console.error('Get report error:', error);
+    console.error('1 Get report error:', error);
     return res.status(500).json({
       success: false,
       message: 'Server error while fetching report'
@@ -214,7 +213,7 @@ export const getAllReports = async (req: Request, res: Response) => {
         query.where(and(...conditions)); 
       }
     const allReports = await query.orderBy(desc(reports.createdAt));
-
+   
     return res.status(200).json({
       success: true,
       data: allReports

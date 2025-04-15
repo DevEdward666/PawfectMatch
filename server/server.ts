@@ -44,7 +44,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/pets', petRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/adoptions', adoptionRoutes);
-app.use('/api/reports', reportsRoutes);
+app.use('/api/report', reportsRoutes);
 app.use('/api/messages', messagesRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/uploads', uploadRoutes);

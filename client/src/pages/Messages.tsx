@@ -200,7 +200,7 @@ const Messages: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonTitle>Messages</IonTitle>
         </IonToolbar>
         <IonToolbar>
@@ -272,12 +272,12 @@ const Messages: React.FC = () => {
             </IonText>
             {!searchText && (
               <IonButton 
-                color="petprimary" 
+                color="primary" 
                 onClick={() => setShowComposeModal(true)}
               >
-                <IonIcon slot="start" icon={pencil} />
                 Compose Message
               </IonButton>
+              
             )}
           </div>
         ) : (
@@ -356,7 +356,7 @@ const Messages: React.FC = () => {
         
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonFabButton 
-            color="petprimary" 
+            color="primary" 
             onClick={() => setShowComposeModal(true)}
           >
             <IonIcon icon={add} />
@@ -366,9 +366,9 @@ const Messages: React.FC = () => {
         {/* Compose Message Modal */}
         <IonModal isOpen={showComposeModal} onDidDismiss={() => setShowComposeModal(false)}>
           <IonHeader>
-            <IonToolbar color="petprimary">
+            <IonToolbar color="primary">
               <IonButtons slot="start">
-                <IonButton onClick={() => setShowComposeModal(false)}>
+                <IonButton color="light" onClick={() => setShowComposeModal(false)}>
                   <IonIcon slot="icon-only" icon={close} />
                 </IonButton>
               </IonButtons>

@@ -1,5 +1,5 @@
 import { useIonToast } from '@ionic/react';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useState } from 'react';
 import { AdoptionApplication, AdoptionApplicationForm, Pet, PetForm } from '../models/pet.model';
 import api from '../services/api';
 
@@ -39,7 +39,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     });
   };
 
-  const fetchPets = async () => {
+  const fetchPets = useCallback(async() => {
     try {
       setIsLoading(true);
       setError(null);
@@ -53,9 +53,9 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
-  const fetchPetById = async (id: number) => {
+  const fetchPetById = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -69,7 +69,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
   const createPet = async (petData: PetForm) => {
     try {
@@ -191,7 +191,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   };
 
-  const fetchUserAdoptionApplications = async (userId:number) => {
+  const fetchUserAdoptionApplications = useCallback(async (userId:number) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -205,9 +205,9 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
-  const fetchAllAdoptionApplications = async () => {
+  const fetchAllAdoptionApplications = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -221,7 +221,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
   const updateAdoptionApplication = async (id: number, status: string) => {
     try {

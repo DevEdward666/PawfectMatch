@@ -58,7 +58,7 @@
   
   .unread-message .message-from {
     font-weight: 700;
-    color: var(--ion-color-petprimary);
+    color: var(--ion-color-primary);
   }
   
   .unread-message .message-subject {
@@ -80,7 +80,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--ion-color-petprimary);
+    background-color: var(--ion-color-primary);
     color: white;
     font-weight: bold;
     font-size: 1.2rem;

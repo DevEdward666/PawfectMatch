@@ -8,8 +8,6 @@ import {
   InsertAdoptionApplication,
 } from '../models/schema';
 import { and, eq, asc, desc } from 'drizzle-orm';
-import fs from 'fs';
-import path from 'path';
 import { z } from "zod";
 
 export const getAllPets = async (req: Request, res: Response) => {
@@ -100,8 +98,8 @@ export const createPet = async (req: Request, res: Response) => {
     }
 
     let imageUrl = null;
-    if (req.file) {
-      imageUrl = `/uploads/Pets/${req.file.filename}`;
+    if (req.file && req.file.buffer) {
+      imageUrl = req.file.buffer.toString('base64');
     }
 
     const newPet: InsertPet = {
@@ -148,17 +146,8 @@ export const updatePet = async (req: Request, res: Response) => {
     
     // Handle image upload if provided
     let imageUrl = existingPet.imageUrl;
-    if (req.file) {
-      // If there's an existing image, delete it
-      if (existingPet.imageUrl) {
-        const oldImagePath = path.join(__dirname, '../..', existingPet.imageUrl);
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
-        }
-      }
-      
-      // Set new image URL
-      imageUrl = `/uploads/${req.file.filename}`;
+    if (req.file && req.file.buffer) {
+      imageUrl = req.file.buffer.toString('base64');
     }
     
     // Update pet
@@ -205,13 +194,7 @@ export const deletePet = async (req: Request, res: Response) => {
       });
     }
     
-    // Delete image if exists
-    if (existingPet.imageUrl) {
-      const imagePath = path.join(__dirname, '../..', existingPet.imageUrl);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
-    }
+    // No need to delete physical files since we're using base64
     
     // Delete pet
     await db.delete(pets).where(eq(pets.id, petId));

@@ -75,7 +75,6 @@ const App: React.FC = () => (
                     <Route exact path="/profile" component={Profile} />
                     <Route exact path="/report" component={Report} />
                     {/* Auth Routes */}
-                    <Route exact path="/login" component={Login} />
                     <Route exact path="/register" component={Register} />
                     
                     {/* Default Route */}
@@ -109,6 +108,8 @@ const App: React.FC = () => (
                 </IonTabs>
 
                 {/* Non-Tab Routes */}
+
+                <Route exact path="/login" component={Login} />
                 <Route exact path="/admin" component={Admin} />
                 <Route exact path="/pets/:id" component={PetDetail} />
                 <Route exact path="/products/:id" component={ProductDetail} />

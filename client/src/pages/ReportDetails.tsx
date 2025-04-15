@@ -51,9 +51,13 @@ const ReportDetail: React.FC = () => {
   const [responseContent, setResponseContent] = useState<string>('');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (isLoggedIn()) {
-      fetchReportById(parseInt(id));
+    const init  = async () => {
+
+      if (isLoggedIn()) {
+        await fetchReportById(parseInt(id));
+      }
     }
+    init();
   }, [id,fetchReportById,isLoggedIn]);
   
   const handleStatusChange = async (status: 'pending' | 'reviewing' | 'resolved') => {
@@ -68,7 +72,7 @@ const ReportDetail: React.FC = () => {
     }
     
     const responseData: ReportResponseForm = {
-      content: responseContent
+      response: responseContent
     };
     
     await respondToReport(parseInt(id), responseData);
@@ -118,7 +122,7 @@ const ReportDetail: React.FC = () => {
       <IonHeader>
         <IonToolbar color="danger">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/report" />
+            <IonBackButton color="light" defaultHref="/report" />
           </IonButtons>
           <IonTitle>Report Details</IonTitle>
         </IonToolbar>
@@ -186,7 +190,7 @@ const ReportDetail: React.FC = () => {
                     </IonText>
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
                       <img 
-                        src={currentReport.imageUrl} 
+                       src={`data:image/jpeg;base64,${currentReport.imageUrl}`} 
                         alt="Report evidence" 
                         style={{ 
                           maxWidth: '100%', 
@@ -198,7 +202,7 @@ const ReportDetail: React.FC = () => {
                   </div>
                 )}
                 
-                {isAdmin() && (
+                {/* {isAdmin() && (
                   <div className="admin-actions ion-margin-top ion-padding-top">
                     <IonText color="medium">
                       <h3>Update Status</h3>
@@ -227,7 +231,7 @@ const ReportDetail: React.FC = () => {
                       </IonButton>
                     </div>
                   </div>
-                )}
+                )} */}
               </IonCardContent>
             </IonCard>
             
@@ -268,7 +272,7 @@ const ReportDetail: React.FC = () => {
                               </IonText>
                             </div>
                             <IonText>
-                              <p style={{ marginTop: '8px' }}>{response.content}</p>
+                              <p style={{ marginTop: '8px' }}>{response.response}</p>
                             </IonText>
                           </div>
                         </div>

@@ -1,10 +1,10 @@
 import { useIonToast } from '@ionic/react';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Report, ReportForm, ReportResponseForm } from '../models/report.model';
+import React, { createContext, ReactNode, useCallback, useContext, useState } from 'react';
+import { Report, ReportData, ReportForm, ReportResponseForm } from '../models/report.model';
 import api from '../services/api';
 
 interface ReportContextProps {
-  reports: Report[];
+  reports: ReportData[];
   userReports: Report[];
   currentReport: Report | null;
   isLoading: boolean;
@@ -20,7 +20,7 @@ interface ReportContextProps {
 const ReportContext = createContext<ReportContextProps | undefined>(undefined);
 
 export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [reports, setReports] = useState<Report[]>([]);
+  const [reports, setReports] = useState<ReportData[]>([]);
   const [userReports, setUserReports] = useState<Report[]>([]);
   const [currentReport, setCurrentReport] = useState<Report | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,13 +37,13 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   };
 
   // Fetch all reports (admin only)
-  const fetchAllReports = async () => {
+  const fetchAllReports = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
       
       const response = await api.get('/report/all');
-      setReports(response.data);
+      setReports(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch reports.';
       setError(errorMessage);
@@ -51,16 +51,16 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
   // Fetch logged-in user's reports
-  const fetchUserReports = async () => {
+  const fetchUserReports = useCallback( async () => {
     try {
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get('/reports/user');
-      setUserReports(response.data);
+      const response = await api.get('/report/user');
+      setUserReports(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch your reports.';
       setError(errorMessage);
@@ -68,16 +68,16 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
   // Fetch a specific report by ID
-  const fetchReportById = async (id: number) => {
+  const fetchReportById = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setError(null);
       
-      const response = await api.get(`/reports/${id}`);
-      setCurrentReport(response.data);
+      const response = await api.get(`/report/single/${id}`);
+      setCurrentReport(response.data.data);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch report details.';
       setError(errorMessage);
@@ -85,7 +85,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
   // Submit a new report
   const submitReport = async (reportData: ReportForm) => {
@@ -104,7 +104,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         }
       });
       
-      const response = await api.post('/reports', formData, {
+      const response = await api.post('/report', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -129,11 +129,11 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       setIsLoading(true);
       setError(null);
       
-      await api.put(`/reports/${id}/status`, { status });
+      await api.put(`/report/${id}/status`, { status });
       
       // Update in reports list
       setReports(reports.map(report => 
-        report.id === id ? { ...report, status } : report
+        report.report.id === id ? { ...report, status } : report
       ));
       
       // Update in user reports list if exists
@@ -162,7 +162,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       setIsLoading(true);
       setError(null);
       
-      const response = await api.post(`/reports/${reportId}/responses`, responseData);
+      const response = await api.post(`/report/${reportId}/respond`, responseData);
       
       // If we're viewing this report, update its responses
       if (currentReport && currentReport.id === reportId) {

@@ -143,9 +143,9 @@ const MessageDetail: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
-          <IonToolbar color="petprimary">
+          <IonToolbar color="primary">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/messages" />
+              <IonBackButton color="light" defaultHref="/messages" />
             </IonButtons>
             <IonTitle>Message</IonTitle>
           </IonToolbar>
@@ -169,9 +169,9 @@ const MessageDetail: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
-          <IonToolbar color="petprimary">
+          <IonToolbar color="primary">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/messages" />
+              <IonBackButton color="light" defaultHref="/messages" />
             </IonButtons>
             <IonTitle>Message</IonTitle>
           </IonToolbar>
@@ -182,7 +182,7 @@ const MessageDetail: React.FC = () => {
               <h5>Message not found</h5>
               <p>The message you're looking for doesn't exist or has been deleted.</p>
             </IonText>
-            <IonButton routerLink="/messages" color="petprimary">
+            <IonButton routerLink="/messages" color="primary">
               Back to Messages
             </IonButton>
           </div>
@@ -194,9 +194,9 @@ const MessageDetail: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/messages" />
+            <IonBackButton color="light" defaultHref="/messages" />
           </IonButtons>
           <IonTitle>{currentMessage.subject || 'No Subject'}</IonTitle>
           <IonButtons slot="end">
@@ -264,7 +264,7 @@ const MessageDetail: React.FC = () => {
         <IonToolbar>
           <IonButton 
             expand="block" 
-            color="petprimary" 
+            color="primary" 
             onClick={handleOpenReplyModal}
             disabled={isCurrentUserSender()}
           >
@@ -277,7 +277,7 @@ const MessageDetail: React.FC = () => {
       {/* Reply Modal */}
       <IonModal isOpen={showReplyModal} onDidDismiss={() => setShowReplyModal(false)}>
         <IonHeader>
-          <IonToolbar color="petprimary">
+          <IonToolbar color="primary">
             <IonButtons slot="start">
               <IonButton onClick={() => setShowReplyModal(false)}>
                 <IonIcon slot="icon-only" icon={close} />

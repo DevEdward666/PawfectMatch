@@ -120,9 +120,9 @@ const Register: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/login" />
+            <IonBackButton color="light" defaultHref="/login" />
           </IonButtons>
           <IonTitle>Create Account</IonTitle>
         </IonToolbar>
@@ -138,8 +138,8 @@ const Register: React.FC = () => {
               
               <form onSubmit={handleSubmit}>
                 <IonItem>
-                  <IonIcon icon={person} slot="start" color="petprimary" />
-                  <IonLabel position="floating">Username*</IonLabel>
+                  <IonIcon icon={person} slot="start" color="primary" />
+                  <IonLabel position="stacked">Username*</IonLabel>
                   <IonInput
                     name="username"
                     value={formData.username}
@@ -149,8 +149,8 @@ const Register: React.FC = () => {
                 </IonItem>
                 
                 <IonItem>
-                  <IonIcon icon={mail} slot="start" color="petprimary" />
-                  <IonLabel position="floating">Email*</IonLabel>
+                  <IonIcon icon={mail} slot="start" color="primary" />
+                  <IonLabel position="stacked">Email*</IonLabel>
                   <IonInput
                     type="email"
                     name="email"
@@ -161,8 +161,8 @@ const Register: React.FC = () => {
                 </IonItem>
                 
                 <IonItem>
-                  <IonIcon icon={lockClosed} slot="start" color="petprimary" />
-                  <IonLabel position="floating">Password*</IonLabel>
+                  <IonIcon icon={lockClosed} slot="start" color="primary" />
+                  <IonLabel position="stacked">Password*</IonLabel>
                   <IonInput
                     type="password"
                     name="password"
@@ -178,8 +178,8 @@ const Register: React.FC = () => {
                 </IonItem>
                 
                 <IonItem>
-                  <IonIcon icon={lockClosed} slot="start" color="petprimary" />
-                  <IonLabel position="floating">Confirm Password*</IonLabel>
+                  <IonIcon icon={lockClosed} slot="start" color="primary" />
+                  <IonLabel position="stacked">Confirm Password*</IonLabel>
                   <IonInput
                     type="password"
                     name="confirmPassword"
@@ -200,7 +200,7 @@ const Register: React.FC = () => {
                 
                 <IonItem>
                   <IonIcon icon={person} slot="start" color="medium" />
-                  <IonLabel position="floating">Full Name</IonLabel>
+                  <IonLabel position="stacked">Full Name</IonLabel>
                   <IonInput
                     name="name"
                     value={formData.name}
@@ -210,7 +210,7 @@ const Register: React.FC = () => {
                 
                 <IonItem>
                   <IonIcon icon={call} slot="start" color="medium" />
-                  <IonLabel position="floating">Phone Number</IonLabel>
+                  <IonLabel position="stacked">Phone Number</IonLabel>
                   <IonInput
                     type="tel"
                     name="phone"
@@ -221,7 +221,7 @@ const Register: React.FC = () => {
                 
                 <IonItem className="ion-margin-bottom">
                   <IonIcon icon={location} slot="start" color="medium" />
-                  <IonLabel position="floating">Address</IonLabel>
+                  <IonLabel position="stacked">Address</IonLabel>
                   <IonInput
                     name="address"
                     value={formData.address}
@@ -238,7 +238,7 @@ const Register: React.FC = () => {
                 <IonButton
                   expand="block"
                   type="submit"
-                  color="petprimary"
+                  color="primary"
                   disabled={
                     isLoading || 
                     !formData.username || 
@@ -256,7 +256,7 @@ const Register: React.FC = () => {
                 <IonText color="medium">
                   <p>Already have an account?</p>
                 </IonText>
-                <IonButton routerLink="/login" expand="block" fill="outline" color="petprimary">
+                <IonButton routerLink="/login" expand="block" fill="outline" color="primary">
                   <IonIcon slot="start" icon={logIn} />
                   Login
                 </IonButton>

@@ -1,5 +1,5 @@
 import { useIonToast } from '@ionic/react';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useState } from 'react';
 import { Message, MessageForm, MessageResponse } from '../models/message.model';
 import api from '../services/api';
 
@@ -45,7 +45,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     });
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -62,9 +62,9 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
-  const fetchMessageById = async (id: number) => {
+  const fetchMessageById = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -83,7 +83,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  };
+  },[inboxMessages]);
 
   const sendMessage = async (messageData: MessageForm) => {
     try {
@@ -159,7 +159,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   // Admin: Fetch all messages in the system
-  const fetchAllMessages = async (page: number = 1, limit: number = 20) => {
+  const fetchAllMessages = useCallback(async (page: number = 1, limit: number = 20) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -176,7 +176,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
   // Admin: Delete a message
   const adminDeleteMessage = async (id: number) => {

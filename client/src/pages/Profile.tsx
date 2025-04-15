@@ -213,7 +213,7 @@ const Profile: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonTitle>My Profile</IonTitle>
           <IonButton slot="end" fill="clear" color="light" onClick={handleLogout}>
             <IonIcon slot="icon-only" icon={logOut} />
@@ -245,7 +245,7 @@ const Profile: React.FC = () => {
                   <div className="profile-details">
                     <h2>{user?.fullName || user?.username}</h2>
                     <p>{user?.email}</p>
-                    <IonBadge color={user?.role === 'admin' ? 'danger' : 'petprimary'}>
+                    <IonBadge color={user?.role === 'admin' ? 'danger' : 'primary'}>
                       {user?.role === 'admin' ? 'Administrator' : 'Member'}
                     </IonBadge>
                   </div>
@@ -276,7 +276,7 @@ const Profile: React.FC = () => {
             <form onSubmit={handleProfileSubmit}>
               <IonList>
                 <IonItem>
-                  <IonIcon icon={person} slot="start" color="petprimary" />
+                  <IonIcon icon={person} slot="start" color="primary" />
                   <IonLabel position="floating">Username</IonLabel>
                   <IonInput
                     name="username"
@@ -286,7 +286,7 @@ const Profile: React.FC = () => {
                 </IonItem>
                 
                 <IonItem>
-                  <IonIcon icon={person} slot="start" color="petprimary" />
+                  <IonIcon icon={person} slot="start" color="primary" />
                   <IonLabel position="floating">Full Name</IonLabel>
                   <IonInput
                     name="fullName"
@@ -296,7 +296,7 @@ const Profile: React.FC = () => {
                 </IonItem>
                 
                 <IonItem>
-                  <IonIcon icon={call} slot="start" color="petprimary" />
+                  <IonIcon icon={call} slot="start" color="primary" />
                   <IonLabel position="floating">Phone Number</IonLabel>
                   <IonInput
                     type="tel"
@@ -307,7 +307,7 @@ const Profile: React.FC = () => {
                 </IonItem>
                 
                 <IonItem className="ion-margin-bottom">
-                  <IonIcon icon={location} slot="start" color="petprimary" />
+                  <IonIcon icon={location} slot="start" color="primary" />
                   <IonLabel position="floating">Address</IonLabel>
                   <IonInput
                     name="address"
@@ -332,7 +332,7 @@ const Profile: React.FC = () => {
               <IonButton
                 expand="block"
                 type="submit"
-                color="petprimary"
+                color="primary"
                 disabled={authLoading}
               >
                 <IonIcon slot="start" icon={save} />
@@ -345,7 +345,7 @@ const Profile: React.FC = () => {
             <form onSubmit={handlePasswordSubmit}>
               <IonList>
                 <IonItem>
-                  <IonIcon icon={lockClosed} slot="start" color="petprimary" />
+                  <IonIcon icon={lockClosed} slot="start" color="primary" />
                   <IonLabel position="floating">Current Password</IonLabel>
                   <IonInput
                     type="password"
@@ -357,7 +357,7 @@ const Profile: React.FC = () => {
                 </IonItem>
                 
                 <IonItem>
-                  <IonIcon icon={lockClosed} slot="start" color="petprimary" />
+                  <IonIcon icon={lockClosed} slot="start" color="primary" />
                   <IonLabel position="floating">New Password</IonLabel>
                   <IonInput
                     type="password"
@@ -374,7 +374,7 @@ const Profile: React.FC = () => {
                 </IonItem>
                 
                 <IonItem className="ion-margin-bottom">
-                  <IonIcon icon={lockClosed} slot="start" color="petprimary" />
+                  <IonIcon icon={lockClosed} slot="start" color="primary" />
                   <IonLabel position="floating">Confirm New Password</IonLabel>
                   <IonInput
                     type="password"
@@ -400,7 +400,7 @@ const Profile: React.FC = () => {
               <IonButton
                 expand="block"
                 type="submit"
-                color="petprimary"
+                color="primary"
                 disabled={
                   authLoading ||
                   !passwordData.currentPassword ||
@@ -463,7 +463,7 @@ const Profile: React.FC = () => {
               <div className="empty-state">
                 <IonIcon icon={paw} color="medium" />
                 <IonText color="medium">You haven't applied to adopt any pets yet.</IonText>
-                <IonButton routerLink="/pets" color="petprimary">
+                <IonButton routerLink="/pets" color="primary">
                   Browse Pets
                 </IonButton>
               </div>
@@ -484,27 +484,27 @@ const Profile: React.FC = () => {
             ) : userReports && userReports.length > 0 ? (
               <IonList>
                 {userReports.map((report) => (
-                  <IonCard key={report.id} routerLink={`/reports/${report.id}`}>
+                  <IonCard key={ report.id} routerLink={`/report/${ report.id}`}>
                     <IonCardContent>
                       <div className="report-item">
                         <div className="report-content">
-                          <h3>{report.title}</h3>
-                          <p className="report-description">{report.description}</p>
+                          <h3>{ report.title}</h3>
+                          <p className="report-description">{ report.description}</p>
                           <div className="report-meta">
                             <IonBadge color={
-                              report.status === 'resolved' ? 'success' :
-                              report.status === 'reviewing' ? 'warning' : 'medium'
+                               report.status === 'resolved' ? 'success' :
+                               report.status === 'reviewing' ? 'warning' : 'medium'
                             }>
-                              {report.status}
+                              { report.status}
                             </IonBadge>
                             <IonText color="medium">
-                              <small>{new Date(report.createdAt).toLocaleDateString()}</small>
+                              <small>{new Date( report.createdAt).toLocaleDateString()}</small>
                             </IonText>
                           </div>
                         </div>
-                        {report.imageUrl && (
-                          <div className="report-image">
-                            <img src={report.imageUrl} alt="Report evidence" />
+                        { report.imageUrl && (
+                          <div className=" report-image">
+                            <img src={ report.imageUrl} alt="Report evidence" />
                           </div>
                         )}
                       </div>

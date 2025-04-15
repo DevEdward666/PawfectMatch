@@ -1,5 +1,5 @@
 import { useIonToast } from '@ionic/react';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useState } from 'react';
 import { Product, ProductForm } from '../models/product.model';
 import api from '../services/api';
 
@@ -33,7 +33,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     });
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -47,9 +47,9 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
-  const fetchProductById = async (id: number) => {
+  const fetchProductById = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -63,7 +63,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  };
+  },[]);
 
   const createProduct = async (productData: ProductForm) => {
     try {

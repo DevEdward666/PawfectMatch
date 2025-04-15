@@ -127,7 +127,7 @@ const ReportManagement: React.FC = () => {
     }
     
     try {
-      await respondToReport(selectedReport.id, { content: responseContent });
+      await respondToReport(selectedReport.id, { response: responseContent });
       presentToast({
         message: 'Response submitted successfully',
         duration: 3000,
@@ -147,7 +147,11 @@ const ReportManagement: React.FC = () => {
   };
   
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+
+    let date = new Date();
+    if(dateString != null){
+      date = new Date(dateString)
+    }
     return formatDistanceToNow(date, { addSuffix: true });
   };
   
@@ -224,10 +228,10 @@ const ReportManagement: React.FC = () => {
       if (searchText) {
         const searchLower = searchText.toLowerCase();
         return (
-          report.title.toLowerCase().includes(searchLower) ||
-          report.description.toLowerCase().includes(searchLower) ||
-          report.user?.fullName?.toLowerCase().includes(searchLower) ||
-          report.location?.toLowerCase().includes(searchLower)
+          report.report.title.toLowerCase().includes(searchLower) ||
+          report.report.description.toLowerCase().includes(searchLower) ||
+          report.report.user?.fullName?.toLowerCase().includes(searchLower) ||
+          report.report.location?.toLowerCase().includes(searchLower)
         );
       }
       return true;
@@ -235,7 +239,7 @@ const ReportManagement: React.FC = () => {
     .filter(report => {
       // Status filter
       if (statusFilter !== 'all') {
-        return report.status === statusFilter;
+        return  report.report.status === statusFilter;
       }
       return true;
     });
@@ -313,7 +317,7 @@ const ReportManagement: React.FC = () => {
                 {!isLoading && filteredReports.length > 0 && (
                   <IonList>
                     {filteredReports.map(report => (
-                      <IonItem key={report.id} className="ion-margin-bottom">
+                      <IonItem key={ report.report.id} className="ion-margin-bottom">
                         <IonAvatar slot="start">
                           <div style={{ 
                             backgroundColor: '#f4f5f8', 
@@ -323,33 +327,33 @@ const ReportManagement: React.FC = () => {
                             width: '100%',
                             height: '100%'
                           }}>
-                            <IonIcon icon={getStatusIcon(report.status)} color={getStatusColor(report.status)} />
+                            <IonIcon icon={getStatusIcon( report.report.status)} color={getStatusColor( report.report.status)} />
                           </div>
                         </IonAvatar>
                         
                         <IonLabel>
-                          <h2>{report.title}</h2>
+                          <h2>{ report.report.title}</h2>
                           <p>
-                            <strong>By:</strong> {report.user?.fullName || 'Anonymous'}
+                            <strong>By:</strong> {report.reporter?.name || 'Anonymous'}
                           </p>
                           <p>
-                            {report.description.substring(0, 60)}
-                            {report.description.length > 60 ? '...' : ''}
+                            { report.report.description?.substring(0, 60)}
+                            { report.report.description?.length > 60 ? '...' : ''}
                           </p>
                           <p className="ion-text-end" style={{ fontSize: '0.8rem', marginTop: '5px' }}>
-                            {formatDate(report.createdAt)}
+                            {formatDate( report.report.createdAt)}
                           </p>
                         </IonLabel>
                         
                         <IonChip 
-                          color={getStatusColor(report.status)}
+                          color={getStatusColor( report.report.status)}
                           slot="end"
                         >
-                          <IonIcon icon={getStatusIcon(report.status)} />
-                          <IonLabel>{report.status}</IonLabel>
+                          <IonIcon icon={getStatusIcon( report.report.status)} />
+                          <IonLabel>{ report.report.status}</IonLabel>
                         </IonChip>
                         
-                        <IonButton fill="clear" slot="end" onClick={() => showOptions(report)}>
+                        <IonButton fill="clear" slot="end" onClick={() => showOptions( report.report)}>
                           <IonIcon icon={ellipsisVertical} />
                         </IonButton>
                       </IonItem>
@@ -417,7 +421,7 @@ const ReportManagement: React.FC = () => {
                       </IonText>
                       <div style={{ marginTop: '10px' }}>
                         <img 
-                          src={currentReport.imageUrl} 
+                          src={`data:image/jpeg;base64,${currentReport.imageUrl}`} 
                           alt="Report" 
                           style={{ 
                             maxWidth: '100%', 
@@ -487,7 +491,7 @@ const ReportManagement: React.FC = () => {
                           <IonItem key={response.id}>
                             <IonLabel className="ion-text-wrap">
                               <h2>Response from {response.user?.fullName || 'Administrator'}</h2>
-                              <p className="ion-margin-top ion-margin-bottom">{response.content}</p>
+                              <p className="ion-margin-top ion-margin-bottom">{response.response}</p>
                               <p className="ion-text-end" style={{ fontSize: '0.8rem' }}>
                                 {formatDate(response.createdAt)}
                               </p>

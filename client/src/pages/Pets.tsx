@@ -146,7 +146,7 @@ const Pets: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonTitle>Pets for Adoption</IonTitle>
           <IonButton 
             slot="end" 
@@ -264,7 +264,7 @@ const Pets: React.FC = () => {
                         <div className="card-image-container">
                           {pet.imageUrl ? (
                             <img 
-                              src={pet.imageUrl} 
+                              src={`data:image/jpeg;base64,${pet.imageUrl}`} 
                               alt={pet.name} 
                               className="pet-image"
                             />
@@ -274,17 +274,7 @@ const Pets: React.FC = () => {
                             </div>
                           )}
                           
-                          <IonChip className="pet-badge species-badge" color={getSpeciesColor(pet.species)}>
-                            {pet.species}
-                          </IonChip>
-                          
-                          {pet.gender && (
-                            <IonChip className="pet-badge gender-badge" color="light">
-                              <IonIcon icon={pet.gender.toLowerCase() === 'male' ? male : female} />
-                              {pet.gender}
-                            </IonChip>
-                          )}
-                          
+                  
                           <IonButton 
                             fill="clear" 
                             className="favorite-button"
@@ -296,15 +286,18 @@ const Pets: React.FC = () => {
                           >
                             <IonIcon 
                               icon={favorites.includes(pet.id) ? heart : heartOutline} 
-                              color={favorites.includes(pet.id) ? 'danger' : 'light'}
+                              color={favorites.includes(pet.id) ? 'danger' : 'dark'}
                             />
                           </IonButton>
+                          
                         </div>
                         
                         <IonCardHeader>
+                     
+                          
                           <IonCardTitle>{pet.name}</IonCardTitle>
                           <IonCardSubtitle>
-                            {pet.breed || 'Mixed Breed'} • {pet.age ? `${pet.age} ${pet.age === 1 ? 'year' : 'years'}` : 'Age unknown'}
+                          {pet.species}- {pet.gender} - {pet.breed || 'Mixed Breed'} • {pet.age ? `${pet.age} ${pet.age === 1 ? 'year' : 'years'}` : 'Age unknown'}
                           </IonCardSubtitle>
                         </IonCardHeader>
                         
@@ -318,10 +311,11 @@ const Pets: React.FC = () => {
                               {pet.status}
                             </IonBadge>
                             
-                            <IonButton fill="solid" color="petprimary" size="small">
+                            <IonButton fill="solid" color="primary" size="small">
                               View Details
                             </IonButton>
                           </div>
+                          
                         </IonCardContent>
                       </IonCard>
                     </IonCol>
@@ -334,7 +328,7 @@ const Pets: React.FC = () => {
                         <h5>No pets found matching your criteria</h5>
                         <p>Try adjusting your filters or check back later for more pets.</p>
                       </IonText>
-                      <IonButton color="petprimary" onClick={resetFilters}>
+                      <IonButton color="primary" onClick={resetFilters}>
                         Reset Filters
                       </IonButton>
                     </div>
@@ -345,9 +339,9 @@ const Pets: React.FC = () => {
           </>
         )}
         
-        <IonInfiniteScroll>
-          <IonInfiniteScrollContent loadingText="Loading more pets..."></IonInfiniteScrollContent>
-        </IonInfiniteScroll>
+        {/* <IonInfiniteScroll>
+          <IonInfiniteScrollContent  loadingText="Loading more pets..."></IonInfiniteScrollContent>
+        </IonInfiniteScroll> */}
       </IonContent>
       
     </IonPage>

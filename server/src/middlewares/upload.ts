@@ -1,24 +1,7 @@
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
 
-// Create uploads directory if it doesn't exist
-const uploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-  }
-});
+// Use memory storage so files are available as buffers for base64 conversion and database storage
+const storage = multer.memoryStorage();
 
 // Filter for allowed file types
 const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
@@ -40,5 +23,10 @@ export const upload = multer({
   }
 });
 
-// Export middleware for image upload
+// Middleware for single image upload (field name 'image')
 export const uploadImage = upload.single('image');
+
+// The uploaded file will be available as req.file with:
+// - req.file.buffer: Buffer containing the file data (convert to base64 in your controller)
+// - req.file.originalname: Original filename
+// - req.file.mimetype: MIME type of the file

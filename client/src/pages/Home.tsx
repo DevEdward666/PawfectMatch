@@ -51,8 +51,11 @@ const Home: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Load data when component mounts
-    fetchPets();
-    fetchProducts();
+    const initialize = async()=> {
+      await fetchPets();
+      await fetchProducts();
+    }
+    initialize()
   }, [fetchPets,fetchProducts]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -72,7 +75,7 @@ const Home: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonTitle>PawfectMatch</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -105,12 +108,12 @@ const Home: React.FC = () => {
         {/* Quick Links */}
         <IonGrid>
           <IonRow>
-            <IonCol size="4">
+            <IonCol size="6">
               <IonButton 
                 routerLink="/pets" 
                 expand="block" 
                 fill="solid" 
-                color="petprimary"
+                color="primary"
                 className="quick-link-button"
               >
                 <div className="button-inner">
@@ -119,7 +122,7 @@ const Home: React.FC = () => {
                 </div>
               </IonButton>
             </IonCol>
-            <IonCol size="4">
+            {/* <IonCol size="4">
               <IonButton 
                 routerLink="/products" 
                 expand="block" 
@@ -132,8 +135,8 @@ const Home: React.FC = () => {
                   <div>Shop</div>
                 </div>
               </IonButton>
-            </IonCol>
-            <IonCol size="4">
+            </IonCol> */}
+            <IonCol size="6">
               <IonButton 
                 routerLink="/report" 
                 expand="block" 
@@ -153,7 +156,7 @@ const Home: React.FC = () => {
         {/* Featured Pets */}
         <div className="section-header">
           <h2>Pets Looking for a Home</h2>
-          <IonButton routerLink="/pets" fill="clear" color="petprimary">
+          <IonButton routerLink="/pets" fill="clear" color="primary">
             View All
             <IonIcon slot="end" icon={arrowForward} />
           </IonButton>
@@ -171,7 +174,7 @@ const Home: React.FC = () => {
                   <div className="card-image-container">
                     {pet.imageUrl ? (
                       <img 
-                        src={pet.imageUrl} 
+                      src={`data:image/jpeg;base64,${pet.imageUrl}`} 
                         alt={pet.name} 
                         className="pet-image"
                       />
@@ -180,7 +183,7 @@ const Home: React.FC = () => {
                         <IonIcon icon={paw} />
                       </div>
                     )}
-                    <IonChip className="pet-badge" color="petprimary">
+                    <IonChip className="pet-badge" color="primary">
                       {pet.species}
                     </IonChip>
                   </div>
@@ -192,7 +195,7 @@ const Home: React.FC = () => {
                   </IonCardHeader>
                   <IonCardContent>
                     <div className="card-footer">
-                      <IonButton fill="clear" color="petprimary">
+                      <IonButton fill="clear" color="primary">
                         View Details
                       </IonButton>
                       <IonIcon icon={heartOutline} className="favorite-icon" />
@@ -212,7 +215,7 @@ const Home: React.FC = () => {
         {/* Featured Products */}
         {/* <div className="section-header">
           <h2>Featured Products</h2>
-          <IonButton routerLink="/products" fill="clear" color="petprimary">
+          <IonButton routerLink="/products" fill="clear" color="primary">
             View All
             <IonIcon slot="end" icon={arrowForward} />
           </IonButton>
@@ -249,7 +252,7 @@ const Home: React.FC = () => {
                   </IonCardHeader>
                   <IonCardContent>
                     <div className="card-footer">
-                      <IonButton fill="clear" color="petprimary">
+                      <IonButton fill="clear" color="primary">
                         View Details
                       </IonButton>
                       <IonButton fill="clear" color="petsecondary">

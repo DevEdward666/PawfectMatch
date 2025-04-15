@@ -150,9 +150,9 @@ const PetDetail: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
-          <IonToolbar color="petprimary">
+          <IonToolbar color="primary">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/pets" />
+              <IonBackButton color="light" defaultHref="/pets" />
             </IonButtons>
             <IonTitle>Pet Details</IonTitle>
           </IonToolbar>
@@ -176,9 +176,9 @@ const PetDetail: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
-          <IonToolbar color="petprimary">
+          <IonToolbar color="primary">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/pets" />
+              <IonBackButton color="light" defaultHref="/pets" />
             </IonButtons>
             <IonTitle>Pet Details</IonTitle>
           </IonToolbar>
@@ -189,7 +189,7 @@ const PetDetail: React.FC = () => {
               <h5>Pet not found</h5>
               <p>The pet you're looking for doesn't exist or has been removed.</p>
             </IonText>
-            <IonButton routerLink="/pets" color="petprimary">
+            <IonButton routerLink="/pets" color="primary">
               Back to Pets
             </IonButton>
           </div>
@@ -231,9 +231,9 @@ const PetDetail: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/pets" />
+            <IonBackButton color="light" defaultHref="/pets" />
           </IonButtons>
           <IonTitle>{pet.name}</IonTitle>
           <IonButtons slot="end">
@@ -255,7 +255,7 @@ const PetDetail: React.FC = () => {
         <div className="pet-image-container">
           {pet.imageUrl ? (
             <img 
-              src={pet.imageUrl} 
+            src={`data:image/jpeg;base64,${pet.imageUrl}`} 
               alt={pet.name} 
               className="pet-detail-image"
             />
@@ -302,7 +302,7 @@ const PetDetail: React.FC = () => {
             
             <div className="adoption-button-container">
               <IonButton 
-                color="petprimary" 
+                color="primary" 
                 disabled={pet.status !== 'available'}
                 onClick={handleAdoptClick}
               >
@@ -383,7 +383,7 @@ const PetDetail: React.FC = () => {
               <div className="adoption-button-container-footer">
                 <IonButton 
                   expand="block" 
-                  color="petprimary" 
+                  color="primary" 
                   disabled={pet.status !== 'available' && pet.status !== 'pending'}
                   onClick={handleAdoptClick}
                 >
@@ -398,7 +398,7 @@ const PetDetail: React.FC = () => {
         {/* Adoption Modal */}
         <IonModal isOpen={showAdoptModal} onDidDismiss={() => setShowAdoptModal(false)}>
           <IonHeader>
-            <IonToolbar color="petprimary">
+            <IonToolbar color="primary">
               <IonTitle>Adopt {pet.name}</IonTitle>
               <IonButtons slot="end">
                 <IonButton onClick={() => setShowAdoptModal(false)}>
@@ -428,7 +428,7 @@ const PetDetail: React.FC = () => {
               <div className="adoption-form-buttons">
                 <IonButton 
                   expand="block" 
-                  color="petprimary"
+                  color="primary"
                   onClick={handleSubmitApplication}
                   disabled={!applicationForm.message}
                 >

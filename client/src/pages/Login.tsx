@@ -54,9 +54,9 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonBackButton color="light" defaultHref="/home" />
           </IonButtons>
           <IonTitle>Login</IonTitle>
         </IonToolbar>
@@ -66,16 +66,16 @@ const Login: React.FC = () => {
           <IonRow className="ion-justify-content-center">
             <IonCol size="12" sizeMd="8" sizeLg="6">
               <div className="login-logo">
-                <img src="/assets/logo.png" alt="PetShop Logo" />
+              <img src="/assets/logo.png" alt="PetShop Logo" />
               </div>
               
               <form onSubmit={handleSubmit}>
                 <IonItem>
-                  <IonIcon icon={mail} slot="start" color="petprimary" />
-                  <IonLabel position="floating">Email</IonLabel>
+                  <IonIcon icon={mail} slot="start" color="primary" />
                   <IonInput
                     type="email"
                     name="email"
+                    placeholder='user@mail.com'
                     value={credentials.email}
                     onIonChange={handleChange}
                     required
@@ -83,11 +83,11 @@ const Login: React.FC = () => {
                 </IonItem>
                 
                 <IonItem className="ion-margin-bottom">
-                  <IonIcon icon={lockClosed} slot="start" color="petprimary" />
-                  <IonLabel position="floating">Password</IonLabel>
+                  <IonIcon icon={lockClosed} slot="start" color="primary" />
                   <IonInput
                     type="password"
                     name="password"
+                    placeholder='Password'
                     value={credentials.password}
                     onIonChange={handleChange}
                     required
@@ -103,7 +103,7 @@ const Login: React.FC = () => {
                 <IonButton
                   expand="block"
                   type="submit"
-                  color="petprimary"
+                  color="primary"
                   disabled={isLoading || !credentials.email || !credentials.password}
                 >
                   <IonIcon slot="start" icon={logIn} />
@@ -115,7 +115,7 @@ const Login: React.FC = () => {
                 <IonText color="medium">
                   <p>Don't have an account yet?</p>
                 </IonText>
-                <IonButton routerLink="/register" expand="block" fill="outline" color="petprimary">
+                <IonButton routerLink="/register" expand="block" fill="outline" color="primary">
                   <IonIcon slot="start" icon={person} />
                   Create Account
                 </IonButton>

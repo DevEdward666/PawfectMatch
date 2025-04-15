@@ -197,9 +197,9 @@ const ProductDetail: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
-          <IonToolbar color="petprimary">
+          <IonToolbar color="primary">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/products" />
+              <IonBackButton color="light" defaultHref="/products" />
             </IonButtons>
             <IonTitle>Product Details</IonTitle>
           </IonToolbar>
@@ -223,9 +223,9 @@ const ProductDetail: React.FC = () => {
     return (
       <IonPage>
         <IonHeader>
-          <IonToolbar color="petprimary">
+          <IonToolbar color="primary">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/products" />
+              <IonBackButton color="light" defaultHref="/products" />
             </IonButtons>
             <IonTitle>Product Details</IonTitle>
           </IonToolbar>
@@ -236,7 +236,7 @@ const ProductDetail: React.FC = () => {
               <h5>Product not found</h5>
               <p>The product you're looking for doesn't exist or has been removed.</p>
             </IonText>
-            <IonButton routerLink="/products" color="petprimary">
+            <IonButton routerLink="/products" color="primary">
               Back to Products
             </IonButton>
           </div>
@@ -248,9 +248,9 @@ const ProductDetail: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/products" />
+            <IonBackButton color="light" defaultHref="/products" />
           </IonButtons>
           <IonTitle>{product.name}</IonTitle>
           <IonButtons slot="end">

@@ -195,7 +195,7 @@ const Products: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="petprimary">
+        <IonToolbar color="primary">
           <IonTitle>Shop Products</IonTitle>
           <IonButton
             slot="end"
@@ -387,7 +387,7 @@ const Products: React.FC = () => {
                           </p>
                           
                           <div className="card-actions">
-                            <IonButton fill="solid" color="petprimary" size="small">
+                            <IonButton fill="solid" color="primary" size="small">
                               View Details
                             </IonButton>
                             
@@ -416,7 +416,7 @@ const Products: React.FC = () => {
                         <h5>No products found matching your criteria</h5>
                         <p>Try adjusting your filters or check back later for more products.</p>
                       </IonText>
-                      <IonButton color="petprimary" onClick={resetFilters}>
+                      <IonButton color="primary" onClick={resetFilters}>
                         Reset Filters
                       </IonButton>
                     </div>

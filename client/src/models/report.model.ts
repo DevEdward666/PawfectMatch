@@ -1,5 +1,15 @@
 import { User } from './user.model';
 
+
+export interface ReportData {
+  report:Report,
+  reporter:Reporter
+}
+export interface Reporter {
+  email:string,
+  id:number,
+  name:string,
+}
 export interface Report {
   id: number;
   userId: number;
@@ -25,11 +35,11 @@ export interface ReportResponse {
   id: number;
   reportId: number;
   userId: number;
-  content: string;
+  response: string;
   createdAt: string;
   user?: Partial<User>;
 }
 
 export interface ReportResponseForm {
-  content: string;
+  response: string;
 }

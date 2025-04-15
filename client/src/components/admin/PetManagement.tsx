@@ -90,14 +90,13 @@ const PetManagement: React.FC = () => {
   const [photoPreview, setPhotoPreview] = useState<string | undefined>(undefined);
   
   // Effects
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-  const initialize = async () => {
-    await fetchPets();
-    await fetchAllAdoptionApplications();
-  }
-  initialize();
-  }, [fetchPets,fetchAllAdoptionApplications]);
+    const initialize = async () => {
+      await fetchPets();
+      await fetchAllAdoptionApplications();
+    };
+    initialize();
+  }, [fetchPets, fetchAllAdoptionApplications]);
   
   // Functions
   const loadPets = async () => {
@@ -148,7 +147,7 @@ const PetManagement: React.FC = () => {
       description: pet.description || '',
       status: pet.status,
     });
-    setPhotoPreview(pet.imageUrl);
+    setPhotoPreview(`data:image/jpeg;base64,${pet.imageUrl}`);
     setIsEditMode(true);
     setIsModalOpen(true);
   };
@@ -449,7 +448,7 @@ const PetManagement: React.FC = () => {
                       <IonItem key={pet.id} className="ion-margin-bottom">
                         {pet.imageUrl && (
                           <IonAvatar slot="start">
-                            <img src={pet.imageUrl} alt={pet.name} />
+                            <img   src={`data:image/jpeg;base64,${pet.imageUrl}`} alt={pet.name} />
                           </IonAvatar>
                         )}
                         {!pet.imageUrl && (
