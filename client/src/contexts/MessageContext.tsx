@@ -64,7 +64,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   },[showToast]);
 
-  const markAsRead = async (id: number) => {
+  const markAsRead = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -89,7 +89,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
   const fetchMessageById = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
