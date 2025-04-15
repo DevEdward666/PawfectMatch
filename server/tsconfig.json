@@ -15,6 +15,6 @@
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src/**/*", "db.ts", "storage.ts", "../shared/**/*"],
+  "include": ["src/**/*", "db.ts", "storage.ts", "../shared/**/*","start-ts-server.js"],
   "exclude": ["node_modules"]
 }
