@@ -20,7 +20,6 @@ import {
 } from '@ionic/react';
 import {
   arrowForward,
-  basket,
   heartOutline,
   paw,
   warning

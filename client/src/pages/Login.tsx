@@ -1,27 +1,26 @@
-import React, { useState } from 'react';
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonInput,
-  IonButton,
-  IonItem,
-  IonLabel,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonText,
-  IonLoading,
-  IonIcon,
   IonBackButton,
-  IonButtons
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLoading,
+  IonPage,
+  IonRow,
+  IonText,
+  IonTitle,
+  IonToolbar
 } from '@ionic/react';
-import { logIn, mail, lockClosed, person } from 'ionicons/icons';
-import { useAuth } from '../contexts/AuthContext';
+import { lockClosed, logIn, mail, person } from 'ionicons/icons';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import "./Login.css"
+import { useAuth } from '../contexts/AuthContext';
+import "./Login.css";
 const Login: React.FC = () => {
   const { login, isLoading, error, isLoggedIn } = useAuth();
   

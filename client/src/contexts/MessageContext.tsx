@@ -62,7 +62,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   const fetchMessageById = useCallback(async (id: number) => {
     try {
@@ -74,7 +74,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
       
       // If this is an unread message in our inbox, mark it as read automatically
       if (response.data.isRead === false && inboxMessages.some(msg => msg.id === id)) {
-        markAsRead(id);
+        await markAsRead(id);
       }
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch message details.';
@@ -83,7 +83,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  },[inboxMessages]);
+  },[showToast,inboxMessages]);
 
   const sendMessage = async (messageData: MessageForm) => {
     try {
@@ -133,7 +133,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
-  const markAsRead = async (id: number) => {
+  const markAsRead = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -156,7 +156,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  };
+  },[showToast,inboxMessages]);
 
   // Admin: Fetch all messages in the system
   const fetchAllMessages = useCallback(async (page: number = 1, limit: number = 20) => {
@@ -176,7 +176,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   // Admin: Delete a message
   const adminDeleteMessage = async (id: number) => {

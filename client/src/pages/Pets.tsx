@@ -13,8 +13,6 @@ import {
   IonGrid,
   IonHeader,
   IonIcon,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
   IonLabel,
   IonLoading,
   IonPage,
@@ -29,11 +27,9 @@ import {
   IonToolbar
 } from '@ionic/react';
 import {
-  female,
   filter,
   heart,
   heartOutline,
-  male,
   paw,
   search
 } from 'ionicons/icons';

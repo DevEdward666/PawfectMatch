@@ -51,7 +51,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   // Fetch logged-in user's reports
   const fetchUserReports = useCallback( async () => {
@@ -68,7 +68,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   // Fetch a specific report by ID
   const fetchReportById = useCallback(async (id: number) => {
@@ -85,7 +85,7 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   // Submit a new report
   const submitReport = async (reportData: ReportForm) => {

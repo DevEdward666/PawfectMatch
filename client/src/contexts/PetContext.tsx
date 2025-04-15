@@ -53,7 +53,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   const fetchPetById = useCallback(async (id: number) => {
     try {
@@ -69,7 +69,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   const createPet = async (petData: PetForm) => {
     try {
@@ -205,7 +205,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   const fetchAllAdoptionApplications = useCallback(async () => {
     try {
@@ -221,7 +221,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   const updateAdoptionApplication = async (id: number, status: string) => {
     try {

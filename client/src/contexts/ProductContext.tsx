@@ -47,7 +47,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   const fetchProductById = useCallback(async (id: number) => {
     try {
@@ -63,7 +63,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  },[]);
+  },[showToast]);
 
   const createProduct = async (productData: ProductForm) => {
     try {

@@ -37,7 +37,6 @@ import {
   add,
   close,
   mailOpen,
-  pencil,
   person,
   send,
   trash
