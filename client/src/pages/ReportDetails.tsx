@@ -44,7 +44,7 @@ interface ReportDetailParams {
 }
 
 const ReportDetail: React.FC = () => {
-  const { currentReport, fetchReportById, updateReportStatus, respondToReport, isLoading, error } = useReports();
+  const { currentReport, fetchReportById, respondToReport, isLoading, error } = useReports();
   const { isLoggedIn } = useAuth();
   const { id } = useParams<ReportDetailParams>();
   

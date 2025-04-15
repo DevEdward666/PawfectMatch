@@ -140,15 +140,19 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
       
       await api.put(`/messages/${id}/read`);
       
-      // Update message in inbox
-      setInboxMessages(inboxMessages.map(msg => 
-        msg.id === id ? { ...msg, isRead: true } : msg
-      ));
+      // Update message in inbox using functional update
+      setInboxMessages(prevInboxMessages => 
+        prevInboxMessages.map(msg => 
+          msg.id === id ? { ...msg, isRead: true } : msg
+        )
+      );
       
-      // Update current message if it's this one
-      if (currentMessage && currentMessage.id === id) {
-        setCurrentMessage({ ...currentMessage, isRead: true });
-      }
+      // Update current message using functional update
+      setCurrentMessage(prevCurrentMessage => 
+        prevCurrentMessage && prevCurrentMessage.id === id
+          ? { ...prevCurrentMessage, isRead: true }
+          : prevCurrentMessage
+      );
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to mark message as read.';
       setError(errorMessage);
@@ -156,7 +160,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  },[showToast,inboxMessages]);
+  },[showToast]);
 
   // Admin: Fetch all messages in the system
   const fetchAllMessages = useCallback(async (page: number = 1, limit: number = 20) => {
