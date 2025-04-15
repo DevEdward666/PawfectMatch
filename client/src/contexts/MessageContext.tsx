@@ -64,15 +64,40 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   },[showToast]);
 
+  const markAsRead = useCallback(async (id: number) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+  
+      await api.put(`/messages/${id}/read`);
+  
+      setInboxMessages(prevInboxMessages =>
+        prevInboxMessages.map(msg =>
+          msg.id === id ? { ...msg, isRead: true } : msg
+        )
+      );
+  
+      setCurrentMessage(prevCurrentMessage =>
+        prevCurrentMessage && prevCurrentMessage.id === id
+          ? { ...prevCurrentMessage, isRead: true }
+          : prevCurrentMessage
+      );
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || 'Failed to mark message as read.';
+      setError(errorMessage);
+      showToast(errorMessage, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [showToast]);
   const fetchMessageById = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setError(null);
-      
+  
       const response = await api.get(`/messages/${id}`);
       setCurrentMessage(response.data.data);
-      
-      // If this is an unread message in our inbox, mark it as read automatically
+  
       if (response.data.isRead === false && inboxMessages.some(msg => msg.id === id)) {
         await markAsRead(id);
       }
@@ -83,7 +108,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     } finally {
       setIsLoading(false);
     }
-  },[showToast,inboxMessages]);
+  }, [showToast, inboxMessages, markAsRead]);
 
   const sendMessage = async (messageData: MessageForm) => {
     try {
@@ -133,34 +158,6 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
-  const markAsRead = useCallback(async (id: number) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      
-      await api.put(`/messages/${id}/read`);
-      
-      // Update message in inbox using functional update
-      setInboxMessages(prevInboxMessages => 
-        prevInboxMessages.map(msg => 
-          msg.id === id ? { ...msg, isRead: true } : msg
-        )
-      );
-      
-      // Update current message using functional update
-      setCurrentMessage(prevCurrentMessage => 
-        prevCurrentMessage && prevCurrentMessage.id === id
-          ? { ...prevCurrentMessage, isRead: true }
-          : prevCurrentMessage
-      );
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Failed to mark message as read.';
-      setError(errorMessage);
-      showToast(errorMessage, 'error');
-    } finally {
-      setIsLoading(false);
-    }
-  },[showToast]);
 
   // Admin: Fetch all messages in the system
   const fetchAllMessages = useCallback(async (page: number = 1, limit: number = 20) => {
