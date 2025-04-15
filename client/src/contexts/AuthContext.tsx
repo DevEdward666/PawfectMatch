@@ -48,14 +48,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     getToken();
   }, []);
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     present({
       message,
       duration: 3000,
       position: 'bottom',
       color: type === 'success' ? 'success' : 'danger'
     });
-  };
+  }, [present]);
 
   const login = async (credentials: LoginRequest) => {
     try {

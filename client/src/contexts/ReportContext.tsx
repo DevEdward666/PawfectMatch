@@ -27,14 +27,14 @@ export const ReportProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [error, setError] = useState<string | null>(null);
   const [present] = useIonToast();
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     present({
       message,
       duration: 3000,
       position: 'bottom',
       color: type === 'success' ? 'success' : 'danger'
     });
-  };
+  }, [present]);
 
   // Fetch all reports (admin only)
   const fetchAllReports = useCallback(async () => {
