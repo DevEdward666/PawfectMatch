@@ -1,181 +1,138 @@
-// Import necessary functions from drizzle
-const { relations } = require('drizzle-orm');
-const { 
-  pgTable, 
-  serial, 
-  varchar, 
-  text, 
-  timestamp, 
-  boolean, 
-  integer, 
-  decimal,
-  pgEnum 
-} = require('drizzle-orm/pg-core');
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.reportResponsesRelations = exports.reportsRelations = exports.messagesRelations = exports.adoptionApplicationsRelations = exports.petsRelations = exports.usersRelations = exports.reportResponses = exports.reports = exports.messages = exports.adoptionApplications = exports.products = exports.pets = exports.users = exports.productCategoryEnum = exports.reportStatusEnum = exports.petStatusEnum = exports.userRoleEnum = void 0;
+const drizzle_orm_1 = require("drizzle-orm");
+const pg_core_1 = require("drizzle-orm/pg-core");
 // Enums
-const userRoleEnum = pgEnum('user_role', ['admin', 'user']);
-const petStatusEnum = pgEnum('pet_status', ['available', 'adopted', 'pending']);
-const reportStatusEnum = pgEnum('report_status', ['pending', 'reviewing', 'resolved']);
-const productCategoryEnum = pgEnum('product_category', ['food', 'toys', 'accessories', 'grooming', 'other']);
-
+exports.userRoleEnum = (0, pg_core_1.pgEnum)('user_role', ['admin', 'user']);
+exports.petStatusEnum = (0, pg_core_1.pgEnum)('pet_status', ['available', 'adopted', 'pending']);
+exports.reportStatusEnum = (0, pg_core_1.pgEnum)('report_status', ['pending', 'reviewing', 'resolved']);
+exports.productCategoryEnum = (0, pg_core_1.pgEnum)('product_category', ['food', 'toys', 'accessories', 'grooming', 'other']);
 // Users table
-const users = pgTable('users', {
-  id: serial('id').primaryKey(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
-  password: varchar('password', { length: 255 }).notNull(),
-  name: varchar('name', { length: 255 }).notNull(),
-  role: userRoleEnum('role').default('user').notNull(),
-  phone: varchar('phone', { length: 20 }),
-  address: text('address'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+exports.users = (0, pg_core_1.pgTable)('users', {
+    id: (0, pg_core_1.serial)('id').primaryKey(),
+    email: (0, pg_core_1.varchar)('email').notNull(),
+    password: (0, pg_core_1.varchar)('password').notNull(),
+    name: (0, pg_core_1.varchar)('name').notNull(),
+    role: (0, pg_core_1.varchar)('role').notNull(),
+    phone: (0, pg_core_1.varchar)('phone'),
+    address: (0, pg_core_1.varchar)('address'),
+    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow(),
 });
-
 // Pets table
-const pets = pgTable('pets', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 255 }).notNull(),
-  species: varchar('species', { length: 100 }).notNull(),
-  breed: varchar('breed', { length: 100 }),
-  age: integer('age'),
-  gender: varchar('gender', { length: 20 }),
-  description: text('description'),
-  imageUrl: text('image_url'),
-  status: petStatusEnum('status').default('available').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+exports.pets = (0, pg_core_1.pgTable)('pets', {
+    id: (0, pg_core_1.serial)('id').primaryKey(),
+    name: (0, pg_core_1.varchar)('name', { length: 255 }).notNull(),
+    species: (0, pg_core_1.varchar)('species', { length: 100 }).notNull(),
+    breed: (0, pg_core_1.varchar)('breed', { length: 100 }),
+    age: (0, pg_core_1.integer)('age'),
+    gender: (0, pg_core_1.varchar)('gender', { length: 20 }),
+    description: (0, pg_core_1.text)('description'),
+    imageUrl: (0, pg_core_1.text)('image_url'),
+    status: (0, exports.petStatusEnum)('status').default('available').notNull(),
+    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow().notNull(),
 });
-
 // Products table
-const products = pgTable('products', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 255 }).notNull(),
-  description: text('description'),
-  price: decimal('price', { precision: 10, scale: 2 }).notNull(),
-  imageUrl: text('image_url'),
-  category: productCategoryEnum('category').default('other').notNull(),
-  stock: integer('stock').default(0).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+exports.products = (0, pg_core_1.pgTable)('products', {
+    id: (0, pg_core_1.serial)('id').primaryKey(),
+    name: (0, pg_core_1.varchar)('name', { length: 255 }).notNull(),
+    description: (0, pg_core_1.text)('description'),
+    price: (0, pg_core_1.decimal)('price', { precision: 10, scale: 2 }).notNull(),
+    imageUrl: (0, pg_core_1.text)('image_url'),
+    category: (0, exports.productCategoryEnum)('category').default('other').notNull(),
+    stock: (0, pg_core_1.integer)('stock').default(0).notNull(),
+    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow().notNull(),
 });
-
 // Adoption Applications table
-const adoptionApplications = pgTable('adoption_applications', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  petId: integer('pet_id').notNull().references(() => pets.id, { onDelete: 'cascade' }),
-  status: varchar('status', { length: 50 }).default('pending').notNull(),
-  message: text('message'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+exports.adoptionApplications = (0, pg_core_1.pgTable)('adoption_applications', {
+    id: (0, pg_core_1.serial)('id').primaryKey(),
+    userId: (0, pg_core_1.integer)('user_id').notNull().references(() => exports.users.id, { onDelete: 'cascade' }),
+    petId: (0, pg_core_1.integer)('pet_id').notNull().references(() => exports.pets.id, { onDelete: 'cascade' }),
+    status: (0, pg_core_1.varchar)('status', { length: 50 }).default('pending').notNull(),
+    message: (0, pg_core_1.text)('message'),
+    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow().notNull(),
 });
-
 // Messages table
-const messages = pgTable('messages', {
-  id: serial('id').primaryKey(),
-  senderId: integer('sender_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  receiverId: integer('receiver_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  subject: varchar('subject', { length: 255 }),
-  content: text('content').notNull(),
-  isRead: boolean('is_read').default(false).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+exports.messages = (0, pg_core_1.pgTable)('messages', {
+    id: (0, pg_core_1.serial)('id').primaryKey(),
+    senderId: (0, pg_core_1.integer)('sender_id').notNull().references(() => exports.users.id, { onDelete: 'cascade' }),
+    receiverId: (0, pg_core_1.integer)('receiver_id').notNull().references(() => exports.users.id, { onDelete: 'cascade' }),
+    subject: (0, pg_core_1.varchar)('subject', { length: 255 }),
+    content: (0, pg_core_1.text)('content').notNull(),
+    isRead: (0, pg_core_1.boolean)('is_read').default(false).notNull(),
+    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
 });
-
 // Reports table
-const reports = pgTable('reports', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  title: varchar('title', { length: 255 }).notNull(),
-  description: text('description').notNull(),
-  location: text('location'),
-  imageUrl: text('image_url'),
-  status: reportStatusEnum('status').default('pending').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+exports.reports = (0, pg_core_1.pgTable)('reports', {
+    id: (0, pg_core_1.serial)('id').primaryKey(),
+    userId: (0, pg_core_1.integer)('user_id').notNull().references(() => exports.users.id, { onDelete: 'cascade' }),
+    title: (0, pg_core_1.varchar)('title', { length: 255 }).notNull(),
+    description: (0, pg_core_1.text)('description').notNull(),
+    location: (0, pg_core_1.text)('location'),
+    imageUrl: (0, pg_core_1.text)('image_url'),
+    status: (0, exports.reportStatusEnum)('status').default('pending').notNull(),
+    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow().notNull(),
 });
-
 // Report Responses table
-const reportResponses = pgTable('report_responses', {
-  id: serial('id').primaryKey(),
-  reportId: integer('report_id').notNull().references(() => reports.id, { onDelete: 'cascade' }),
-  adminId: integer('admin_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  response: text('response').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+exports.reportResponses = (0, pg_core_1.pgTable)('report_responses', {
+    id: (0, pg_core_1.serial)('id').primaryKey(),
+    reportId: (0, pg_core_1.integer)('report_id').notNull().references(() => exports.reports.id, { onDelete: 'cascade' }),
+    adminId: (0, pg_core_1.integer)('admin_id').notNull().references(() => exports.users.id, { onDelete: 'cascade' }),
+    response: (0, pg_core_1.text)('response').notNull(),
+    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
 });
-
 // Define relations
-const usersRelations = relations(users, ({ many }) => ({
-  sentMessages: many(messages, { relationName: 'sender' }),
-  receivedMessages: many(messages, { relationName: 'receiver' }),
-  adoptionApplications: many(adoptionApplications),
-  reports: many(reports),
-  reportResponses: many(reportResponses),
+exports.usersRelations = (0, drizzle_orm_1.relations)(exports.users, ({ many }) => ({
+    sentMessages: many(exports.messages, { relationName: 'sender' }),
+    receivedMessages: many(exports.messages, { relationName: 'receiver' }),
+    adoptionApplications: many(exports.adoptionApplications),
+    reports: many(exports.reports),
+    reportResponses: many(exports.reportResponses),
 }));
-
-const petsRelations = relations(pets, ({ many }) => ({
-  adoptionApplications: many(adoptionApplications),
+exports.petsRelations = (0, drizzle_orm_1.relations)(exports.pets, ({ many }) => ({
+    adoptionApplications: many(exports.adoptionApplications),
 }));
-
-const adoptionApplicationsRelations = relations(adoptionApplications, ({ one }) => ({
-  user: one(users, {
-    fields: [adoptionApplications.userId],
-    references: [users.id],
-  }),
-  pet: one(pets, {
-    fields: [adoptionApplications.petId],
-    references: [pets.id],
-  }),
+exports.adoptionApplicationsRelations = (0, drizzle_orm_1.relations)(exports.adoptionApplications, ({ one }) => ({
+    user: one(exports.users, {
+        fields: [exports.adoptionApplications.userId],
+        references: [exports.users.id],
+    }),
+    pet: one(exports.pets, {
+        fields: [exports.adoptionApplications.petId],
+        references: [exports.pets.id],
+    }),
 }));
-
-const messagesRelations = relations(messages, ({ one }) => ({
-  sender: one(users, {
-    fields: [messages.senderId],
-    references: [users.id],
-    relationName: 'sender',
-  }),
-  receiver: one(users, {
-    fields: [messages.receiverId],
-    references: [users.id],
-    relationName: 'receiver',
-  }),
+exports.messagesRelations = (0, drizzle_orm_1.relations)(exports.messages, ({ one }) => ({
+    sender: one(exports.users, {
+        fields: [exports.messages.senderId],
+        references: [exports.users.id],
+        relationName: 'sender',
+    }),
+    receiver: one(exports.users, {
+        fields: [exports.messages.receiverId],
+        references: [exports.users.id],
+        relationName: 'receiver',
+    }),
 }));
-
-const reportsRelations = relations(reports, ({ one, many }) => ({
-  reporter: one(users, {
-    fields: [reports.userId],
-    references: [users.id],
-  }),
-  responses: many(reportResponses),
+exports.reportsRelations = (0, drizzle_orm_1.relations)(exports.reports, ({ one, many }) => ({
+    reporter: one(exports.users, {
+        fields: [exports.reports.userId],
+        references: [exports.users.id],
+    }),
+    responses: many(exports.reportResponses),
 }));
-
-const reportResponsesRelations = relations(reportResponses, ({ one }) => ({
-  report: one(reports, {
-    fields: [reportResponses.reportId],
-    references: [reports.id],
-  }),
-  admin: one(users, {
-    fields: [reportResponses.adminId],
-    references: [users.id],
-  }),
+exports.reportResponsesRelations = (0, drizzle_orm_1.relations)(exports.reportResponses, ({ one }) => ({
+    report: one(exports.reports, {
+        fields: [exports.reportResponses.reportId],
+        references: [exports.reports.id],
+    }),
+    admin: one(exports.users, {
+        fields: [exports.reportResponses.adminId],
+        references: [exports.users.id],
+    }),
 }));
-
-// Export everything
-module.exports = {
-  userRoleEnum,
-  petStatusEnum,
-  reportStatusEnum,
-  productCategoryEnum,
-  users,
-  pets,
-  products,
-  adoptionApplications,
-  messages,
-  reports,
-  reportResponses,
-  usersRelations,
-  petsRelations,
-  adoptionApplicationsRelations,
-  messagesRelations,
-  reportsRelations,
-  reportResponsesRelations
-};

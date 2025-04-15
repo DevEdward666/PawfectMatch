@@ -2,9 +2,9 @@
   "name": "petshop-server",
   "version": "1.0.0",
   "description": "Pet Shop Application Backend",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/server/src/index.js",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "db:push": "drizzle-kit push:pg",
