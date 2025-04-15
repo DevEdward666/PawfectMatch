@@ -2,17 +2,17 @@ import express, { Request, Response, NextFunction, Application } from 'express';
 import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import userRoutes from '../../server/src/routes/userRoutes';
-import authRoutes from '../../server/src/routes/authRoutes';
-import petRoutes from '../../server/src/routes/petRoutes';
-import productsRoutes from '../../server/src/routes/productRoutes';
-import adoptionRoutes from '../../server/src/routes/adoptionRoutes';
-import reportsRoutes from '../../server/src/routes/reportRoutes';
-import messagesRoutes from '../../server/src/routes/messagesRoutes';
-import dashboardRoutes from '../../server/src/routes/dashboardRoutes';
-import uploadRoutes from '../../server/src/routes/uploadRoutes';
+import userRoutes from './routes/userRoutes';
+import authRoutes from './routes/authRoutes';
+import petRoutes from './routes/petRoutes';
+import productsRoutes from './routes/productRoutes';
+import adoptionRoutes from './routes/adoptionRoutes';
+import reportsRoutes from './routes/reportRoutes';
+import messagesRoutes from './routes/messagesRoutes';
+import dashboardRoutes from './routes/dashboardRoutes';
+import uploadRoutes from './routes/uploadRoutes';
 // Import database connection
-import { pool } from './../src/db/connection';
+import { pool } from './db/connection';
 // Initialize environment variables
 dotenv.config();
 

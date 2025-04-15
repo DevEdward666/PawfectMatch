@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { db } from '../../src/db/connection';
+import { db } from '../db/connection';
 import { reports, reportResponses, users, InsertReport, InsertReportResponse } from '../models/schema';
 import { and,eq, desc, sql } from 'drizzle-orm';
 import fs from 'fs';

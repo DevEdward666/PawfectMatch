@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { db } from '../../src/db/connection';
+import { db } from '../db/connection';
 import { users, User, InsertUser } from '../models/schema';
 import { hashPassword, comparePassword, generateToken } from '../config/auth';
 import { eq, and } from 'drizzle-orm';

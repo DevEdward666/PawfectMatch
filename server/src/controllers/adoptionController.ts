@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { db } from '../../src/db/connection';
+import { db } from '../db/connection';
 import { 
     pets, 
     Pet, 
