@@ -9,9 +9,6 @@ import {
     users
   } from '../models/schema';
 import { sql,and, eq, asc, desc } from 'drizzle-orm';
-import fs from 'fs';
-import path from 'path';
-import { z } from "zod";
 export const getAllAdoption  = async (req: Request, res: Response) => {
     console.log(res)
     try {

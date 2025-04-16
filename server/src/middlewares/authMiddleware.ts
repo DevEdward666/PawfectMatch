@@ -2,13 +2,13 @@ import jwt from 'jsonwebtoken';
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
+import * as schema  from '../db/schema'
 import { Request, Response, NextFunction } from 'express';
 // Database connection
 const pool = new Pool({   connectionString: process.env.DATABASE_URL + '?sslmode=require'});
 const db = drizzle(pool);
 
 // Get schema
-const schema = require('../../../shared/schema');
 const { users } = schema;
 
 // JWT Secret
