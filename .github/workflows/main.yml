@@ -1,0 +1,49 @@
+name: Build and Deploy Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🟢 Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Update with your version if needed
+
+      - name: 📦 Install dependencies in /server
+        working-directory: ./server
+        run: npm install --legacy-peer-deps
+
+      - name: 🛠️ Build the server
+        working-directory: ./server
+        run: npm run build
+
+      - name: 📂 Check dist folder (debug)
+        working-directory: ./server
+        run: ls -R dist || echo "dist folder not found"
+
+      - name: Install Render CLI
+        run: |
+          curl -L https://github.com/render-oss/cli/releases/download/v1.1.0/cli_1.1.0_linux_amd64.zip -o render.zip
+            unzip render.zip
+            sudo mv cli_v1.1.0 /usr/local/bin/render
+
+      - name: Set up Render API Key
+        run: echo "RENDER_API_KEY=${{ secrets.RENDER_API_KEY }}" >> $GITHUB_ENV
+      - name: Set Render Workspace
+        run: render workspace set ${{ secrets.RENDER_WORKSPACE_ID }} -o json
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      - name: Deploy to Render
+        run: render deploys create ${{ secrets.RENDER_SERVICE_ID }} --output json --confirm
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+
