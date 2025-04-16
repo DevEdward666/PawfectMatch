@@ -31,14 +31,13 @@ jobs:
         run: ls -R dist || echo "dist folder not found"
 
       - name: 🚀 Install Render CLI globally
-        run: |
-          sudo npm install -g render-cli
+        run: sudo npm install -g render-cli
 
-      - name: 📂 Print npm bin path
+      - name: 📂 Print npm bin path and check binaries
         run: |
-          echo "Global npm bin path: $(npm bin --global)"
-          echo "Checking if render-cli is installed in global bin directory:"
-          ls -al $(npm bin --global)
+          echo "Global npm bin path: $(npm bin -g)"
+          echo "Listing global npm binaries:"
+          ls -al $(npm bin -g) || echo "No binaries found in the global npm bin directory"
 
       - name: 🌐 Verify Render CLI installation
         run: render-cli --version || echo "Render CLI not found"
