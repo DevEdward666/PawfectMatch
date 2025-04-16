@@ -69,12 +69,12 @@ app.get('/api/health', async (req: Request, res: Response) => {
 });
 
 // Serve the static files from client build directory
-app.use(express.static(path.join(__dirname, '../client/build')));
+// app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Catch-all route to serve the React app (or our placeholder for now)
-app.get('*', (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
+// app.get('*', (req: Request, res: Response) => {
+//   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+// });
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

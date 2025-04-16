@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const path_1 = __importDefault(require("path"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
@@ -70,11 +69,11 @@ app.get('/api/health', async (req, res) => {
     }
 });
 // Serve the static files from client build directory
-app.use(express_1.default.static(path_1.default.join(__dirname, '../client/build')));
+// app.use(express.static(path.join(__dirname, '../client/build')));
 // Catch-all route to serve the React app (or our placeholder for now)
-app.get('*', (req, res) => {
-    res.sendFile(path_1.default.join(__dirname, '../client/build', 'index.html'));
-});
+// app.get('*', (req: Request, res: Response) => {
+//   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+// });
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Server error:', err);
