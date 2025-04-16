@@ -32,7 +32,7 @@ jobs:
 
       - name: 🚀 Install Render CLI globally
         run: |
-          sudo npm install -g render-cli
+          curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
           echo "Adding global npm binaries to PATH"
           echo "$(npm bin -g)" >> $GITHUB_PATH
 
