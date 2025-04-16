@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://petshop-api.replit.app/api'
+  apiUrl: 'https://pawfectmatch-gk4e.onrender.com/api'
 };
