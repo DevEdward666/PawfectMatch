@@ -33,15 +33,12 @@ jobs:
       - name: 🚀 Install Render CLI globally
         run: |
           sudo npm install -g render-cli
-          
-      - name: 📂 Print Global NPM Bin Path
-        run: echo "Global npm bin path $(npm bin --global)"
 
-      - name: 📂 List Global NPM Binaries
+      - name: 📂 Print npm bin path
         run: |
-          NPM_BIN_PATH=$(npm bin --global)
-          echo "Listing global npm binaries in: $NPM_BIN_PATH"
-          ls -al $NPM_BIN_PATH
+          echo "Global npm bin path: $(npm bin --global)"
+          echo "Checking if render-cli is installed in global bin directory:"
+          ls -al $(npm bin --global)
 
       - name: 🌐 Verify Render CLI installation
         run: render-cli --version || echo "Render CLI not found"
