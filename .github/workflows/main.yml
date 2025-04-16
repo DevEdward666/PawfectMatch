@@ -31,7 +31,10 @@ jobs:
         run: ls -R dist || echo "dist folder not found"
 
       - name: 🚀 Install Render CLI globally
-        run: sudo npm install -g render-cli
+        run: |
+          sudo npm install -g render-cli
+          echo "Adding global npm binaries to PATH"
+          echo "$(npm bin -g)" >> $GITHUB_PATH
 
       - name: 📂 Check render-cli installation
         run: |
