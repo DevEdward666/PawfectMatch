@@ -16,7 +16,7 @@ jobs:
       - name: 🟢 Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # Change if needed
+          node-version: '18' # Change to your required Node.js version
 
       - name: 📦 Install dependencies in /server
         working-directory: ./server
@@ -30,8 +30,8 @@ jobs:
         working-directory: ./server
         run: ls -R dist || echo "dist folder not found"
 
-      - name: 🚀 Install Render CLI
-        run: npm install -g render-cli
+      - name: 🚀 Install Render CLI globally
+        run: sudo npm install -g render-cli
 
       - name: 🌐 Deploy to Render
         env:
