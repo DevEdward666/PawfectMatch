@@ -38,11 +38,13 @@ jobs:
         working-directory: ./server
         run: npx render-cli --version
 
-      - name: 🌐 Deploy to Render
+      - name: 🌐 Deploy to Render and capture output
         working-directory: ./server
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
+          echo "Deploying to Render..."
           npx render-cli services deploy \
             --service-id=your-service-id \
-            --from-branch=main
+            --from-branch=main \
+            > render-deploy-output.log 2>&1 || tail -n 10 render-deploy-output.log
