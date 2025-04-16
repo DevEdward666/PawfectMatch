@@ -1,5 +1,5 @@
-import path from 'path';
-import fs from 'fs';
+import * as path from 'path';
+import * as fs from 'fs';
 
 // Function to ensure directory exists
 export const ensureDirectoryExists = (directory: string): void => {
