@@ -32,12 +32,16 @@ jobs:
 
       - name: Install Render CLI
         run: |
-          curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
-          echo "$HOME/.render/bin" >> $GITHUB_PATH
+          curl -L https://github.com/render-oss/cli/releases/download/v1.1.0/cli_1.1.0_linux_amd64.zip -o render.zip
+            unzip render.zip
+            sudo mv cli_v1.1.0 /usr/local/bin/render
 
       - name: Set up Render API Key
         run: echo "RENDER_API_KEY=${{ secrets.RENDER_API_KEY }}" >> $GITHUB_ENV
-
+      - name: Set Render Workspace
+        run: render workspace set --id ${{ secrets.RENDER_WORKSPACE_ID }}
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       - name: Deploy to Render
         run: render deploys create ${{ secrets.RENDER_SERVICE_ID }}
         env:
