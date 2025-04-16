@@ -44,7 +44,8 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
           echo "Deploying to Render..."
-          npx render-cli services deploy \
+          set -x
+          render-cli services deploy  \
             --service-id=srv-cvuh2njuibrs7389ke8g \
             --from-branch=main \
             > render-deploy-output.log 2>&1 || tail -n 10 render-deploy-output.log
