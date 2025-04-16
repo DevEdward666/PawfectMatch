@@ -39,7 +39,7 @@ jobs:
       - name: Set up Render API Key
         run: echo "RENDER_API_KEY=${{ secrets.RENDER_API_KEY }}" >> $GITHUB_ENV
       - name: Set Render Workspace
-        run: render workspace set --id ${{ secrets.RENDER_WORKSPACE_ID }}
+        run: render workspace set ${{ secrets.RENDER_WORKSPACE_ID }}
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       - name: Deploy to Render
