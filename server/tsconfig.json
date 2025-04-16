@@ -10,9 +10,9 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "types": ["node"]
   },
   "include": [
     "src/**/*"
