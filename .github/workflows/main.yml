@@ -1,13 +1,12 @@
-name: Build Server
+name: Build and Deploy Server
 
 on:
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
-  build-server:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +16,7 @@ jobs:
       - name: 🟢 Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # or your required Node version
+          node-version: '18' # Change if needed
 
       - name: 📦 Install dependencies in /server
         working-directory: ./server
@@ -27,6 +26,17 @@ jobs:
         working-directory: ./server
         run: npm run build
 
-      - name: 📂 Show server build output (dist/)
+      - name: 📂 Check dist folder (debug)
         working-directory: ./server
         run: ls -R dist || echo "dist folder not found"
+
+      - name: 🚀 Install Render CLI
+        run: npm install -g render-cli
+
+      - name: 🌐 Deploy to Render
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          render-cli services deploy \
+            --service-id=your-service-id \
+            --from-branch=main
