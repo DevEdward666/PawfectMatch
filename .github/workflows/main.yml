@@ -30,19 +30,19 @@ jobs:
         working-directory: ./server
         run: ls -R dist || echo "dist folder not found"
 
-      - name: 🚀 Install Render CLI globally
-        run: sudo npm install -g render-cli
-
-      - name: 🧭 Add npm global bin to PATH (for render-cli)
-        run: echo "$(npm bin -g)" >> $GITHUB_PATH
+      - name: 🚀 Install Render CLI locally
+        working-directory: ./server
+        run: npm install render-cli
 
       - name: 🌐 Verify Render CLI installation
-        run: render-cli --version
+        working-directory: ./server
+        run: npx render-cli --version
 
       - name: 🌐 Deploy to Render
+        working-directory: ./server
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          render-cli services deploy \
+          npx render-cli services deploy \
             --service-id=your-service-id \
             --from-branch=main
