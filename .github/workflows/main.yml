@@ -33,6 +33,9 @@ jobs:
       - name: 🚀 Install Render CLI globally
         run: sudo npm install -g render-cli
 
+      - name: 🧭 Add npm global bin to PATH (for render-cli)
+        run: echo "$(npm bin -g)" >> $GITHUB_PATH
+
       - name: 🌐 Verify Render CLI installation
         run: render-cli --version
 
