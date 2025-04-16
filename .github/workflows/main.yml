@@ -30,29 +30,13 @@ jobs:
         working-directory: ./server
         run: ls -R dist || echo "dist folder not found"
 
-      - name: 🚀 Install Render CLI globally
+      - name: Install Render CLI
         run: |
-          curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
-          echo "Adding global npm binaries to PATH"
-          echo "$(npm bin -g)" >> $GITHUB_PATH
+          curl -fsSL https://render.com/cli/install.sh | bash
+          echo "$HOME/.render/bin" >> $GITHUB_PATH
 
-      - name: 📂 Check render-cli installation
-        run: |
-          echo "Checking if render-cli is installed:"
-          render-cli --version || echo "Render CLI not found after installation"
+      - name: Authenticate Render CLI
+        run: render login --api-key ${{ secrets.RENDER_API_KEY }}
 
-      - name: 📂 Check npm bin path and binaries
-        run: |
-          echo "Global npm bin path: $(npm bin -g)"
-          echo "Listing global npm binaries:"
-          ls -al $(npm bin -g) || echo "No binaries found in the global npm bin directory"
-
-      - name: 🌐 Deploy to Render with debugging
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-        run: |
-          echo "Deploying to Render..."
-          set -x  # This will print each command being run in the shell for debugging
-          render-cli services deploy \
-            --service-id=srv-cvuh2njuibrs7389ke8g \
-            --from-branch=main || echo "Deployment failed. Check logs for errors."
+      - name: Deploy to Render
+        run: render services deploy --service-id ${{ secrets.RENDER_SERVICE_ID }} --from-branch main
