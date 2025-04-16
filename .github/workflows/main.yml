@@ -39,7 +39,7 @@ jobs:
         run: echo "RENDER_API_KEY=${{ secrets.RENDER_API_KEY }}" >> $GITHUB_ENV
 
       - name: Deploy to Render
-        run: render deploys create ${{ secrets.RENDER_SERVICE_ID }}  main production
+        run: render deploys create ${{ secrets.RENDER_SERVICE_ID }}
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
 
