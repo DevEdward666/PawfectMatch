@@ -1,0 +1,32 @@
+name: Build Server
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🟢 Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # or your required Node version
+
+      - name: 📦 Install dependencies in /server
+        working-directory: ./server
+        run: npm install --legacy-peer-deps
+
+      - name: 🛠️ Build the server
+        working-directory: ./server
+        run: npm run build
+
+      - name: 📂 Show server build output (dist/)
+        working-directory: ./server
+        run: ls -R dist || echo "dist folder not found"
