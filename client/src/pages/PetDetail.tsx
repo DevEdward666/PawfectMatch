@@ -83,7 +83,7 @@ const PetDetail: React.FC = () => {
       const favorites = JSON.parse(savedFavorites);
       setIsFavorite(favorites.includes(parseInt(id)));
     }
-  }, [id,isForAdoption,fetchPetById,user]);
+  }, [id,isForAdoption,fetchPetById,user,fetchPetForAddoptionById]);
   useEffect(() => {
     if(pet?.userId === user?.id){
 
@@ -403,7 +403,10 @@ const PetDetail: React.FC = () => {
                   onClick={handleAdoptClick}
                 >
                   <IonIcon slot="start" icon={clipboard} />
-                  {pet.status === 'available' || pet.status === 'pending' && !adoptionSent ? 'Submit Adoption Application' : 'Not Available for Adoption'}
+                  {(pet.status === 'available' || (pet.status === 'pending' && !adoptionSent))
+  ? 'Submit Adoption Application'
+  : 'Not Available for Adoption'}
+
                 </IonButton>
               </div>
             </IonCardContent>

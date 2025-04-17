@@ -89,7 +89,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     } finally {
       setIsLoading(false);
     }
-  },[showToast]);
+  },[showToast,fetchPetForAddoptionById]);
 
   const createPet = async (petData: PetForm) => {
     try {
