@@ -5,7 +5,6 @@ const connection_1 = require("../db/connection");
 const schema_1 = require("../models/schema");
 const drizzle_orm_1 = require("drizzle-orm");
 const getAllAdoption = async (req, res) => {
-    console.log(res);
     try {
         const applications = await connection_1.db.select({
             id: schema_1.adoptionApplications.id,
@@ -56,10 +55,16 @@ const getuserAdoptionApplication = async (req, res) => {
             message: schema_1.adoptionApplications.message,
             createdAt: schema_1.adoptionApplications.createdAt,
             updatedAt: schema_1.adoptionApplications.updatedAt,
-            petName: schema_1.pets.name,
-            petSpecies: schema_1.pets.species,
-            petBreed: schema_1.pets.breed,
-            petImageUrl: schema_1.pets.imageUrl
+            pet: {
+                id: schema_1.pets.id,
+                name: schema_1.pets.name,
+                species: schema_1.pets.species,
+                breed: schema_1.pets.breed,
+                age: schema_1.pets.age,
+                gender: schema_1.pets.gender,
+                description: schema_1.pets.description,
+                imageUrl: schema_1.pets.imageUrl,
+            }
         })
             .from(schema_1.adoptionApplications)
             .leftJoin(schema_1.pets, (0, drizzle_orm_1.eq)(schema_1.adoptionApplications.petId, schema_1.pets.id))

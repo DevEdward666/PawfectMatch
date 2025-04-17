@@ -11,6 +11,7 @@ const router = express_1.default.Router();
 // Public routes
 router.get('/', petController_1.getAllPets);
 router.get('/:id', petController_1.getPetById);
+router.get('/forAdoption/:id', auth_1.authenticate, petController_1.getPetForAdoptionById);
 // Protected routes (require authentication)
 router.post('/:id/adopt', auth_1.authenticate, petController_1.applyForAdoption);
 router.get('/adoption/user', auth_1.authenticate, petController_1.getUserAdoptionApplications);

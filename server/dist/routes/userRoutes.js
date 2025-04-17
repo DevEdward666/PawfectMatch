@@ -12,7 +12,7 @@ router.post('/register', userController_1.registerUser);
 router.post('/login', userController_1.loginUser);
 // Protected routes (require authentication)
 router.get('/profile', auth_1.authenticate, userController_1.getUserProfile);
-router.put('/profile', auth_1.authenticate, userController_1.updateUserProfile);
+router.put('/profile/:id', auth_1.authenticate, userController_1.updateUserProfile);
 router.put('/change-password', auth_1.authenticate, userController_1.changePassword);
 // Admin routes
 router.get('/getAllUsers', auth_1.authenticate, auth_1.isAdmin, userController_1.getAllUsers);

@@ -22,7 +22,7 @@ router.post('/login', loginUser);
 
 // Protected routes (require authentication)
 router.get('/profile', authenticate, getUserProfile);
-router.put('/profile', authenticate, updateUserProfile);
+router.put('/profile/:id', authenticate, updateUserProfile);
 router.put('/change-password', authenticate, changePassword);
 
 // Admin routes

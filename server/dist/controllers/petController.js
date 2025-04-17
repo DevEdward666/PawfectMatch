@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAdoptionApplication = exports.getAllAdoptionApplications = exports.getUserAdoptionApplications = exports.applyForAdoption = exports.deletePet = exports.updatePet = exports.createPet = exports.getPetById = exports.getAllPets = void 0;
+exports.updateAdoptionApplication = exports.getAllAdoptionApplications = exports.getUserAdoptionApplications = exports.applyForAdoption = exports.deletePet = exports.updatePet = exports.createPet = exports.getPetById = exports.getPetForAdoptionById = exports.getAllPets = void 0;
 const connection_1 = require("../db/connection");
 const schema_1 = require("../models/schema");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -31,9 +31,35 @@ const getAllPets = async (req, res) => {
         }
         // Execute query
         const petsList = await query.execute(); // Ensure `.execute()` is called
+        const petIds = petsList.map((pet) => pet.id);
+        const adoptionRecords = await connection_1.db
+            .select({
+            petId: schema_1.adoptionApplications.petId,
+            user: {
+                id: schema_1.users.id,
+                name: schema_1.users.name,
+                email: schema_1.users.email,
+            },
+        })
+            .from(schema_1.adoptionApplications)
+            .innerJoin(schema_1.users, (0, drizzle_orm_1.eq)(schema_1.adoptionApplications.userId, schema_1.users.id))
+            .where((0, drizzle_orm_1.inArray)(schema_1.adoptionApplications.petId, petIds));
+        // Group users by petId
+        const usersByPetId = {};
+        for (const record of adoptionRecords) {
+            if (!usersByPetId[record.petId]) {
+                usersByPetId[record.petId] = [];
+            }
+            usersByPetId[record.petId].push(record.user);
+        }
+        // Merge users into pet list
+        const petsWithUsers = petsList.map((pet) => ({
+            ...pet,
+            adopters: usersByPetId[pet.id] || [],
+        }));
         return res.status(200).json({
             success: true,
-            data: petsList
+            data: petsWithUsers
         });
     }
     catch (error) {
@@ -45,6 +71,50 @@ const getAllPets = async (req, res) => {
     }
 };
 exports.getAllPets = getAllPets;
+const getPetForAdoptionById = async (req, res) => {
+    try {
+        const petId = parseInt(req.params.id);
+        const userId = req.user?.id;
+        const [data] = await connection_1.db.select({
+            id: schema_1.adoptionApplications.id,
+            userId: schema_1.adoptionApplications.userId,
+            petId: schema_1.adoptionApplications.petId,
+            status: schema_1.adoptionApplications.status,
+            message: schema_1.adoptionApplications.message,
+            createdAt: schema_1.adoptionApplications.createdAt,
+            updatedAt: schema_1.adoptionApplications.updatedAt,
+            name: schema_1.pets.name,
+            species: schema_1.pets.species,
+            breed: schema_1.pets.breed,
+            age: schema_1.pets.age,
+            gender: schema_1.pets.gender,
+            description: schema_1.pets.description,
+            imageUrl: schema_1.pets.imageUrl,
+        })
+            .from(schema_1.adoptionApplications)
+            .leftJoin(schema_1.pets, (0, drizzle_orm_1.eq)(schema_1.adoptionApplications.userId, userId))
+            .where((0, drizzle_orm_1.eq)(schema_1.pets.id, petId));
+        // const [pet] = await db.select().from(pets).leftJoin(users, eq(adoptionApplications.userId, users.id)).where(eq(pets.id, petId));
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: 'Pet not found'
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: data
+        });
+    }
+    catch (error) {
+        console.error('Get pet error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Server error while fetching pet'
+        });
+    }
+};
+exports.getPetForAdoptionById = getPetForAdoptionById;
 const getPetById = async (req, res) => {
     try {
         const petId = parseInt(req.params.id);

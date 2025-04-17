@@ -55,11 +55,7 @@ export const authenticate = async (req: Request, res: Response,next: NextFunctio
     }
     
     // Add user to request
-    req.user = {
-      id: user.id,
-      email: user.email,
-      role: user.role
-    };
+    req.user = user;
     
     next();
   } catch (error:any) {

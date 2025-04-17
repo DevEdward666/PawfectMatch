@@ -82,11 +82,7 @@ const authenticate = async (req, res, next) => {
             });
         }
         // Add user to request
-        req.user = {
-            id: user.id,
-            email: user.email,
-            role: user.role
-        };
+        req.user = user;
         next();
     }
     catch (error) {

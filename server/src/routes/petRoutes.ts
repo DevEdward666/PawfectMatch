@@ -8,7 +8,8 @@ import {
   applyForAdoption,
   getUserAdoptionApplications,
   getAllAdoptionApplications,
-  updateAdoptionApplication
+  updateAdoptionApplication,
+  getPetForAdoptionById
 } from '../controllers/petController';
 import { authenticate, isAdmin } from '../middlewares/auth';
 import { uploadImage } from '../middlewares/upload';
@@ -18,6 +19,8 @@ const router = express.Router();
 // Public routes
 router.get('/', getAllPets);
 router.get('/:id', getPetById);
+router.get('/forAdoption/:id', authenticate,getPetForAdoptionById);
+
 
 // Protected routes (require authentication)
 router.post('/:id/adopt', authenticate, applyForAdoption);

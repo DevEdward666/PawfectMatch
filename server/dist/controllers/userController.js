@@ -68,6 +68,7 @@ const loginUser = async (req, res) => {
         }
         // Generate token
         const token = (0, auth_1.generateToken)(user.id, user.email, user.role);
+        req.user = user;
         // Return user without password
         const { password: _, ...userWithoutPassword } = user;
         return res.status(200).json({
@@ -88,6 +89,7 @@ exports.loginUser = loginUser;
 const getUserProfile = async (req, res) => {
     try {
         const userId = req.user?.id;
+        console.log("userId" + userId);
         if (!userId) {
             return res.status(401).json({
                 success: false,

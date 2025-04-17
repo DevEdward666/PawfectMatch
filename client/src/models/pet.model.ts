@@ -10,6 +10,8 @@ export interface Pet {
   status: 'available' | 'adopted' | 'pending';
   createdAt: string;
   updatedAt: string;
+
+  userId?: number;
 }
 
 export interface PetForm {

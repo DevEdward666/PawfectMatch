@@ -10,7 +10,6 @@ import {
   } from '../models/schema';
 import { sql,and, eq, asc, desc } from 'drizzle-orm';
 export const getAllAdoption  = async (req: Request, res: Response) => {
-    console.log(res)
     try {
       const applications = await db.select({
         id: adoptionApplications.id,
@@ -62,10 +61,16 @@ export const getuserAdoptionApplication =async (req: Request, res: Response) => 
         message: adoptionApplications.message,
         createdAt: adoptionApplications.createdAt,
         updatedAt: adoptionApplications.updatedAt,
-        petName: pets.name,
-        petSpecies: pets.species,
-        petBreed: pets.breed,
-        petImageUrl: pets.imageUrl
+        pet:{
+          id: pets.id,
+          name: pets.name,
+          species: pets.species,
+          breed: pets.breed,
+          age: pets.age,
+          gender: pets.gender,
+          description: pets.description,
+          imageUrl: pets.imageUrl,
+        }
       })
       .from(adoptionApplications)
       .leftJoin(pets, eq(adoptionApplications.petId, pets.id))

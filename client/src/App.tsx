@@ -27,6 +27,8 @@ import Register from './pages/Register';
 import Report from './pages/Report';
 
 // Contexts
+import { UserProvider } from './contexts/UserContext';
+
 import { AuthProvider } from './contexts/AuthContext';
 import { MessageProvider } from './contexts/MessageContext';
 import { PetProvider } from './contexts/PetContext';
@@ -60,6 +62,7 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <AuthProvider>
+      <UserProvider>
       <PetProvider>
         <ProductProvider>
           <MessageProvider>
@@ -112,6 +115,7 @@ const App: React.FC = () => (
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/admin" component={Admin} />
                 <Route exact path="/pets/:id" component={PetDetail} />
+                <Route exact path="/pets/forAdoption/:id/:isForAdoption" component={PetDetail} />
                 <Route exact path="/products/:id" component={ProductDetail} />
                 <Route exact path="/messages/:id" component={MessageDetail} />
                 <Route exact path="/reports/:id" component={ReportDetail} />
@@ -120,6 +124,7 @@ const App: React.FC = () => (
           </MessageProvider>
         </ProductProvider>
       </PetProvider>
+      </UserProvider>
     </AuthProvider>
   </IonApp>
 );

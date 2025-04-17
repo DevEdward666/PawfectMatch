@@ -46,15 +46,18 @@ import { useAuth } from '../contexts/AuthContext';
 import { usePets } from '../contexts/PetContext';
 import { AdoptionApplicationForm } from '../models/pet.model';
 import "./PetDetail.css";
+import { useUser } from 'contexts/UserContext';
 interface PetDetailParams {
   id: string;
+  isForAdoption:string;
 }
 
 const PetDetail: React.FC = () => {
-  const { id } = useParams<PetDetailParams>();
-  const { pet, isLoading, error, fetchPetById, applyForAdoption } = usePets();
+  const { id,isForAdoption } = useParams<PetDetailParams>();
+  const { pet, isLoading, error, fetchPetById,fetchPetForAddoptionById, applyForAdoption } = usePets();
   const { isLoggedIn } = useAuth();
-  
+  const { user } = useUser();
+  const [adoptionSent,setAdoptionSent] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAdoptModal, setShowAdoptModal] = useState(false);
   const [applicationForm, setApplicationForm] = useState<AdoptionApplicationForm>({
@@ -67,7 +70,11 @@ const PetDetail: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (id) {
-      fetchPetById(parseInt(id));
+      if(isForAdoption === "true"){
+        fetchPetForAddoptionById(parseInt(id))
+      }else{
+        fetchPetById(parseInt(id));
+      }
     }
     
     // Check if pet is in favorites
@@ -76,8 +83,13 @@ const PetDetail: React.FC = () => {
       const favorites = JSON.parse(savedFavorites);
       setIsFavorite(favorites.includes(parseInt(id)));
     }
-  }, [id,fetchPetById]);
-  
+  }, [id,isForAdoption,fetchPetById,user]);
+  useEffect(() => {
+    if(pet?.userId === user?.id){
+
+      setAdoptionSent(true)
+    }
+  }, [user,pet]);
   const toggleFavorite = () => {
     const newIsFavorite = !isFavorite;
     setIsFavorite(newIsFavorite);
@@ -98,6 +110,9 @@ const PetDetail: React.FC = () => {
   };
   
   const handleAdoptClick = () => {
+    if(adoptionSent){
+      return;
+    }
     if (!isLoggedIn()) {
       setShowLoginAlert(true);
     } else {
@@ -384,11 +399,11 @@ const PetDetail: React.FC = () => {
                 <IonButton 
                   expand="block" 
                   color="primary" 
-                  disabled={pet.status !== 'available' && pet.status !== 'pending'}
+                  disabled={pet.status !== 'available' && pet.status !== 'pending' && adoptionSent}
                   onClick={handleAdoptClick}
                 >
                   <IonIcon slot="start" icon={clipboard} />
-                  {pet.status === 'available' || pet.status === 'pending' ? 'Submit Adoption Application' : 'Not Available for Adoption'}
+                  {pet.status === 'available' || pet.status === 'pending' && !adoptionSent ? 'Submit Adoption Application' : 'Not Available for Adoption'}
                 </IonButton>
               </div>
             </IonCardContent>

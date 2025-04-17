@@ -41,10 +41,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { usePets } from '../contexts/PetContext';
 import { useReports } from '../contexts/ReportContext';
 import "./Profile.css";
+import { useUser } from '../contexts/UserContext';
 const Profile: React.FC = () => {
-  const { user, isLoading: authLoading, error: authError, logout, updateProfile, changePassword, isLoggedIn } = useAuth();
+  const {  isLoading: authLoading, error: authError, logout, updateProfile, changePassword, isLoggedIn } = useAuth();
+  const { user } = useUser();
   const { adoptionApplications, fetchUserAdoptionApplications, isLoading: petsLoading } = usePets();
   const { userReports, fetchUserReports, isLoading: reportsLoading } = useReports();
+
   
   const [activeSegment, setActiveSegment] = useState<string>('info');
   
@@ -74,24 +77,26 @@ const Profile: React.FC = () => {
   // Update profile form when user data changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (user) {
-      setProfileData({
-        username: user.username || '',
-        fullName: user.fullName || '',
-        phone: user.phone || '',
-        address: user.address || ''
-      });
+    const init = async() =>{
+    
+      if (isLoggedIn()) {
+        if (user) {
+          setProfileData({
+            username: user.username || '',
+            fullName: user.fullName || '',
+            phone: user.phone || '',
+            address: user.address || ''
+          });
+
+        await fetchUserAdoptionApplications(user?.id!);
+        await fetchUserReports();
+        }
+      }
     }
-  }, [user]);
-  
-  // Fetch user's adoption applications and reports when component mounts
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (isLoggedIn()) {
-      fetchUserAdoptionApplications(user?.id!);
-      fetchUserReports();
-    }
+
+    init();
   }, [user,fetchUserAdoptionApplications,fetchUserReports,isLoggedIn]);
+  
   // If user is not logged in, redirect to login
   if (!isLoggedIn()) {
     return <Redirect to="/login" />;
@@ -428,7 +433,7 @@ const Profile: React.FC = () => {
             ) : adoptionApplications && adoptionApplications.length > 0 ? (
               <IonList>
                 {adoptionApplications.map((application) => (
-                  <IonCard key={application.id} routerLink={`/pets/${application.petId}`}>
+                  <IonCard key={application.id} routerLink={`/pets/forAdoption/${application.petId}/${true}`}>
                     <IonCardContent>
                       <div className="application-item">
                         <div className="application-pet-info">
@@ -442,7 +447,7 @@ const Profile: React.FC = () => {
                             )}
                           </div>
                           <div className="application-pet-details">
-                            <h3>{application.pet ? application.pet.name : 'Pet'}</h3>
+                            <h3>{application.pet ? application.pet.name :"Pet"}</h3>
                             <p>{application.pet ? `${application.pet.species}, ${application.pet.breed || 'Mixed Breed'}` : 'Unknown'}</p>
                             <IonBadge color={getStatusColor(application.status)}>
                               {application.status}

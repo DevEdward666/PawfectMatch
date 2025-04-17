@@ -78,10 +78,10 @@ export const loginUser = async (req: Request, res: Response) => {
 
     // Generate token
     const token = generateToken(user.id, user.email, user.role);
-
+    req.user = user;
     // Return user without password
     const { password: _, ...userWithoutPassword } = user;
-
+    
     return res.status(200).json({
       success: true,
       message: 'Login successful',
@@ -99,7 +99,7 @@ export const loginUser = async (req: Request, res: Response) => {
 export const getUserProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
-
+    console.log("userId"+userId)
     if (!userId) {
       return res.status(401).json({
         success: false,

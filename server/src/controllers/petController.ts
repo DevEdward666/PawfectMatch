@@ -6,8 +6,9 @@ import {
   InsertPet, 
   adoptionApplications,
   InsertAdoptionApplication,
+  users,
 } from '../models/schema';
-import { and, eq, asc, desc } from 'drizzle-orm';
+import { and, eq, asc, desc, inArray } from 'drizzle-orm';
 import { z } from "zod";
 
 export const getAllPets = async (req: Request, res: Response) => {
@@ -43,10 +44,38 @@ export const getAllPets = async (req: Request, res: Response) => {
     // Execute query
     const petsList = await query.execute(); // Ensure `.execute()` is called
     
-    
+    const petIds = petsList.map((pet) => pet.id);
+
+    const adoptionRecords = await db
+      .select({
+        petId: adoptionApplications.petId,
+        user: {
+          id: users.id,
+          name: users.name,
+          email: users.email,
+        },
+      })
+      .from(adoptionApplications)
+      .innerJoin(users, eq(adoptionApplications.userId, users.id))
+      .where(inArray(adoptionApplications.petId, petIds));
+
+    // Group users by petId
+    const usersByPetId: Record<string, any[]> = {};
+    for (const record of adoptionRecords) {
+      if (!usersByPetId[record.petId]) {
+        usersByPetId[record.petId] = [];
+      }
+      usersByPetId[record.petId].push(record.user);
+    }
+
+    // Merge users into pet list
+    const petsWithUsers = petsList.map((pet) => ({
+      ...pet,
+      adopters: usersByPetId[pet.id] || [],
+    }));
     return res.status(200).json({
       success: true,
-      data: petsList
+      data: petsWithUsers
     });
   } catch (error) {
     console.error('Get all pets error:', error);
@@ -56,11 +85,54 @@ export const getAllPets = async (req: Request, res: Response) => {
     });
   }
 };
-
+export const getPetForAdoptionById = async (req: Request, res: Response) => {
+  try {
+    const petId = parseInt(req.params.id);
+    const userId = req.user?.id;
+    const [data] = await db.select({
+      id: adoptionApplications.id,
+      userId: adoptionApplications.userId,
+      petId: adoptionApplications.petId,
+      status: adoptionApplications.status,
+      message: adoptionApplications.message,
+      createdAt: adoptionApplications.createdAt,
+      updatedAt: adoptionApplications.updatedAt,
+      name: pets.name,
+      species: pets.species,
+      breed: pets.breed,
+      age: pets.age,
+      gender: pets.gender,
+      description: pets.description,
+      imageUrl: pets.imageUrl,
+      
+    })
+    .from(adoptionApplications)
+    .leftJoin(pets, eq(adoptionApplications.userId, userId!))
+    .where(eq(pets.id, petId))
+    // const [pet] = await db.select().from(pets).leftJoin(users, eq(adoptionApplications.userId, users.id)).where(eq(pets.id, petId));
+    
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: 'Pet not found'
+      });
+    }
+    
+    return res.status(200).json({
+      success: true,
+      data: data
+    });
+  } catch (error) {
+    console.error('Get pet error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while fetching pet'
+    });
+  }
+};
 export const getPetById = async (req: Request, res: Response) => {
   try {
     const petId = parseInt(req.params.id);
-    
     const [pet] = await db.select().from(pets).where(eq(pets.id, petId));
     
     if (!pet) {

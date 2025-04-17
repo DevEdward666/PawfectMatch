@@ -11,6 +11,7 @@ interface PetContextProps {
   error: string | null;
   fetchPets: () => Promise<void>;
   fetchPetById: (id: number) => Promise<void>;
+  fetchPetForAddoptionById: (id: number) => Promise<void>;
   createPet: (petData: PetForm) => Promise<void>;
   updatePet: (id: number, petData: PetForm) => Promise<void>;
   deletePet: (id: number) => Promise<void>;
@@ -54,14 +55,33 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setIsLoading(false);
     }
   },[showToast]);
-
+  const fetchPetForAddoptionById = useCallback(async (id: number) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const response = await api.get(`/pets/forAdoption/${id}`);
+      setPet(response.data.data);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || 'Failed to fetch pet details.';
+      setError(errorMessage);
+      showToast(errorMessage, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  },[showToast]);
   const fetchPetById = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setError(null);
       
       const response = await api.get(`/pets/${id}`);
-      setPet(response.data.data);
+      if(response.data.data?.status === "pending"){
+        await fetchPetForAddoptionById(id);
+      }else{
+
+        setPet(response.data.data);
+      }
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch pet details.';
       setError(errorMessage);
@@ -195,7 +215,6 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     try {
       setIsLoading(true);
       setError(null);
-      
       const response = await api.get(`/adoptions/user/${userId}`);
       setAdoptionApplications(response.data.data);
     } catch (err: any) {
@@ -269,6 +288,7 @@ export const PetProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         error,
         fetchPets,
         fetchPetById,
+        fetchPetForAddoptionById,
         createPet,
         updatePet,
         deletePet,
